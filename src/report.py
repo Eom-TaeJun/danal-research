@@ -2,7 +2,7 @@
 # 입력: --type [brief|im|screen] --company [optional]
 # 출력: outputs/reports/[type]_YYYYMMDD.md
 # 실패 시: 데이터 없으면 "데이터 없음" 섹션으로 대체
-# 제외: PDF 변환, 이메일 발송, 시각화 (별도)
+# 제외: PDF 변환, 이메일 발송 (시각화는 chart.py 연동)
 
 import json
 import os
@@ -37,7 +37,7 @@ def fmt_num(val, unit="B") -> str:
     return str(val)
 
 
-def build_brief(data: dict) -> str:
+def build_brief(data: dict, chart_paths: dict = None) -> str:
     date = datetime.now().strftime("%Y-%m-%d")
     macro = data.get("macro", {})
     stable = data.get("stablecoins", {})
@@ -73,13 +73,22 @@ def build_brief(data: dict) -> str:
         f"| USDC | {fmt_num(usdc.get('market_cap'))} | {fmt_pct(usdc.get('price_change_7d'))} |",
         f"| BTC | ${btc.get('price', 'N/A'):,} | {fmt_pct(btc.get('change_24h'))} (24h) |",
         "",
+    ]
+    if chart_paths and "stablecoin_pie" in chart_paths:
+        # 리포트 경로 기준 상대 경로: outputs/reports/ → outputs/charts/
+        pie_rel = "../charts/" + Path(chart_paths["stablecoin_pie"]).name
+        lines += [
+            f"![Stablecoin Market Share]({pie_rel})",
+            "",
+        ]
+    lines += [
         "## 3. 이번 주 핵심 동향",
         "> 최신 뉴스는 `/brief` 커맨드 실행 시 Perplexity가 자동 보완합니다.",
         "",
         "## 4. 투자 시사점",
         "> 데이터 기반 시사점을 여기에 작성하세요.",
         "",
-        f"---",
+        "---",
         f"*Generated: {datetime.now().isoformat()} | Source: FRED, CoinGecko*",
     ]
     return "\n".join(lines)
@@ -165,7 +174,12 @@ def report(report_type: str = "brief", company: str = "") -> str:
 
     if report_type == "brief":
         data = load_latest("snapshot_*.json")
-        content = build_brief(data)
+        try:
+            from src.chart import build_charts
+            charts = build_charts(date_str)
+        except Exception:
+            charts = {}
+        content = build_brief(data, chart_paths=charts)
         path = f"{OUTPUT_DIR}/brief_{date_str}.md"
 
     elif report_type == "im":
