@@ -85,17 +85,21 @@ def build_brief(data: dict) -> str:
     return "\n".join(lines)
 
 
+def _fmt_list(items, fallback="- 조사 필요") -> str:
+    return "\n".join(f"- {i}" for i in items) if items else fallback
+
+
 def build_im(research_data: dict, company: str) -> str:
     date = datetime.now().strftime("%Y-%m-%d")
-    summary = research_data.get("summary", "수집된 정보 없음")
-    biz_model = research_data.get("business_model", "—")
-    competitors = research_data.get("competitors", [])
-    risks = research_data.get("risks", [])
-    news = research_data.get("recent_news", [])
-
-    comp_str = "\n".join(f"- {c}" for c in competitors) if competitors else "- 조사 필요"
-    risk_str = "\n".join(f"- {r}" for r in risks) if risks else "- 조사 필요"
-    news_str = "\n".join(f"- {n}" for n in news) if news else "- 조사 필요"
+    summary    = research_data.get("summary", "수집된 정보 없음")
+    biz_model  = research_data.get("business_model", "—")
+    products   = research_data.get("key_products", [])
+    market_sz  = research_data.get("market_size", "—")
+    competitors= research_data.get("competitors", [])
+    bull       = research_data.get("bull_case", [])
+    bear       = research_data.get("bear_case", [])
+    risks      = research_data.get("risks", [])
+    news       = research_data.get("recent_news", [])
 
     return f"""# Investment Memorandum — {company}
 > 작성일: {date} | 초안 (Draft)
@@ -113,46 +117,41 @@ def build_im(research_data: dict, company: str) -> str:
 **사업 모델:** {biz_model}
 
 **핵심 제품/서비스:**
-- (조사 필요)
+{_fmt_list(products)}
 
 ---
 
 ## 3. Market Opportunity
-| 구분 | 규모 | 출처 |
-|------|------|------|
-| TAM | — | |
-| SAM | — | |
-| SOM | — | |
-
-**시장 성장 드라이버:**
-- (조사 필요)
+**시장 규모:** {market_sz}
 
 **경쟁사:**
-{comp_str}
+{_fmt_list(competitors)}
 
 ---
 
 ## 4. Investment Thesis
+
 **Bull Case:**
-- (작성 필요)
+{_fmt_list(bull)}
 
 **Bear Case:**
-- (작성 필요)
+{_fmt_list(bear)}
 
 ---
 
-## 5. Key Risks & Mitigants
-{risk_str}
+## 5. Key Risks
+{_fmt_list(risks)}
 
 ---
 
 ## 6. 최근 동향
-{news_str}
+{_fmt_list(news)}
 
 ---
 
 ## 7. 다음 단계
-- [ ] 추가 확인 필요 항목
+- [ ] TAM/SAM/SOM 수치 확인
+- [ ] 재무 지표 추가 (Revenue, EBITDA)
 - [ ] 미팅 요청 여부
 
 ---

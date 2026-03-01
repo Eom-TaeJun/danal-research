@@ -25,10 +25,17 @@ def research(company: str = "", query: str = "") -> dict:
 
     prompt = (
         f"Provide a structured research summary for investment analysis of: {target}\n\n"
-        "Include: business model, key products/services, market position, "
-        "recent news (last 3 months), main competitors, key risks. "
-        "Format as JSON with keys: summary, business_model, market_size, "
-        "competitors (list), recent_news (list), risks (list)."
+        "Format as JSON with exactly these keys:\n"
+        "- summary: 2-3 sentence company overview\n"
+        "- business_model: how they make money\n"
+        "- key_products: list of 3-5 main products/services\n"
+        "- market_size: TAM description and size estimate\n"
+        "- competitors: list of top 3-5 competitors\n"
+        "- bull_case: list of 3 reasons to invest\n"
+        "- bear_case: list of 3 risks or reasons not to invest\n"
+        "- recent_news: list of 3 most recent developments (last 6 months)\n"
+        "- risks: list of top 3-5 key risks\n"
+        "Return only valid JSON, no markdown."
     )
 
     print(f"  → Perplexity 리서치 중: {target}")
