@@ -6,6 +6,7 @@
 
 import json
 import os
+import re
 import argparse
 import requests
 from datetime import datetime, timedelta
@@ -80,6 +81,35 @@ def fetch_crypto_prices() -> dict:
     return result
 
 
+def fetch_fintech_news() -> dict:
+    """Perplexity로 핀테크·디지털자산 주간 뉴스 + 투자 시사점 수집"""
+    api_key = os.getenv("PERPLEXITY_API_KEY", "")
+    if not api_key:
+        return {}
+    prompt = (
+        "Summarize the top 3 fintech and digital asset news from the past 7 days. "
+        "Return JSON only: {\"items\": [{\"title\": \"...\", \"summary\": \"one sentence\"}], "
+        "\"implications\": [\"ko: 투자 시사점 1\", \"ko: 시사점 2\", \"ko: 시사점 3\"]}. "
+        "Focus on: stablecoins, crypto regulation, global payments, central bank policy. "
+        "Write implications in Korean. Return only valid JSON, no markdown."
+    )
+    try:
+        import httpx
+        with httpx.Client(timeout=30) as client:
+            resp = client.post(
+                "https://api.perplexity.ai/chat/completions",
+                headers={"Authorization": f"Bearer {api_key}"},
+                json={"model": "sonar", "messages": [{"role": "user", "content": prompt}]},
+            )
+            resp.raise_for_status()
+            content = resp.json()["choices"][0]["message"]["content"]
+        match = re.search(r"\{.*\}", content, re.DOTALL)
+        return json.loads(match.group()) if match else {}
+    except Exception as e:
+        print(f"  [뉴스] 수집 실패: {e}")
+        return {}
+
+
 def collect(mode: str = "brief", sector: str = "stablecoin") -> dict:
     print(f"[collect] mode={mode} sector={sector}")
     snapshot = {"collected_at": datetime.now().isoformat(), "mode": mode}
@@ -92,6 +122,11 @@ def collect(mode: str = "brief", sector: str = "stablecoin") -> dict:
     print("  → CoinGecko 수집 중...")
     snapshot["stablecoins"] = fetch_coingecko_stablecoins()
     snapshot["crypto"] = fetch_crypto_prices()
+
+    # 핀테크 뉴스 (brief 모드)
+    if mode == "brief":
+        print("  → 핀테크 뉴스 수집 중...")
+        snapshot["news"] = fetch_fintech_news()
 
     # 저장
     os.makedirs(OUTPUT_DIR, exist_ok=True)

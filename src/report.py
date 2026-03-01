@@ -37,6 +37,10 @@ def fmt_num(val, unit="B") -> str:
     return str(val)
 
 
+def _na(v, suffix="") -> str:
+    return "—" if v is None else f"{v}{suffix}"
+
+
 def build_brief(data: dict, chart_paths: dict = None) -> str:
     date = datetime.now().strftime("%Y-%m-%d")
     macro = data.get("macro", {})
@@ -81,15 +85,32 @@ def build_brief(data: dict, chart_paths: dict = None) -> str:
             f"![Stablecoin Market Share]({pie_rel})",
             "",
         ]
+    # 섹션 3: 핵심 동향 (Perplexity 뉴스)
+    news = data.get("news", {})
+    news_items = news.get("items", [])
+    implications = news.get("implications", [])
+
+    lines += ["## 3. 이번 주 핵심 동향", ""]
+    if news_items:
+        for item in news_items:
+            lines.append(f"**{item.get('title', '')}**")
+            lines.append(item.get("summary", ""))
+            lines.append("")
+    else:
+        lines += ["> 뉴스 데이터 없음 (PERPLEXITY_API_KEY 확인)", ""]
+
+    # 섹션 4: 투자 시사점
+    lines += ["## 4. 투자 시사점", ""]
+    if implications:
+        for imp in implications:
+            lines.append(f"- {imp}")
+        lines.append("")
+    else:
+        lines += ["> 시사점 데이터 없음", ""]
+
     lines += [
-        "## 3. 이번 주 핵심 동향",
-        "> 최신 뉴스는 `/brief` 커맨드 실행 시 Perplexity가 자동 보완합니다.",
-        "",
-        "## 4. 투자 시사점",
-        "> 데이터 기반 시사점을 여기에 작성하세요.",
-        "",
         "---",
-        f"*Generated: {datetime.now().isoformat()} | Source: FRED, CoinGecko*",
+        f"*Generated: {datetime.now().isoformat()} | Source: FRED, CoinGecko, Perplexity*",
     ]
     return "\n".join(lines)
 
@@ -118,8 +139,8 @@ def _fmt_financials(history: list) -> str:
     if not history:
         return "_데이터 없음_"
     rows = [
-        [h.get("year", "?"), h.get("revenue_usd_millions", "N/A"),
-         h.get("net_income_usd_millions", "N/A"), f"{h.get('gross_margin_pct', 'N/A')}%"]
+        [h.get("year", "?"), _na(h.get("revenue_usd_millions")),
+         _na(h.get("net_income_usd_millions")), _na(h.get("gross_margin_pct"), "%")]
         for h in history
     ]
     return _fmt_table(["연도", "매출(백만$)", "순이익(백만$)", "매출총이익률"], rows)
@@ -129,9 +150,9 @@ def _fmt_valuation(metrics: dict) -> str:
     if not metrics:
         return "_데이터 없음_"
     rows = [
-        ["시가총액(백만$)", metrics.get("market_cap_usd_millions", "N/A"), "—"],
-        ["EV/Revenue", metrics.get("ev_revenue_multiple", "N/A"), metrics.get("peer_avg_ev_revenue_multiple", "N/A")],
-        ["P/E", metrics.get("pe_ratio", "N/A"), "—"],
+        ["시가총액(백만$)", _na(metrics.get("market_cap_usd_millions")), "—"],
+        ["EV/Revenue", _na(metrics.get("ev_revenue_multiple")), _na(metrics.get("peer_avg_ev_revenue_multiple"))],
+        ["P/E", _na(metrics.get("pe_ratio")), "—"],
     ]
     return _fmt_table(["지표", "회사", "동종업계 평균"], rows)
 
