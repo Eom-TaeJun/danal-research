@@ -98,7 +98,45 @@ def _fmt_list(items, fallback="- 조사 필요") -> str:
     return "\n".join(f"- {i}" for i in items) if items else fallback
 
 
-def build_im(research_data: dict, company: str) -> str:
+def _fmt_table(headers: list, rows: list) -> str:
+    head = " | ".join(headers)
+    sep = "|".join("---" for _ in headers)
+    lines = [f"| {head} |", f"|{sep}|"]
+    for row in rows:
+        lines.append("| " + " | ".join(str(c) for c in row) + " |")
+    return "\n".join(lines)
+
+
+def _fmt_mgmt(team: list) -> str:
+    if not team:
+        return "_데이터 없음_"
+    rows = [[m.get("name", "?"), m.get("title", "?"), m.get("background_one_line", "—")] for m in team]
+    return _fmt_table(["이름", "직책", "주요 이력"], rows)
+
+
+def _fmt_financials(history: list) -> str:
+    if not history:
+        return "_데이터 없음_"
+    rows = [
+        [h.get("year", "?"), h.get("revenue_usd_millions", "N/A"),
+         h.get("net_income_usd_millions", "N/A"), f"{h.get('gross_margin_pct', 'N/A')}%"]
+        for h in history
+    ]
+    return _fmt_table(["연도", "매출(백만$)", "순이익(백만$)", "매출총이익률"], rows)
+
+
+def _fmt_valuation(metrics: dict) -> str:
+    if not metrics:
+        return "_데이터 없음_"
+    rows = [
+        ["시가총액(백만$)", metrics.get("market_cap_usd_millions", "N/A"), "—"],
+        ["EV/Revenue", metrics.get("ev_revenue_multiple", "N/A"), metrics.get("peer_avg_ev_revenue_multiple", "N/A")],
+        ["P/E", metrics.get("pe_ratio", "N/A"), "—"],
+    ]
+    return _fmt_table(["지표", "회사", "동종업계 평균"], rows)
+
+
+def build_im(research_data: dict, company: str, chart_paths: dict = None) -> str:
     date = datetime.now().strftime("%Y-%m-%d")
     summary    = research_data.get("summary", "수집된 정보 없음")
     biz_model  = research_data.get("business_model", "—")
@@ -109,6 +147,14 @@ def build_im(research_data: dict, company: str) -> str:
     bear       = research_data.get("bear_case", [])
     risks      = research_data.get("risks", [])
     news       = research_data.get("recent_news", [])
+    fin_hist   = research_data.get("financials_history", [])
+    val_met    = research_data.get("valuation_metrics", {})
+    mgmt_team  = research_data.get("management_team", [])
+
+    chart_block = ""
+    if chart_paths and "revenue_trend" in chart_paths:
+        rel = "../charts/" + Path(chart_paths["revenue_trend"]).name
+        chart_block = f"\n![Revenue Trend]({rel})\n"
 
     return f"""# Investment Memorandum — {company}
 > 작성일: {date} | 초안 (Draft)
@@ -130,7 +176,12 @@ def build_im(research_data: dict, company: str) -> str:
 
 ---
 
-## 3. Market Opportunity
+## 3. 경영진
+{_fmt_mgmt(mgmt_team)}
+
+---
+
+## 4. Market Opportunity
 **시장 규모:** {market_sz}
 
 **경쟁사:**
@@ -138,7 +189,11 @@ def build_im(research_data: dict, company: str) -> str:
 
 ---
 
-## 4. Investment Thesis
+## 5. 재무 실적
+{_fmt_financials(fin_hist)}{chart_block}
+---
+
+## 6. Investment Thesis
 
 **Bull Case:**
 {_fmt_list(bull)}
@@ -148,17 +203,22 @@ def build_im(research_data: dict, company: str) -> str:
 
 ---
 
-## 5. Key Risks
+## 7. 밸류에이션
+{_fmt_valuation(val_met)}
+
+---
+
+## 8. Key Risks
 {_fmt_list(risks)}
 
 ---
 
-## 6. 최근 동향
+## 9. 최근 동향
 {_fmt_list(news)}
 
 ---
 
-## 7. 다음 단계
+## 10. 다음 단계
 - [ ] TAM/SAM/SOM 수치 확인
 - [ ] 재무 지표 추가 (Revenue, EBITDA)
 - [ ] 미팅 요청 여부
@@ -185,7 +245,12 @@ def report(report_type: str = "brief", company: str = "") -> str:
     elif report_type == "im":
         safe = company.replace(" ", "_").replace("/", "-")
         data = load_latest(f"research_{safe}_*.json")
-        content = build_im(data, company)
+        try:
+            from src.chart import build_im_charts
+            im_charts = build_im_charts(data, date_str)
+        except Exception:
+            im_charts = {}
+        content = build_im(data, company, im_charts)
         path = f"{OUTPUT_DIR}/im_{safe}_{date_str}.md"
 
     else:

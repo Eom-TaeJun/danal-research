@@ -97,6 +97,48 @@ def build_charts(date_str: str = None) -> dict:
     return paths
 
 
+def revenue_trend(research_data: dict, date_str: str) -> str | None:
+    """재무 이력 → 매출 막대차트 PNG (숫자 없으면 None)"""
+    history = research_data.get("financials_history", [])
+    if not history:
+        return None
+    years, revenues = [], []
+    for h in history:
+        try:
+            revenues.append(float(h["revenue_usd_millions"]))
+            years.append(str(h.get("year", "?")))
+        except (KeyError, TypeError, ValueError):
+            return None  # 숫자 아니면 skip
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+    except ImportError:
+        return None
+    fig, ax = plt.subplots(figsize=(7, 4))
+    ax.bar(years, revenues, color="#2196F3")
+    ax.set_title("Revenue Trend (USD M)", fontsize=12, fontweight="bold")
+    ax.set_ylabel("Revenue (USD M)")
+    fig.tight_layout()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    path = f"{OUTPUT_DIR}/revenue_trend_{date_str}.png"
+    fig.savefig(path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  ✓ 차트 저장: {path}")
+    return path
+
+
+def build_im_charts(research_data: dict, date_str: str = None) -> dict:
+    """IM용 차트 생성 → {name: path} 반환"""
+    if date_str is None:
+        date_str = datetime.now().strftime("%Y%m%d")
+    paths = {}
+    trend = revenue_trend(research_data, date_str)
+    if trend:
+        paths["revenue_trend"] = trend
+    return paths
+
+
 if __name__ == "__main__":
     result = build_charts()
     for k, v in result.items():

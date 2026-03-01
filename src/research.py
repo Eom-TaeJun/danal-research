@@ -35,6 +35,9 @@ def research(company: str = "", query: str = "") -> dict:
         "- bear_case: list of 3 risks or reasons not to invest\n"
         "- recent_news: list of 3 most recent developments (last 6 months)\n"
         "- risks: list of top 3-5 key risks\n"
+        "- financials_history: list of last 3 fiscal years, each {year, revenue_usd_millions, net_income_usd_millions, gross_margin_pct}\n"
+        "- valuation_metrics: {market_cap_usd_millions, ev_revenue_multiple, pe_ratio, peer_avg_ev_revenue_multiple}\n"
+        "- management_team: list of top 3 executives {name, title, background_one_line}\n"
         "Return only valid JSON, no markdown."
     )
 
