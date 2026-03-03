@@ -249,6 +249,113 @@ def build_im(research_data: dict, company: str, chart_paths: dict = None) -> str
 """
 
 
+def build_screen(snapshot: dict, analysis: dict, chart_paths: dict = None) -> str:
+    date = datetime.now().strftime("%Y-%m-%d")
+    macro = snapshot.get("macro", {})
+    stable = snapshot.get("stablecoins", {})
+
+    regime = analysis.get("regime", {})
+    sig = analysis.get("stablecoin_signal", {})
+    danal = analysis.get("danal_implications", {})
+
+    fed = macro.get("FEDFUNDS", {}).get("value", "N/A")
+    dgs10 = macro.get("DGS10", {}).get("value", "N/A")
+    krw = macro.get("DEXKOUS", {}).get("value", "N/A")
+
+    total_b = sig.get("total_mcap_b", 0)
+    usdt_dom = sig.get("usdt_dom_pct", 0)
+    usdc_dom = sig.get("usdc_dom_pct", 0)
+    stablecoin_signal = sig.get("signal", "—").upper()
+    stablecoin_note = sig.get("note", "—")
+
+    rationale_lines = "\n".join(f"  - {r}" for r in regime.get("rationale", []))
+
+    lines = [
+        f"# 스테이블코인 섹터 스크리닝 — {date}",
+        "",
+    ]
+    if chart_paths and "macro_dashboard" in chart_paths:
+        rel = "../charts/" + Path(chart_paths["macro_dashboard"]).name
+        lines += [f"![Market Snapshot Dashboard]({rel})", ""]
+    lines += [
+        "---",
+        "",
+        "## 1. 거시 레짐",
+        "",
+        f"| 판단 | 확신 | 성장 방향 | 인플레이션 |",
+        f"|------|------|---------|-----------|",
+        f"| **{regime.get('regime', '—')}** | {regime.get('confidence', '—')} "
+        f"| {regime.get('growth_dir', '—')} | {regime.get('inflation_dir', '—')} |",
+        "",
+        "**근거:**",
+        rationale_lines,
+        "",
+    ]
+    if chart_paths and "regime_gauge" in chart_paths:
+        rel = "../charts/" + Path(chart_paths["regime_gauge"]).name
+        lines += [f"![Regime Gauge]({rel})", ""]
+
+    lines += [
+        "## 2. 거시경제 스냅샷",
+        "",
+        f"| 지표 | 값 |",
+        f"|------|-----|",
+        f"| Fed Funds Rate | {fed}% |",
+        f"| 미국 10Y 국채 | {dgs10}% |",
+        f"| USD/KRW | {krw} |",
+        "",
+        "## 3. 스테이블코인 시장",
+        "",
+        f"**전체 시총: ${total_b}B** — 시그널: `{stablecoin_signal}`",
+        f"> {stablecoin_note}",
+        "",
+        "| 코인 | 시총 | 도미넌스 | 7일 변화 |",
+        "|------|------|---------|---------|",
+    ]
+    for sym, v in stable.items():
+        mcap = fmt_num(v.get("market_cap"))
+        dom = round((v.get("market_cap") or 0) / (total_b * 1e9) * 100, 1) if total_b else 0
+        chg = fmt_pct(v.get("price_change_7d"))
+        lines.append(f"| {sym} | {mcap} | {dom}% | {chg} |")
+
+    if chart_paths and "stablecoin_pie" in chart_paths:
+        rel = "../charts/" + Path(chart_paths["stablecoin_pie"]).name
+        lines += ["", f"![Stablecoin Market Share]({rel})"]
+
+    lines += [
+        "",
+        "## 4. 다날 비즈니스 함의",
+        "",
+        f"**레짐 {regime.get('regime', '—')} 기준:**",
+        "",
+        f"- **KRW 스테이블코인 SaaS**: {danal.get('stablecoin_saas', '—')}",
+        f"- **휴대폰결제 캐시카우**: {danal.get('payment_cashcow', '—')}",
+        f"- **글로벌 핀테크 확장**: {danal.get('global_expansion', '—')}",
+        "",
+        "**주목할 이벤트:**",
+    ]
+    for ev in danal.get("watch_events", []):
+        lines.append(f"- {ev}")
+
+    lines += [
+        "",
+        "## 5. 투자 기회 & 리스크 매트릭스",
+        "",
+        "| 구분 | 내용 |",
+        "|------|------|",
+        f"| ✅ 기회 1 | 스테이블코인 규제 명확화(GENIUS Act) → SaaS 신규 수요 |",
+        f"| ✅ 기회 2 | {regime.get('regime', '')} 레짐 → {danal.get('stablecoin_saas', '')[:40]}... |",
+        f"| ✅ 기회 3 | PCI 편의점 결제 확장 — 경기 방어적 포지션 |",
+        f"| ⚠️ 리스크 1 | USDT 도미넌스 {usdt_dom}% 집중 → Circle 이탈 시 구조 변화 |",
+        f"| ⚠️ 리스크 2 | USD/KRW {krw} — 환율 변동성 |",
+        f"| ⚠️ 리스크 3 | 한국 디지털자산기본법 스테이블코인 정의 미확정 |",
+        "",
+        "---",
+        f"*Generated: {datetime.now().isoformat()} | Source: FRED, CoinGecko, Perplexity*",
+    ]
+    return "\n".join(lines)
+
+
 def report(report_type: str = "brief", company: str = "") -> str:
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     date_str = datetime.now().strftime("%Y%m%d")
@@ -274,8 +381,22 @@ def report(report_type: str = "brief", company: str = "") -> str:
         content = build_im(data, company, im_charts)
         path = f"{OUTPUT_DIR}/im_{safe}_{date_str}.md"
 
+    elif report_type == "screen":
+        snapshot = load_latest("snapshot_*.json")
+        analysis = load_latest("analysis_*.json")
+        try:
+            from src.chart import build_analysis_charts, build_charts
+            screen_charts = {**build_charts(date_str),
+                             **build_analysis_charts(analysis, date_str,
+                                                     snapshot=snapshot)}
+        except Exception:
+            screen_charts = {}
+        content = build_screen(snapshot, analysis, chart_paths=screen_charts)
+        safe_sector = "stablecoin"
+        path = f"{OUTPUT_DIR}/screen_{safe_sector}_{date_str}.md"
+
     else:
-        content = f"# Screen Report\n> {date_str}\n\n(작성 필요)"
+        content = f"# Screen Report\n> {date_str}\n\n(sector 미지정)"
         path = f"{OUTPUT_DIR}/screen_{date_str}.md"
 
     with open(path, "w", encoding="utf-8") as f:

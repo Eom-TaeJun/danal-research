@@ -1,0 +1,57 @@
+{
+  "hooks": {
+
+    "SessionStart": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "command",
+            "command": "bash -c 'echo \"[danal] API 상태 — FRED: $([ -n \"$FRED_API_KEY\" ] && echo ✓ || echo ✗ MISSING) | PERPLEXITY: $([ -n \"$PERPLEXITY_API_KEY\" ] && echo ✓ || echo ✗ MISSING)\"'",
+            "timeout": 5
+          }
+        ]
+      }
+    ],
+
+    "PreToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "파일 쓰기 검증: (1) outputs/ 외부 경로에 분석 결과를 저장하려 하는가? (2) .env 또는 API 키가 포함된 파일을 수정하려 하는가? (3) skills/ 하위 파일을 수정하려 하는가? 세 가지 모두 해당 없으면 'approve', 하나라도 해당하면 'deny'와 이유를 반환하라.",
+            "timeout": 15
+          }
+        ]
+      }
+    ],
+
+    "Stop": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "작업 완료 검증: (1) 요청된 리포트가 outputs/reports/ 에 저장되었는가? (2) IM 리포트의 경우 None 값이 테이블에 남아있지 않은가? (3) 수치에 출처 또는 날짜가 명기되었는가? 모두 충족하면 'approve', 미완료 항목이 있으면 'block'과 구체적 미완료 항목 목록을 반환하라.",
+            "timeout": 25
+          }
+        ]
+      }
+    ],
+
+    "PreCompact": [
+      {
+        "matcher": "*",
+        "hooks": [
+          {
+            "type": "prompt",
+            "prompt": "컨텍스트 압축 전 보존: (1) 완료된 단계 (collect/research/report), (2) 생성된 리포트 경로, (3) 남은 None 값 항목, (4) 다음 수행할 작업을 systemMessage에 요약해 압축 후에도 연속성이 유지되도록 하라.",
+            "timeout": 20
+          }
+        ]
+      }
+    ]
+
+  }
+}

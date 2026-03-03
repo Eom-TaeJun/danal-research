@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>danal-research — 포트폴리오 프리뷰</title>
+<style>
+  :root {
+    --blue: #1565C0; --light-blue: #E3F2FD;
+    --green: #2E7D32; --light-green: #E8F5E9;
+    --grey: #546E7A; --bg: #F5F7FA; --white: #FFFFFF;
+    --border: #DEE2E6; --text: #212529; --muted: #6C757D;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'Segoe UI', 'Noto Sans KR', sans-serif;
+         background: var(--bg); color: var(--text); line-height: 1.6; }
+
+  /* ── 헤더 */
+  header { background: linear-gradient(135deg, var(--blue) 0%, #0D47A1 100%);
+           color: white; padding: 40px 48px 32px; }
+  header h1 { font-size: 28px; font-weight: 700; letter-spacing: -0.5px; }
+  header p  { font-size: 15px; opacity: 0.85; margin-top: 8px; max-width: 680px; }
+  .badges { display: flex; gap: 8px; margin-top: 16px; flex-wrap: wrap; }
+  .badge { background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+           padding: 3px 12px; border-radius: 20px; font-size: 12px; }
+
+  /* ── 레이아웃 */
+  main { max-width: 1100px; margin: 0 auto; padding: 36px 24px 60px; }
+  section { margin-bottom: 40px; }
+  h2 { font-size: 18px; font-weight: 700; color: var(--blue);
+       border-left: 4px solid var(--blue); padding-left: 12px; margin-bottom: 20px; }
+  h3 { font-size: 14px; font-weight: 600; color: var(--grey); margin-bottom: 10px;
+       text-transform: uppercase; letter-spacing: 0.5px; }
+
+  /* ── 파이프라인 */
+  .pipeline { background: var(--white); border: 1px solid var(--border);
+              border-radius: 12px; padding: 24px; overflow-x: auto; }
+  .pipeline pre { font-family: 'Consolas', monospace; font-size: 13px;
+                  color: #334; line-height: 1.8; }
+
+  /* ── 기능 카드 */
+  .cmd-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 14px; }
+  .cmd-card { background: var(--white); border: 1px solid var(--border); border-radius: 10px;
+              padding: 18px; transition: box-shadow .2s; }
+  .cmd-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.08); }
+  .cmd-card code { display: block; background: #F0F4FF; color: var(--blue);
+                   padding: 8px 10px; border-radius: 6px; font-size: 12px;
+                   margin-bottom: 10px; }
+  .cmd-card .label { font-weight: 600; font-size: 14px; }
+  .cmd-card .desc  { font-size: 13px; color: var(--muted); margin-top: 4px; }
+
+  /* ── 차트 갤러리 */
+  .chart-gallery { display: grid; grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+                   gap: 20px; }
+  .chart-card { background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+                overflow: hidden; }
+  .chart-card img { width: 100%; height: auto; display: block; }
+  .chart-label { padding: 10px 14px; font-size: 13px; color: var(--muted);
+                 font-weight: 500; border-top: 1px solid var(--border); }
+
+  /* ── 리포트 프리뷰 */
+  .report-tabs { display: flex; gap: 4px; margin-bottom: 0;
+                 border-bottom: 2px solid var(--border); }
+  .tab-btn { padding: 8px 18px; border: none; background: none; cursor: pointer;
+             font-size: 13px; color: var(--muted); border-radius: 6px 6px 0 0; }
+  .tab-btn.active { background: var(--white); color: var(--blue);
+                    font-weight: 600; border: 1px solid var(--border);
+                    border-bottom: 2px solid var(--white); margin-bottom: -2px; }
+  .report-panel { display: none; background: var(--white);
+                  border: 1px solid var(--border); border-top: none;
+                  border-radius: 0 8px 8px 8px; padding: 24px; }
+  .report-panel.active { display: block; }
+  .report-panel table { border-collapse: collapse; width: 100%; font-size: 13px; }
+  .report-panel th, .report-panel td { border: 1px solid var(--border);
+                                        padding: 8px 12px; text-align: left; }
+  .report-panel th { background: var(--light-blue); font-weight: 600; }
+  .report-panel h3, .report-panel h4 { margin: 18px 0 8px; color: #333; }
+  .report-panel p  { font-size: 14px; margin-bottom: 8px; color: #444; }
+  .report-panel pre { background: #F8F9FA; padding: 14px; border-radius: 6px;
+                       font-size: 12px; overflow-x: auto; }
+  blockquote { border-left: 3px solid var(--border); padding-left: 12px;
+               color: var(--muted); font-size: 13px; margin: 8px 0; }
+
+  /* ── 레짐 배지 */
+  .regime-badge { display: inline-block; background: var(--light-green);
+                  color: var(--green); border: 1px solid #A5D6A7;
+                  padding: 4px 14px; border-radius: 20px; font-weight: 700;
+                  font-size: 14px; margin-bottom: 12px; }
+
+  /* ── 함의 카드 */
+  .impl-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap: 14px; }
+  .impl-card { background: var(--white); border-left: 4px solid var(--blue);
+               border-radius: 0 8px 8px 0; padding: 14px 16px;
+               box-shadow: 0 1px 4px rgba(0,0,0,.06); }
+  .impl-card .title { font-size: 12px; font-weight: 700; color: var(--blue);
+                       text-transform: uppercase; margin-bottom: 6px; }
+  .impl-card .body  { font-size: 13px; color: #444; line-height: 1.55; }
+
+  /* ── 매트릭스 */
+  .matrix-table { width: 100%; border-collapse: collapse; font-size: 13px; }
+  .matrix-table td { padding: 10px 14px; border: 1px solid var(--border); }
+  .opp { background: #F0FFF4; }
+  .risk { background: #FFF8F0; }
+
+  /* ── 아키텍처 */
+  .arch { background: #0D1117; color: #C9D1D9; padding: 24px 28px;
+          border-radius: 12px; font-family: 'Consolas', monospace;
+          font-size: 12.5px; line-height: 1.9; overflow-x: auto; }
+  .arch .hl { color: #79C0FF; }
+  .arch .new { color: #56D364; }
+  .arch .muted { color: #8B949E; }
+
+  /* ── 푸터 */
+  footer { text-align: center; padding: 24px; color: var(--muted); font-size: 13px; }
+</style>
+</head>
+<body>
+
+<header>
+  <h1>danal-research</h1>
+  <p>핀테크 & 디지털자산 투자 리서치 자동화 에이전트<br>
+     FRED × CoinGecko × Perplexity → 브리핑 · IM · 스크리닝 · 레짐 분석</p>
+  <div class="badges">
+    <span class="badge">Python 3.11+</span>
+    <span class="badge">FRED API</span>
+    <span class="badge">CoinGecko</span>
+    <span class="badge">Perplexity</span>
+    <span class="badge">Claude Code</span>
+    <span class="badge">matplotlib</span>
+  </div>
+</header>
+
+<main>
+
+  <!-- ── 파이프라인 ─────────────────────────────────── -->
+  <section>
+    <h2>분석 파이프라인</h2>
+    <div class="pipeline"><pre>
+  사용자 요청
+      │
+      ├── --brief   ──→  collect.py  (FRED + CoinGecko + Perplexity 뉴스)
+      │                      └→  report.py  →  brief_YYYYMMDD.md
+      │
+      ├── --im "기업명"  ──→  research.py  (Perplexity 기업 리서치)
+      │                          └→  report.py  →  im_기업명_YYYYMMDD.md
+      │
+      ├── --screen  ──→  collect.py → analyze.py → chart.py → report.py
+      │                  레짐 판단 (수익률 곡선 + Fed 스탠스)
+      │                  다날 비즈니스 함의 자동 도출
+      │                      └→  screen_stablecoin_YYYYMMDD.md + 3종 차트
+      │
+      └── --analyze ──→  analyze.py  →  analysis_YYYYMMDD.json
+                         레짐 + 스테이블코인 시그널 + 함의
+    </pre></div>
+  </section>
+
+  <!-- ── 명령어 ────────────────────────────────────── -->
+  <section>
+    <h2>주요 기능</h2>
+    <div class="cmd-grid">
+      <div class="cmd-card">
+        <code>python main.py --brief</code>
+        <div class="label">주간 브리핑</div>
+        <div class="desc">거시경제 스냅샷 + 스테이블코인 시장 + 핵심 뉴스 3건 + 투자 시사점</div>
+      </div>
+      <div class="cmd-card">
+        <code>python main.py --im "Circle"</code>
+        <div class="label">투자 검토 보고서 (IM)</div>
+        <div class="desc">10섹션 구조: Executive Summary ~ 다음 단계. 재무·밸류에이션·경영진 포함</div>
+      </div>
+      <div class="cmd-card">
+        <code>python main.py --screen stablecoin</code>
+        <div class="label">섹터 스크리닝</div>
+        <div class="desc">레짐 판단 + 시장 현황 + 다날 비즈니스 함의 + 기회·리스크 매트릭스</div>
+      </div>
+      <div class="cmd-card">
+        <code>python main.py --analyze</code>
+        <div class="label">레짐 분석</div>
+        <div class="desc">Goldilocks / Overheating / Stagflation / Recession 판단. 다날 3축 함의 도출</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 차트 갤러리 ───────────────────────────────── -->
+  <section>
+    <h2>시각화 출력</h2>
+    <div class="chart-gallery">
+      <div class="chart-card">
+        <img src="outputs/charts/macro_dashboard_20260303.png" alt="Macro Dashboard">
+        <div class="chart-label">📊 시장 스냅샷 대시보드 — 금리 · 스테이블코인 · 암호화폐</div>
+      </div>
+      <div class="chart-card">
+        <img src="outputs/charts/regime_gauge_20260303.png" alt="Regime Gauge">
+        <div class="chart-label">🎯 레짐 게이지 — 현재 Goldilocks (Medium)</div>
+      </div>
+      <div class="chart-card">
+        <img src="outputs/charts/stablecoin_pie_20260303.png" alt="Stablecoin Pie">
+        <div class="chart-label">🥧 스테이블코인 시장점유율 — 총 $264.2B</div>
+      </div>
+      <div class="chart-card">
+        <img src="outputs/charts/revenue_trend_20260302.png" alt="Revenue Trend">
+        <div class="chart-label">📈 기업 매출 추이 (Circle, IM 자동 생성)</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ── 리포트 프리뷰 ─────────────────────────────── -->
+  <section>
+    <h2>리포트 샘플</h2>
+    <div class="report-tabs">
+      <button class="tab-btn active" onclick="showTab('screen')">섹터 스크리닝</button>
+      <button class="tab-btn" onclick="showTab('brief')">주간 브리핑</button>
+      <button class="tab-btn" onclick="showTab('im')">IM (Circle)</button>
+    </div>
+
+    <!-- 스크리닝 탭 -->
+    <div id="tab-screen" class="report-panel active">
+      <div class="regime-badge">⭐ Goldilocks &nbsp; Medium 확신</div>
+      <h3>1. 거시 레짐</h3>
+      <table>
+        <tr><th>판단</th><th>확신</th><th>성장 방향</th><th>인플레이션</th></tr>
+        <tr><td><strong>Goldilocks</strong></td><td>Medium</td><td>positive ↑</td><td>moderate</td></tr>
+      </table>
+      <p style="margin-top:10px; font-size:13px; color:#555;">
+        📌 수익률 곡선 정상화 (10Y-FF spread: +0.33%p) → 성장 기대<br>
+        📌 Fed Funds 3.64% — 완만한 긴축 (인플레이션 moderate)
+      </p>
+      <h3>2. 스테이블코인 시장 (2026-03-03)</h3>
+      <table>
+        <tr><th>코인</th><th>시총</th><th>도미넌스</th><th>7일 변화</th></tr>
+        <tr><td>USDT</td><td>$183.6B</td><td>69.5%</td><td>+0.0%</td></tr>
+        <tr><td>USDC</td><td>$76.0B</td><td>28.8%</td><td>+0.0%</td></tr>
+        <tr><td>DAI</td><td>$4.2B</td><td>1.6%</td><td>+0.1%</td></tr>
+        <tr><td>FDUSD</td><td>$0.4B</td><td>0.1%</td><td>+0.0%</td></tr>
+      </table>
+      <h3>3. 다날 비즈니스 함의</h3>
+      <div class="impl-grid">
+        <div class="impl-card">
+          <div class="title">KRW 스테이블코인 SaaS</div>
+          <div class="body">성장 환경 최적 — 기업의 스테이블코인 결제 도입 수요 증가. SaaS 신규 계약 공략 타이밍.</div>
+        </div>
+        <div class="impl-card">
+          <div class="title">휴대폰결제 캐시카우</div>
+          <div class="body">소비 확장 국면 → 휴대폰결제 거래량 증가 예상. 캐시카우 수익 안정적.</div>
+        </div>
+        <div class="impl-card">
+          <div class="title">글로벌 핀테크 확장</div>
+          <div class="body">위험자산 선호 → 글로벌 핀테크 투자 활성화. 해외 파트너십 협상 유리.</div>
+        </div>
+      </div>
+      <h3>4. 기회 &amp; 리스크 매트릭스</h3>
+      <table class="matrix-table">
+        <tr class="opp"><td>✅ 기회 1</td><td>스테이블코인 규제 명확화(GENIUS Act) → SaaS 신규 수요</td></tr>
+        <tr class="opp"><td>✅ 기회 2</td><td>Goldilocks 레짐 → SaaS 신규 계약 공략 최적 타이밍</td></tr>
+        <tr class="opp"><td>✅ 기회 3</td><td>PCI 편의점 결제 확장 — 경기 방어적 포지션</td></tr>
+        <tr class="risk"><td>⚠️ 리스크 1</td><td>USDT 도미넌스 69.5% 집중 → Circle 이탈 시 구조 변화</td></tr>
+        <tr class="risk"><td>⚠️ 리스크 2</td><td>USD/KRW 1,440 — 환율 변동성 모니터링 필요</td></tr>
+        <tr class="risk"><td>⚠️ 리스크 3</td><td>한국 디지털자산기본법 스테이블코인 정의 미확정</td></tr>
+      </table>
+    </div>
+
+    <!-- 브리핑 탭 -->
+    <div id="tab-brief" class="report-panel">
+      <h3>거시경제 스냅샷 (2026-03-02)</h3>
+      <table>
+        <tr><th>지표</th><th>값</th></tr>
+        <tr><td>Fed Funds Rate</td><td>3.64%</td></tr>
+        <tr><td>미국 10Y 국채</td><td>4.02%</td></tr>
+        <tr><td>USD/KRW</td><td>1,445.97</td></tr>
+      </table>
+      <h3>디지털자산 시장</h3>
+      <table>
+        <tr><th>항목</th><th>값</th><th>7일 변화</th></tr>
+        <tr><td>스테이블코인 전체 시총</td><td>$263.4B</td><td>—</td></tr>
+        <tr><td>USDT</td><td>$183.7B</td><td>+0.0%</td></tr>
+        <tr><td>USDC</td><td>$75.2B</td><td>-0.0%</td></tr>
+        <tr><td>BTC</td><td>$66,818</td><td>+3.2% (24h)</td></tr>
+      </table>
+      <h3>이번 주 핵심 동향</h3>
+      <p><strong>U.S. Passes GENIUS Act Reducing Stablecoin Regulatory Uncertainty</strong><br>
+      The GENIUS Act has significantly reduced regulatory uncertainty for stablecoins, encouraging financial institutions and brands to issue new stablecoins for yield generation on customer funds.</p>
+      <p><strong>Federal Reserve Considers Master Accounts for Fintechs and Stablecoin Issuers</strong><br>
+      The Federal Reserve is exploring limited master accounts for innovative payment firms, including stablecoin issuers, to enable direct access to U.S. payment rails.</p>
+      <h3>투자 시사점</h3>
+      <p>• <strong>스테이블코인 발행 확대</strong>: GENIUS Act로 규제 불확실성 감소, 은행·핀테크의 신규 스테이블코인 출시 증가로 안정적 수익 창출 기회</p>
+      <p>• <strong>결제 인프라 접근성 강화</strong>: 연준의 마스터 계좌 도입 검토로 핀테크·스테이블코인 업체의 글로벌 결제 네트워크 직접 연결</p>
+      <p>• <strong>토큰화 및 DeFi 성장</strong>: MiCA 시행과 스테이블코인 기반 자산 토큰화 본격화로 투자 다각화 및 수익 전략 확대</p>
+    </div>
+
+    <!-- IM 탭 -->
+    <div id="tab-im" class="report-panel">
+      <blockquote>Investment Memorandum — Circle &nbsp;|&nbsp; 작성일: 2026-03-02 (초안)</blockquote>
+      <h3>1. Executive Summary</h3>
+      <p>Circle is a financial technology company building infrastructure for the internet economy using stablecoins and blockchain technology. Its flagship product, USDC, is a regulated digital dollar stablecoin backed by cash and US Treasuries, enabling fast global payments and DeFi integration.</p>
+      <p><strong>투자 의견:</strong> ☐ 관심 &nbsp; ☐ 검토 &nbsp; ☐ 보류</p>
+      <h3>5. 재무 실적</h3>
+      <table>
+        <tr><th>연도</th><th>매출(백만$)</th><th>순이익(백만$)</th><th>매출총이익률</th></tr>
+        <tr><td>2023</td><td>779.0</td><td>-69.0</td><td>85.0%</td></tr>
+        <tr><td>2024</td><td>1,670.0</td><td>155.0</td><td>90.0%</td></tr>
+        <tr><td>2025</td><td>2,800.0</td><td>450.0</td><td>92.0%</td></tr>
+      </table>
+      <h3>6. Investment Thesis</h3>
+      <p><strong>Bull Case:</strong><br>
+      • Dominant USDC position as leading regulated stablecoin with institutional adoption<br>
+      • Revenue growth from interest on reserves and expanding services<br>
+      • Public company status enables capital access for innovation</p>
+      <p><strong>Bear Case:</strong><br>
+      • High dependency on volatile crypto markets<br>
+      • Regulatory risks from evolving global stablecoin rules<br>
+      • Competition from Tether's larger USDT market share</p>
+      <h3>7. 밸류에이션</h3>
+      <table>
+        <tr><th>지표</th><th>Circle</th><th>동종업계 평균</th></tr>
+        <tr><td>시가총액(백만$)</td><td>85,000</td><td>—</td></tr>
+        <tr><td>EV/Revenue</td><td>28.5x</td><td>25.0x</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <!-- ── 아키텍처 ───────────────────────────────────── -->
+  <section>
+    <h2>프로젝트 구조</h2>
+    <div class="arch"><pre>
+<span class="hl">danal-research/</span>
+├── <span class="new">INTENT.md</span>              프로젝트 의도 + 불변 원칙 + 어휘 레지스터
+├── README.md
+├── main.py               CLI 진입점 (--brief / --im / --screen / --analyze)
+│
+├── <span class="hl">src/</span>
+│   ├── collect.py         FRED + CoinGecko + Perplexity 데이터 수집
+│   ├── research.py        Perplexity 기업 심층 리서치
+│   ├── <span class="new">analyze.py</span>         레짐 판단 + 스테이블코인 시그널 + 다날 함의  ★
+│   ├── report.py          Markdown 리포트 생성
+│   └── chart.py           시각화 (pie / trend / <span class="new">regime_gauge / macro_dashboard</span>)  ★
+│
+├── <span class="hl">.claude/</span>
+│   ├── <span class="new">agents/</span>            .md 형식 서브에이전트 (공식 Claude Code 스펙)  ★
+│   │   ├── danal-lead.md
+│   │   ├── research-agent.md
+│   │   ├── collect-agent.md
+│   │   └── <span class="new">macro-analyst.md</span>  ★
+│   ├── <span class="new">skills/</span>
+│   │   ├── weekly-brief/
+│   │   ├── im-draft/
+│   │   ├── stablecoin-market/
+│   │   └── <span class="new">danal-context/</span>   user-invocable:false  자동 주입  ★
+│   └── <span class="new">settings.json</span>     Hooks (SessionStart + PreToolUse + Stop)  ★
+│
+├── <span class="new">agents/contracts.json</span>  에이전트 계약 선언 (JSON harness 패턴)  ★
+│
+└── <span class="hl">outputs/</span>
+    ├── reports/           brief×2 / im_Circle×2 / screen_stablecoin×1
+    ├── charts/            <span class="new">macro_dashboard</span> / <span class="new">regime_gauge</span> / pie×3 / revenue_trend
+    └── context/           snapshot / analysis / research (JSON)
+
+<span class="muted">★ 이번에 신규 추가된 항목</span></pre></div>
+  </section>
+
+</main>
+
+<footer>
+  <p>danal-research &nbsp;·&nbsp; 핀테크 & 디지털자산 투자 리서치 자동화
+  &nbsp;·&nbsp; Source: FRED, CoinGecko, Perplexity</p>
+</footer>
+
+<script>
+function showTab(name) {
+  document.querySelectorAll('.report-panel').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+  document.getElementById('tab-' + name).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+</body>
+</html>

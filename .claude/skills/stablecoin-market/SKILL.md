@@ -1,6 +1,7 @@
 ---
 name: stablecoin-market
 description: 글로벌 스테이블코인 시장 분석. 시총·도미넌스·규제 동향·경쟁 구도를 구조화. 다날 스테이블코인 SaaS 사업 맥락에서 시장 기회 평가. Triggers on "스테이블코인", "stablecoin", "USDT", "USDC", "원화 스테이블코인", "KRW stablecoin".
+user-invocable: false
 ---
 
 # Stablecoin Market Analysis

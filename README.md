@@ -2,8 +2,10 @@
 
 핀테크 & 디지털자산 투자 리서치 자동화 에이전트
 
-거시경제 지표(FRED) + 스테이블코인 시장(CoinGecko)을 수집해
-투자 브리핑과 IM(Investment Memorandum) 초안을 Markdown으로 생성합니다.
+FRED(거시경제) + CoinGecko(디지털자산) + Perplexity(뉴스·기업 리서치)를 수집해
+주간 브리핑, 투자 검토 보고서(IM), 섹터 스크리닝을 Markdown으로 자동 생성합니다.
+거시 레짐(Goldilocks/Overheating/Stagflation/Recession)을 판단하고
+다날의 KRW 스테이블코인·핀테크 사업 맥락에서 투자 함의까지 도출합니다.
 
 ---
 
@@ -13,50 +15,160 @@
 git clone https://github.com/[username]/danal-research
 cd danal-research
 pip install -r requirements.txt
-cp .env.example .env  # API 키 입력
+cp .env.example .env        # FRED_API_KEY, PERPLEXITY_API_KEY 입력
 
-python main.py --brief              # 주간 핀테크 브리핑
-python main.py --im "Circle"        # 투자 검토 보고서 초안
-python main.py --screen stablecoin  # 시장 스크리닝
+python main.py --brief              # 주간 핀테크/디지털자산 브리핑
+python main.py --im "Circle"        # 투자 검토 보고서(IM) 초안
+python main.py --screen stablecoin  # 섹터 스크리닝 + 레짐 분석
+python main.py --analyze            # 거시 레짐 단독 분석
 ```
+
+---
+
+## 분석 파이프라인
+
+```
+사용자 요청
+    │
+    ├── --brief ─────────────────────────────────────────────────────┐
+    │     collect.py: FRED(금리·환율) + CoinGecko(스테이블코인·BTC)    │
+    │     + Perplexity(핀테크 뉴스)                                   │
+    │     → outputs/reports/brief_YYYYMMDD.md                        │
+    │                                                                 │
+    ├── --im "[기업명]" ──────────────────────────────────────────────┤
+    │     research.py: Perplexity(기업개요·재무·경영진·경쟁사)          │
+    │     → outputs/reports/im_[기업명]_YYYYMMDD.md                  │
+    │       (10섹션: Executive Summary ~ 다음 단계)                   │
+    │                                                                 │
+    ├── --screen [sector] ────────────────────────────────────────────┤
+    │     collect.py → analyze.py → chart.py → report.py            │
+    │     레짐 판단: 수익률 곡선 + Fed 스탠스 → 4가지 국면              │
+    │     → outputs/reports/screen_[sector]_YYYYMMDD.md              │
+    │       + outputs/charts/macro_dashboard_YYYYMMDD.png            │
+    │       + outputs/charts/regime_gauge_YYYYMMDD.png               │
+    │                                                                 │
+    └── --analyze ────────────────────────────────────────────────────┘
+          analyze.py: 스냅샷 → 레짐 + 스테이블코인 시그널 + 다날 함의
+          → outputs/context/analysis_YYYYMMDD.json
+```
+
+---
+
+## 레짐 분석 프레임워크
+
+수익률 곡선(DGS10 - FEDFUNDS)과 Fed 스탠스를 교차해 경기 국면을 판단합니다.
+
+```
+              인플레이션 高 (Fed ≥ 4%)   인플레이션 低 (Fed < 3%)
+성장 ↑  →      Overheating               Goldilocks  ← 현재
+성장 ↓  →      Stagflation               Recession
+```
+
+레짐별로 다날 3대 사업(KRW 스테이블코인 SaaS / 휴대폰결제 / 글로벌 핀테크)에
+대한 투자 함의와 주목 이벤트를 자동으로 도출합니다.
 
 ---
 
 ## 샘플 출력
 
-- [주간 브리핑 샘플](outputs/reports/brief_20260301.md)
+### 주간 브리핑
+- [brief_20260302.md](outputs/reports/brief_20260302.md)
+  - 거시경제 스냅샷 | 디지털자산 시장 | 핵심 동향 3건 | 투자 시사점
+
+### 투자 검토 보고서 (IM)
+- [im_Circle_20260302.md](outputs/reports/im_Circle_20260302.md)
+  - Executive Summary | 사업 모델 | 경영진 | 시장 규모 | 재무 실적
+  - Investment Thesis (Bull/Bear) | 밸류에이션 | Key Risks | 최근 동향
+
+### 섹터 스크리닝
+- [screen_stablecoin_20260303.md](outputs/reports/screen_stablecoin_20260303.md)
+  - 거시 레짐 판단 | 스테이블코인 시장 | 다날 비즈니스 함의 | 기회·리스크 매트릭스
 
 ---
 
-## 구조
+## 아키텍처
 
 ```
-.claude/skills/          Claude Code 인터페이스 (Anthropic plugin 구조)
-  weekly-brief/          주간 브리핑 스킬
-  im-draft/              IM 초안 스킬
-  stablecoin-market/     스테이블코인 시장 분석 스킬
-src/
-  collect.py             FRED + CoinGecko 데이터 수집
-  research.py            Perplexity 기업 리서치
-  report.py              Markdown 리포트 생성
-outputs/reports/         생성된 리포트
+.
+├── src/
+│   ├── collect.py      FRED + CoinGecko + Perplexity 데이터 수집
+│   ├── research.py     Perplexity 기업 심층 리서치
+│   ├── analyze.py      레짐 판단 + 스테이블코인 시그널 + 다날 함의 도출
+│   ├── report.py       Markdown 리포트 생성 (Brief / IM / Screen)
+│   └── chart.py        시각화 (파이차트 / 매출추이 / 레짐게이지 / 대시보드)
+│
+├── .claude/
+│   ├── agents/         Claude Code 서브에이전트 정의
+│   │   ├── danal-lead.md       조율·품질 검토
+│   │   ├── research-agent.md   IM 리서치 + None 보완
+│   │   ├── collect-agent.md    데이터 수집 (경량)
+│   │   └── macro-analyst.md    거시 레짐 + 다날 함의
+│   ├── skills/         도메인 지식 자동 주입
+│   │   ├── weekly-brief/       브리핑 구조·원칙
+│   │   ├── im-draft/           IM 섹션 구조·작성 기준
+│   │   ├── stablecoin-market/  스테이블코인 시장 도메인 지식
+│   │   └── danal-context/      다날 전략 맥락 (자동 활성화)
+│   └── settings.json   Hooks (API 키 확인, 경로 검증, 완성도 검증)
+│
+├── agents/contracts.json   에이전트 역할·계약 선언
+├── INTENT.md               프로젝트 의도 + 불변 원칙 + 어휘 레지스터
+├── outputs/
+│   ├── reports/        생성된 리포트 (.md)
+│   ├── charts/         시각화 차트 (.png)
+│   └── context/        중간 데이터 (.json)
+└── main.py
 ```
 
 ---
 
 ## 데이터 소스
 
-| 소스 | 용도 |
-|------|------|
-| [FRED](https://fred.stlouisfed.org/) | 금리·환율·CPI (무료) |
-| [CoinGecko](https://www.coingecko.com/) | 스테이블코인 시총·거래량 (무료) |
-| [Perplexity](https://www.perplexity.ai/) | 기업 리서치·최신 뉴스 |
+| 소스 | 수집 데이터 | API |
+|------|-----------|-----|
+| [FRED](https://fred.stlouisfed.org/) | Fed Funds Rate, 10Y 국채, USD/KRW, CPI | 무료 |
+| [CoinGecko](https://www.coingecko.com/) | 스테이블코인 시총·도미넌스·거래량, BTC/ETH | 무료 |
+| [Perplexity](https://www.perplexity.ai/) | 핀테크 뉴스, 기업 재무·경영진·경쟁사 리서치 | 유료 |
+
+---
+
+## Claude Code 통합
+
+이 프로젝트는 [Claude Code](https://claude.ai/code)의 에이전트 인프라를 활용합니다.
+
+| 컴포넌트 | 역할 |
+|---------|------|
+| **Agents** (`.claude/agents/`) | 역할 분리 서브에이전트 — 조율·리서치·수집·분석 |
+| **Skills** (`.claude/skills/`) | 도메인 지식 자동 주입 — 스테이블코인·IM·다날 컨텍스트 |
+| **Hooks** (`.claude/settings.json`) | 가드레일 — API 키 확인, 경로 검증, 완성도 검증 |
+| **INTENT.md** | 프로젝트 불변 원칙 + 어휘 레지스터 |
+
+Claude Code에서 자연어로 작업 지시:
+```
+"Circle IM 만들어줘"                 → research-agent 자동 위임
+"이번 주 스테이블코인 시장 브리핑"    → collect-agent + weekly-brief skill
+"현재 매크로 레짐이 다날에 어떤 의미?" → macro-analyst + danal-context skill
+```
 
 ---
 
 ## 환경 변수
 
+```bash
+FRED_API_KEY=...          # https://fred.stlouisfed.org/docs/api/api_key.html
+PERPLEXITY_API_KEY=...    # https://www.perplexity.ai/settings/api
 ```
-FRED_API_KEY          https://fred.stlouisfed.org/docs/api/api_key.html
-PERPLEXITY_API_KEY    https://www.perplexity.ai/settings/api
+
+CoinGecko는 Public API (무료, 키 불필요).
+
+---
+
+## 요구 사항
+
+```
+python >= 3.11
+requests, httpx, matplotlib
+```
+
+```bash
+pip install -r requirements.txt
 ```

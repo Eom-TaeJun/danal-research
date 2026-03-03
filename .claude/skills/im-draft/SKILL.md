@@ -1,6 +1,7 @@
 ---
 name: im-draft
 description: 핀테크 / 디지털자산 기업 투자 검토 보고서(IM) 초안 작성. 기업명 입력 시 시장 조사 → IM 구조 작성까지 자동화. Triggers on "IM 작성", "투자 검토", "im draft", "investment memo", 기업명 + "분석".
+argument-hint: [기업명]
 ---
 
 # IM Draft (Investment Memorandum)
