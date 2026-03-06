@@ -1,0 +1,155 @@
+# spec.md — Danal Research 방법론 원천 (Source of Truth)
+
+> 이 파일이 아키텍처와 방법론 결정의 유일한 진실.
+> CLAUDE.md나 AGENTS.md와 충돌 시 이 파일이 우선.
+
+---
+
+## 1. 인턴 업무 범위 (소개.txt 기준)
+
+| 업무 | 상세 | 산출물 |
+|------|------|--------|
+| 투자 리포트 작성 보조 | 국내외 기업·산업 분석 조사, IM 초안 작성 | `im_[기업명]_YYYYMMDD.md` |
+| 금융·거시경제 데이터 분석 | 주요 금융 지표 수집, 핀테크·디지털자산 시장 조사 | `snapshot_YYYYMMDD.json`, `brief_YYYYMMDD.md` |
+| 전략 보고 및 시각화 | 데이터 차트화, 핵심 인사이트 도출 지원 | `outputs/charts/*.png`, 보고서 임베드 |
+
+**포지셔닝**: 인턴의 역할은 **초안 수준**의 리서치 및 정리. 최종 투자 판단은 시니어가 수행.
+
+---
+
+## 2. 워크플로 유형
+
+### Brief (주간 브리핑)
+
+**목적**: 투자팀이 2분 안에 읽을 수 있는 핀테크·디지털자산 주간 요약
+
+**데이터 흐름**:
+```
+collect.py --mode brief
+    → FRED (FEDFUNDS, DGS10, DEXKOUS ← 3개 필수)
+    → CoinGecko (스테이블코인 시총·USDT·USDC·BTC)
+    → Perplexity (핀테크 뉴스 3건 + 투자 시사점)
+    → outputs/context/snapshot_YYYYMMDD.json
+
+report.py --type brief
+    → outputs/reports/brief_YYYYMMDD.md
+    → outputs/charts/stablecoin_pie_YYYYMMDD.png (차트 임베드)
+```
+
+**보고서 포맷** (실제 산출물 기준):
+```markdown
+# 핀테크/디지털자산 주간 브리핑 — YYYY-MM-DD
+
+## 1. 거시경제 스냅샷
+| 지표 | 값 |
+
+## 2. 디지털자산 시장
+| 항목 | 값 | 7일 변화 |
+![Stablecoin Market Share](../charts/stablecoin_pie_YYYYMMDD.png)
+
+## 3. 이번 주 핵심 동향
+뉴스 3건 (함의 중심 서술)
+
+## 4. 투자 시사점
+- ko: **[키워드]**: [시사점 내용]  ← "ko:" 접두어 필수
+
+---
+*Generated: TIMESTAMP | Source: FRED, CoinGecko, Perplexity*
+```
+
+---
+
+### IM (Investment Memorandum)
+
+**목적**: 내부 투자 의사결정용 기업 검토 보고서 초안 — **10섹션 구조**
+
+**데이터 흐름**:
+```
+research.py --company "[기업명]"
+    → Perplexity: 기업 개요·재무·경영진·경쟁사
+    → outputs/context/research_[기업명]_YYYYMMDD.json
+
+report.py --type im --company "[기업명]"
+    → outputs/reports/im_[기업명]_YYYYMMDD.md
+    → outputs/charts/revenue_trend_YYYYMMDD.png (차트 임베드)
+```
+
+**IM 10섹션 구조** (실제 산출물 기준):
+
+| # | 섹션 | 내용 | 인턴 담당 |
+|---|------|------|----------|
+| 1 | Executive Summary | 투자 논리 3-5문장 + 투자 의견 체크박스 | 시니어 검토 |
+| 2 | Company Overview | 사업 모델·매출 방식 | ✅ 초안 |
+| 3 | 경영진 | 창업팀·CLO 등 표 형식 | ✅ 초안 |
+| 4 | Market Opportunity | TAM/SAM 추정 + 경쟁사 목록 | ✅ 초안 |
+| 5 | 재무 실적 | 연도별 매출·순이익·마진 표 + 차트 임베드 | ✅ 초안 |
+| 6 | Investment Thesis | Bull Case 3개 / Bear Case 3개 | 시니어 검토 |
+| 7 | 밸류에이션 | 시총·EV/Rev·P/E + 동종업계 비교 | ✅ 초안 |
+| 8 | Key Risks | 규제·경쟁·사이버·시장 리스크 | ✅ 초안 |
+| 9 | 최근 동향 | 최근 6개월 내 주요 이벤트 3건 | ✅ 초안 |
+| 10 | 다음 단계 | 체크리스트 형식 (`- [ ] 항목`) | 팀 논의 |
+
+**투자 의견 포맷** (섹션 1 필수):
+```markdown
+**투자 의견:** ☐ 관심  ☐ 검토  ☐ 보류
+```
+
+**차트 임베드 위치**:
+- 재무 실적(섹션 5): `![Revenue Trend](../charts/revenue_trend_YYYYMMDD.png)`
+- 시장점유율 필요 시: `![Market Share](../charts/market_share_YYYYMMDD.png)`
+
+---
+
+### Screen (섹터 스크리닝)
+
+**목적**: 스테이블코인·핀테크·DeFi 등 섹터 기회 탐색
+
+**데이터 흐름**:
+```
+collect.py --mode screen --sector [sector]
+    → CoinGecko + Perplexity
+    → outputs/context/snapshot_YYYYMMDD.json
+    → outputs/reports/screen_[sector]_YYYYMMDD.md
+    → outputs/charts/macro_dashboard_YYYYMMDD.png
+```
+
+---
+
+## 3. 레짐 판단 기준
+
+| 레짐 | 핵심 지표 | 다날 함의 |
+|------|----------|---------|
+| **Goldilocks** | 금리 안정 + 성장 양호 | KRW 스테이블코인 SaaS 확대 타이밍 |
+| **Overheating** | Fed 긴축 + 인플레↑ | 준비금 이자 수익 증가, 수수료 모델 유지 |
+| **Stagflation** | 성장↓ + 인플레↑ | 결제 스테이블코인 채택 둔화 우려 |
+| **Recession** | 성장↓ + 실업↑ | x402 AI 결제 수요 방어적 특성 |
+
+**판단 원칙**: 단일 지표 아닌 3개 이상 지표 수렴으로 레짐 판단.
+
+---
+
+## 4. 출처 명기 표준
+
+```
+# 올바른 예
+스테이블코인 전체 시총: $263B (CoinGecko, 2026-03-02)
+Fed Funds Rate: 3.64% (FRED FEDFUNDS, 2026-03-01)
+Circle 매출: $1,670M (Bloomberg, 2026-02, 확인 필요)
+
+# 잘못된 예 (절대 금지)
+스테이블코인 시총: $263B      ← 날짜·출처 없음
+투자 시사점: 시장이 좋아질 것  ← "ko:" 접두어 누락
+```
+
+---
+
+## 5. 다날 비즈니스 연결 원칙
+
+모든 외부 분석의 마지막은 다날 3축과 연결:
+1. **캐시카우**: 휴대폰결제 — 이 분석이 기존 수익에 미치는 영향  
+2. **성장동력**: KRW 스테이블코인 SaaS — 사업 확장 시사점  
+3. **미래**: x402 프로토콜·페이코인(PCI) — 신규 기회 또는 리스크
+
+---
+
+*Last Updated: 2026-03-06 | 소개.txt + 실제 산출물 기준*
