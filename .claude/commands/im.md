@@ -27,22 +27,33 @@ python src/research.py --company "$ARGUMENTS"
 - 재무 섹션: 매출·영업이익·밸류에이션 수치 존재 여부
 - 경영진 섹션: 창업팀 2인 이상 정보
 
-**Human-in-the-Loop Gate [1]**: 재무 수치 결측 여부 확인  
+**Human-in-the-Loop Gate [1]**: 재무 수치 결측 여부 확인
 → 결측 시 research-agent가 추가 웹 리서치로 보완
+
+## Step 2-b: 거시 전파 분석 (macro-analyst)
+
+`macro-analyst` 에이전트를 호출해 **Step 7 전파 분석** 실행:
+- 입력: 기업명 + 섹터 + 현재 snapshot 데이터
+- 출력: α·β·γ 전파율 + KR Market Sensitivity 등급
+- 이 결과가 IM 섹션 1-b 거시 맥락 및 스코어카드에 자동 반영됨
 
 ## Step 3: IM 초안 작성
 
-```bash
-python src/report.py --type im --company "$ARGUMENTS"
-```
+`im-draft` 스킬의 **10섹션 구조** (`spec.md §2` 기준):
 
-`im-draft` 스킬의 6섹션 구조를 따름:
-1. Executive Summary + 투자 의견
-2. Company Overview
-3. Market Opportunity (TAM/SAM/SOM)
-4. Investment Thesis (Bull 3개 / Bear 3개)
-5. Key Risks & Mitigants
-6. 다음 단계
+| # | 섹션 |
+|---|------|
+| 1 | Executive Summary + 투자 의견 + 스코어카드 |
+| 1-b | 거시 맥락 (macro-analyst Step 7 결과 반영) |
+| 2 | Company Overview |
+| 3 | 경영진 |
+| 4 | Market Opportunity (TAM/SAM/SOM) |
+| 5 | 재무 실적 + 차트 |
+| 6 | Investment Thesis (Bull 3 / Bear 3) |
+| 7 | 밸류에이션 (피어 비교) |
+| 8 | Key Risks |
+| 9 | 최근 동향 |
+| 10 | 다음 단계 (다날 전략 연결) |
 
 **Human-in-the-Loop Gate [2]**: Bull/Bear 균형·재무 수치 출처 확인
 
@@ -57,7 +68,7 @@ grep -n "None" outputs/reports/im_*.md | wc -l
 
 ## Step 5: 품질 검증
 
-`sanity-checker` 에이전트가 3-Gate 자동 검사.
+`sanity-checker` 에이전트가 4-Gate 자동 검사.
 `danal-context` 스킬 기준으로 다날 비즈니스 함의 마지막 단락 확인.
 
 ## 출력물

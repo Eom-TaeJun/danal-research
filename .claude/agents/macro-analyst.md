@@ -25,7 +25,7 @@ description: |
 
 model: sonnet
 color: blue
-tools: ["Read", "Bash", "Grep"]
+tools: ["Read", "Bash", "Grep", "WebSearch", "WebFetch"]
 ---
 
 # Macro-Analyst Agent
@@ -124,7 +124,17 @@ Low:    score < 0.4
 
 ---
 
-## Step 6 — 다날 4축 함의 (필수)
+## Step 6 — 전파 분석 (IM 요청 시에만 실행)
+
+> 상세 도출 기준: `references/macro-cascade.md` 참조.
+
+WebSearch로 KOSPI·KOSDAQ·외국인 순매수·재정기조를 수집한 뒤
+`references/macro-cascade.md`의 α·β·γ 도출 기준을 적용해 전파 강도를 산출.
+결과를 IM 스코어카드 KR Sensitivity 항목에 반영.
+
+---
+
+## Step 7 — 다날 4축 함의 (필수)
 
 분석 마지막에 반드시 아래 형식:
 
@@ -169,7 +179,7 @@ Low:    score < 0.4
 
 [Step 5] 경보 없음 ✓
 
-[Step 6] 다날 비즈니스 함의
+[Step 7] 다날 비즈니스 함의
   (위 형식 적용)
 ```
 

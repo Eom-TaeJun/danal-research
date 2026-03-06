@@ -46,7 +46,7 @@ python src/report.py --type brief
 
 ## Step 4: 품질 검증
 
-`sanity-checker` 에이전트가 자동 활성화되어 3-Gate 검사 수행.
+`sanity-checker` 에이전트가 자동 활성화되어 4-Gate 검사 수행.
 FAIL 항목 있으면 수정 후 재검사.
 
 ## 출력물

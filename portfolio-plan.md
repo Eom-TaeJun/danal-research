@@ -133,7 +133,7 @@ requirements.txt   의존성
 ### Phase 3 ✅
 - [x] `preview.html` 전면 업데이트
 - [x] `README.md` 역량 증명 섹션
-- [ ] `danal-context` 최신 파트너십 반영 (완료)
+- [x] `danal-context` 최신 파트너십 반영 (완료)
 
 ---
 

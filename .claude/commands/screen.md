@@ -46,7 +46,7 @@ python src/report.py --type screen --sector "$ARGUMENTS"
 
 ## Step 4: 품질 검증
 
-`sanity-checker` 자동 활성화: None값·출처·다날 함의 3-Gate 검사.
+`sanity-checker` 자동 활성화: None값·출처·다날 함의 4-Gate 검사.
 
 ## 출력물
 

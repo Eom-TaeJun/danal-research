@@ -18,9 +18,9 @@ FRED·CoinGecko·Perplexity 데이터를 조합해 주간 브리핑·IM·섹터 
 danal-lead (조율·품질 검토)    ← 모든 워크플로의 시작점
     ├→ research-agent           (IM 리서치 + None 보완)
     ├→ collect-agent            (데이터 수집 + Brief/Screen)
-    └→ macro-analyst            (레짐 판단 + 다날 함의)
-         ↓
-    sanity-checker              (품질 게이트 — None값·출처 최종 확인)
+    └→ macro-analyst            (레짐 판단 + 전파 분석 + 다날 함의)
+
+sanity-checker (danal-lead 직속 — 모든 산출물 4-Gate 검증)
 ```
 
 | 레이어 | 위치 | 역할 | 핵심 규칙 |
