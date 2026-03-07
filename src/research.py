@@ -13,6 +13,13 @@ from datetime import datetime
 OUTPUT_DIR = "outputs/context"
 PERPLEXITY_API_KEY = os.getenv("PERPLEXITY_API_KEY", "")
 
+_RESEARCH_FALLBACK = {
+    "summary": "", "business_model": "", "key_products": [],
+    "market_size": "", "competitors": [], "bull_case": [],
+    "bear_case": [], "recent_news": [], "risks": [],
+    "financials_history": [], "valuation_metrics": {}, "management_team": [],
+}
+
 
 def research(company: str = "", query: str = "") -> dict:
     target = company or query
@@ -64,7 +71,15 @@ def research(company: str = "", query: str = "") -> dict:
         # JSON 파싱 시도
         import re
         match = re.search(r"\{.*\}", content, re.DOTALL)
-        parsed = json.loads(match.group()) if match else {"raw": content}
+        if match:
+            try:
+                parsed = json.loads(match.group())
+            except json.JSONDecodeError:
+                print("  [research] JSON 파싱 실패 — fallback 구조 사용")
+                parsed = {**_RESEARCH_FALLBACK, "raw": content}
+        else:
+            print("  [research] JSON 없음 — fallback 구조 사용")
+            parsed = {**_RESEARCH_FALLBACK, "raw": content}
     except Exception as e:
         print(f"  [research] 실패: {e}")
         parsed = {"error": str(e)}

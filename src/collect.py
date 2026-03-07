@@ -104,7 +104,13 @@ def fetch_fintech_news() -> dict:
             resp.raise_for_status()
             content = resp.json()["choices"][0]["message"]["content"]
         match = re.search(r"\{.*\}", content, re.DOTALL)
-        return json.loads(match.group()) if match else {}
+        if not match:
+            return {}
+        try:
+            return json.loads(match.group())
+        except json.JSONDecodeError:
+            print("  [뉴스] JSON 파싱 실패")
+            return {}
     except Exception as e:
         print(f"  [뉴스] 수집 실패: {e}")
         return {}
@@ -116,7 +122,7 @@ def collect(mode: str = "brief", sector: str = "stablecoin") -> dict:
 
     # 거시경제 (공통)
     print("  → FRED 수집 중...")
-    snapshot["macro"] = fetch_fred(["FEDFUNDS", "DGS10", "DEXKOUS", "CPIAUCSL"])
+    snapshot["macro"] = fetch_fred(["FEDFUNDS", "DGS2", "DGS10", "DEXKOUS", "CPIAUCSL"])
 
     # 디지털자산 (brief, stablecoin, screen)
     print("  → CoinGecko 수집 중...")

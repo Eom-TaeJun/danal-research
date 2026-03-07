@@ -106,6 +106,7 @@ requirements.txt   의존성
 | 토스 IM | `--im "토스"` | 경쟁사 분석 → 다날 차별화 역도출 |
 | 레짐 분석 리포트 | `--analyze --report` | 통계 없이 투자팀 언어로 서술 |
 | Screen 개선 | `--screen stablecoin` | 다날 포지셔닝 독립 섹션 |
+| Ripple IM | `--im "Ripple"` | 다날 KSC 기술 인프라 파트너 분석 + RLUSD-KSC 공존 시나리오 |
 
 ### Phase 3: 통합 쇼케이스 마무리
 
@@ -129,11 +130,33 @@ requirements.txt   의존성
 - [x] 토스 IM 초안 + 다날 차별화 역도출
 - [x] 레짐 분석 독립 리포트 (`regime_report_20260306.md`)
 - [x] Screen 리포트 다날 포지셔닝 독립 섹션
+- [x] Ripple IM 초안 + 다날 KSC 인프라 파트너 분석 (`im_Ripple_20260306.md`)
 
 ### Phase 3 ✅
 - [x] `preview.html` 전면 업데이트
 - [x] `README.md` 역량 증명 섹션
 - [x] `danal-context` 최신 파트너십 반영 (완료)
+
+### Phase 4: 품질 점검 후 수정 (2026-03-07)
+
+**품질 점검 결과 (2026-03-07 sanity-checker 기준)**
+
+| 산출물 | None 값 | 포맷 | 출처 | 다날 함의 | 판정 |
+|--------|:------:|:----:|:----:|:--------:|:----:|
+| `brief_20260306` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `regime_report_20260306` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `screen_stablecoin_20260306` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `im_Circle_20260306` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `im_토스_20260306` | ✅ | ✅ | ✅ | ✅ | ✅ |
+| `im_Ripple_20260306` | ✅* | ✅ | ✅ | ✅ | ✅ |
+
+*\*"확인 필요" 명기로 None 대체 처리 — 규칙 준수*
+
+**발견된 결함 및 처리:**
+
+- [x] **차트 링크 날짜 불일치**: `brief_20260306` → `stablecoin_pie_20260302.png` → `stablecoin_pie_20260303.png` 로 수정 완료 (2026-03-07). `regime_gauge`, `revenue_trend`는 최신 버전 하나뿐으로 링크 정상.
+- [x] **brief ↔ screen 수치 불일치**: 10Y 국채(4.02% vs 3.97%), KRW(1,445.97 vs 1,439.82) 상이. → 각 리포트 거시지표 테이블 하단에 "수집 시각 기준 — 동일 날짜 산출물과 소폭 차이 발생 가능" 각주 추가 완료 (2026-03-07).
+- [x] **portfolio-plan.md Ripple IM 미반영** → Phase 2 Todo·산출물 표·역량 매핑 표 업데이트 완료 (2026-03-07)
 
 ---
 
@@ -197,6 +220,7 @@ requirements.txt   의존성
 | `regime_report_20260306.md` | ★★★ | ★★ | ★ |
 | `im_Circle_20260306.md` | ★★★ | ★★★ | ★★ |
 | `im_토스_20260306.md` | ★★ | ★★ | ★★ |
+| `im_Ripple_20260306.md` | ★★★ | ★★ | ★★ |
 | `screen_stablecoin_20260306.md` | ★★ | ★★★ | ★★ |
 | `brief_20260306.md` | ★★ | ★★ | ★★★ |
 | `.claude/` 아키텍처 | ★ | ★ | ★★★ |

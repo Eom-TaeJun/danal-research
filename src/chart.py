@@ -261,7 +261,7 @@ def macro_dashboard(snapshot: dict, analysis: dict, date_str: str) -> str | None
     for i, (p, m) in enumerate(zip(pcts, mcaps)):
         ax2.text(p + 0.5, i, f"{p:.1f}%  (${m/1e9:.0f}B)",
                  va="center", fontsize=9, color="#333")
-    ax2.set_xlim(0, max(pcts) * 1.4)
+    ax2.set_xlim(0, (max(pcts) if pcts else 100) * 1.4)
     ax2.set_title(f"스테이블코인 도미넌스\n총 ${total/1e9:.0f}B", fontsize=11, fontweight="bold", pad=8)
     ax2.set_xlabel("도미넌스 (%)", fontsize=9)
     ax2.set_facecolor("#F8F9FA")

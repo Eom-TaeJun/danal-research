@@ -32,13 +32,17 @@ def fmt_pct(val) -> str:
 def fmt_num(val, unit="B") -> str:
     if val is None:
         return "N/A"
+    try:
+        val = float(str(val).replace(",", ""))
+    except (ValueError, TypeError):
+        return str(val)
     if unit == "B":
         return f"${val/1e9:.1f}B"
     return str(val)
 
 
 def _na(v, suffix="") -> str:
-    return "—" if v is None else f"{v}{suffix}"
+    return "[확인 필요]" if v is None else f"{v}{suffix}"
 
 
 def build_brief(data: dict, chart_paths: dict = None) -> str:
@@ -58,6 +62,8 @@ def build_brief(data: dict, chart_paths: dict = None) -> str:
     )
 
     btc = crypto.get("BTC", {})
+    _btc_price = btc.get("price")
+    btc_price_str = f"${int(_btc_price):,}" if isinstance(_btc_price, (int, float)) else "N/A"
 
     lines = [
         f"# 핀테크/디지털자산 주간 브리핑 — {date}",
@@ -75,7 +81,7 @@ def build_brief(data: dict, chart_paths: dict = None) -> str:
         f"| 스테이블코인 전체 시총 | {fmt_num(total_mcap)} | — |",
         f"| USDT | {fmt_num(usdt.get('market_cap'))} | {fmt_pct(usdt.get('price_change_7d'))} |",
         f"| USDC | {fmt_num(usdc.get('market_cap'))} | {fmt_pct(usdc.get('price_change_7d'))} |",
-        f"| BTC | ${btc.get('price', 'N/A'):,} | {fmt_pct(btc.get('change_24h'))} (24h) |",
+        f"| BTC | {btc_price_str} | {fmt_pct(btc.get('change_24h'))} (24h) |",
         "",
     ]
     if chart_paths and "stablecoin_pie" in chart_paths:
@@ -103,7 +109,8 @@ def build_brief(data: dict, chart_paths: dict = None) -> str:
     lines += ["## 4. 투자 시사점", ""]
     if implications:
         for imp in implications:
-            lines.append(f"- {imp}")
+            clean = imp.replace("ko: ", "").replace("ko:", "").strip()
+            lines.append(f"- {clean}")
         lines.append("")
     else:
         lines += ["> 시사점 데이터 없음", ""]
@@ -356,7 +363,7 @@ def build_screen(snapshot: dict, analysis: dict, chart_paths: dict = None) -> st
     return "\n".join(lines)
 
 
-def report(report_type: str = "brief", company: str = "") -> str:
+def report(report_type: str = "brief", company: str = "", sector: str = "stablecoin") -> str:
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     date_str = datetime.now().strftime("%Y%m%d")
 
@@ -392,7 +399,7 @@ def report(report_type: str = "brief", company: str = "") -> str:
         except Exception:
             screen_charts = {}
         content = build_screen(snapshot, analysis, chart_paths=screen_charts)
-        safe_sector = "stablecoin"
+        safe_sector = sector.replace(" ", "_").replace("/", "-") or "stablecoin"
         path = f"{OUTPUT_DIR}/screen_{safe_sector}_{date_str}.md"
 
     else:
