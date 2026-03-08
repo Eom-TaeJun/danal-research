@@ -1,0 +1,10 @@
+﻿indicator,value,unit,direction,source,date,interpretation_kr
+CPI,2.4,%,하락,BLS,2026-02-13,디스인플레 재개
+Core CPI,2.5,%,횡보,BLS,2026-02-13,2% 상회 지속
+Core PCE,3.0,%,횡보,BEA,2026-02-20,Fed 목표 대비 +1%p
+Unemployment U-3,4.4,%,횡보,BLS,2026-03-06,연착륙 유지
+ISM Manufacturing PMI,52.4,지수,상승,ISM,2026-03-02,확장 국면
+DXY,97.81,지수,반등,Investing.com,2026-03-02,약세 후 박스권
+Fed Funds Rate,3.625,%,유지,Fed,2026-01-28,3.50~3.75% 범위 중간값
+Fed Dot Plot 2026 YE,3.4,%,하락,Fed SEP,2025-12-10,연내 1회 인하 컨센서스
+5Y BEI,2.42,%,횡보,FRED,2026-02-13,시장 기대 2%대 초중반

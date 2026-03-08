@@ -4,23 +4,13 @@
 # 실패 시: 데이터 없으면 "데이터 없음" 섹션으로 대체
 # 제외: PDF 변환, 이메일 발송 (시각화는 chart.py 연동)
 
-import json
 import os
 import argparse
 from datetime import datetime
 from pathlib import Path
+from src.io import load_latest
 
 OUTPUT_DIR = "outputs/reports"
-CONTEXT_DIR = "outputs/context"
-
-
-def load_latest(pattern: str) -> dict:
-    """outputs/context/에서 가장 최신 파일 로드"""
-    files = sorted(Path(CONTEXT_DIR).glob(pattern), reverse=True)
-    if not files:
-        return {}
-    with open(files[0], encoding="utf-8") as f:
-        return json.load(f)
 
 
 def fmt_pct(val) -> str:
@@ -372,7 +362,8 @@ def report(report_type: str = "brief", company: str = "", sector: str = "stablec
         try:
             from src.chart import build_charts
             charts = build_charts(date_str)
-        except Exception:
+        except Exception as e:
+            print(f"[WARN] chart 생성 실패: {e}")
             charts = {}
         content = build_brief(data, chart_paths=charts)
         path = f"{OUTPUT_DIR}/brief_{date_str}.md"
@@ -383,7 +374,8 @@ def report(report_type: str = "brief", company: str = "", sector: str = "stablec
         try:
             from src.chart import build_im_charts
             im_charts = build_im_charts(data, date_str)
-        except Exception:
+        except Exception as e:
+            print(f"[WARN] chart 생성 실패: {e}")
             im_charts = {}
         content = build_im(data, company, im_charts)
         path = f"{OUTPUT_DIR}/im_{safe}_{date_str}.md"
@@ -396,7 +388,8 @@ def report(report_type: str = "brief", company: str = "", sector: str = "stablec
             screen_charts = {**build_charts(date_str),
                              **build_analysis_charts(analysis, date_str,
                                                      snapshot=snapshot)}
-        except Exception:
+        except Exception as e:
+            print(f"[WARN] chart 생성 실패: {e}")
             screen_charts = {}
         content = build_screen(snapshot, analysis, chart_paths=screen_charts)
         safe_sector = sector.replace(" ", "_").replace("/", "-") or "stablecoin"

@@ -4,21 +4,11 @@
 # 실패 시: matplotlib 없거나 데이터 없으면 None 반환
 # 제외: 인터랙티브 차트, 웹 대시보드, 실시간 스트리밍
 
-import json
 import os
 from datetime import datetime
-from pathlib import Path
+from src.io import load_latest
 
 OUTPUT_DIR = "outputs/charts"
-CONTEXT_DIR = "outputs/context"
-
-
-def load_latest(pattern: str) -> dict:
-    files = sorted(Path(CONTEXT_DIR).glob(pattern), reverse=True)
-    if not files:
-        return {}
-    with open(files[0], encoding="utf-8") as f:
-        return json.load(f)
 
 
 def stablecoin_pie(data: dict, date_str: str) -> str | None:

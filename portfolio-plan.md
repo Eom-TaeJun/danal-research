@@ -137,6 +137,18 @@ requirements.txt   의존성
 - [x] `README.md` 역량 증명 섹션
 - [x] `danal-context` 최신 파트너십 반영 (완료)
 
+### Phase 5: 분석 구조화 + 리팩토링 (2026-03-08) ✅
+
+**목표**: 분석 스토리 연결 + 코드 신뢰성 확보 + 영문 원문 분석 + 정량 모델
+
+- [x] **마스터 리서치 리포트** (`master_research_report_20260308.md`) — 거시→섹터→스크리닝→IM→권고 완전 연결
+- [x] **거시 분석 심화** — 9개 지표 확장, Goldilocks with sticky inflation 레짐 재정의, 영문 원문 출처 27개
+- [x] **GENIUS Act 정정** — "진행 중" → "2025-07-18 시행 완료" 오류 수정
+- [x] **슈퍼블록 IM 보완** — 경영진(Dan Park CTO, Louis CPO), 투자 이력 테이블, $OVER 토큰 수치 채움
+- [x] **Phase 0 리팩토링** — `src/io.py` 신규(load_latest 중복 제거), report.py 묵살형 except 수정, research.py 조기반환 버그 수정, requirements.txt matplotlib 추가
+- [x] **Circle S-1 영문 원문 분석** (`circle_s1_analysis_20260308.md`) — SEC S-1 직접 독해, 7섹션, 영문 인용 7개
+- [x] **CSV 3종 생성** — KRW 수익 시나리오(27행), 스크리닝 스코어카드(7개사), 거시지표 스냅샷
+
 ### Phase 4: 품질 점검 후 수정 (2026-03-07)
 
 **품질 점검 결과 (2026-03-07 sanity-checker 기준)**
@@ -172,10 +184,11 @@ requirements.txt   의존성
 
 | 증명 방법 | 산출물 | 핵심 포인트 |
 |---------|-------|-----------|
-| 거시 레짐 판단 | `regime_report_20260306.md` | Goldilocks/Overheating/Stagflation/Recession 4국면 + 3개 지표 수렴으로 판단 |
+| 거시 레짐 판단 | `master_research_report_20260308.md` Part 1 | 9개 지표 수렴, "Goldilocks with sticky inflation" 재정의, 영문 원문 출처 |
 | 밸류에이션 해석 | `im_Circle_20260306.md` 섹션 7 | EV/Revenue 피어 비교 + 금리 하락 시나리오별 수익 추정 |
-| 규제 영향 분석 | `screen_stablecoin_20260306.md` 섹션 4 | GENIUS Act·MiCA·디지털자산기본법 → 다날 사업 영향 연결 |
-| 시나리오 분석 | `regime_report_20260306.md` 섹션 5 | Goldilocks 지속(70%)·Overheating(20%)·Recession(10%) 확률 |
+| 규제 영향 분석 | `master_research_report_20260308.md` Part 1.3 | GENIUS Act 시행 완료·MiCA 집행·한국법 미확정 3단계 명확화 |
+| 시나리오 분석 | `kwrw_stablecoin_scenario_20260308.csv` | 3규제×3전환율×3take rate = 27개 수익 시나리오 정량 모델 |
+| 영문 원문 분석 | `circle_s1_analysis_20260308.md` | SEC S-1 직독, 영문 인용 7개, 다날 협력 타당성 도출 |
 
 **일반 지원자와의 차이**: 지표 나열이 아닌 **판단과 권고**로 표현.
 

@@ -77,22 +77,34 @@ python main.py --analyze            # 거시 레짐 단독 분석
   - 다날 3축 투자 시사점 (KRW SaaS·x402·PCI 연결)
 - [brief_20260302.md](outputs/reports/brief_20260302.md) — 초기 버전
 
+### 마스터 리서치 리포트 ★ (2026-03-08 신규)
+- [master_research_report_20260308.md](outputs/reports/master_research_report_20260308.md) — **핵심 포트폴리오 문서**
+  - 거시→섹터→스크리닝→IM→권고 완전 연결 (6-Part 구조)
+  - 레짐: "Goldilocks with sticky inflation" | 9개 지표 | 영문 원문 출처 27개
+  - GENIUS Act 시행 완료·MiCA 집행·한국법 미확정 3단계 규제 비교
+  - B2B 스테이블코인 $36B/년 실증 데이터 | 롱리스트 8개 → 숏리스트 3개 스크리닝
+  - 반론 4개 + 반증 가능 신호 4개 명시 (분석 신뢰도 표시)
+
+### Circle S-1 영문 원문 분석 ★ (2026-03-08 신규)
+- [circle_s1_analysis_20260308.md](outputs/reports/circle_s1_analysis_20260308.md) — **영어 공시 직독 분석**
+  - SEC S-1(2025-06-04) + FY2025 실적(2026-02-25) + GENIUS Act 원문 직접 분석
+  - 수익 구조 분해: 준비금 이자 ~90% 취약성 | CPN $5.7B | USDC $11.9T
+  - S-1 Risk Factors 영문 인용 4개 (금리 의존·법적 지위·Tether 경쟁·Coinbase 집중)
+  - CCTP 기반 다날 KRW→USDC 정산 흐름 다이어그램 | 협력 타당성 최종 판단
+
 ### 투자 검토 보고서 (IM)
-- [im_Circle_20260306.md](outputs/reports/im_Circle_20260306.md) — **최신 (개선판)**
-  - 투자의견 ☑ 검토 확정 | TAM/SAM/SOM 수치 | 경쟁사 5개 비교표
-  - 재무 YoY 성장률 + 수익구조 리스크 | 밸류에이션 피어 | 리스크 강도 표
-  - 섹션 10: 다날-Circle 협력 시나리오 (x402·CCTP 연동)
-- [im_토스_20260306.md](outputs/reports/im_%ED%86%A0%EC%8A%A4_20260306.md) — **신규**
-  - 투자의견 ☑ 보류 (경쟁사 모니터링) | 한국 결제 시장 경쟁 구도 분석
-  - 섹션 10: 다날 차별화 역도출 (스테이블코인 공백·협력 시나리오)
-- [im_Circle_20260302.md](outputs/reports/im_Circle_20260302.md) — 초기 버전
+- [im_Circle_20260306.md](outputs/reports/im_Circle_20260306.md) — 투자의견 ☑ 검토 | 밸류에이션 피어 | 다날-Circle 협력 시나리오
+- [im_Ripple_20260306.md](outputs/reports/im_Ripple_20260306.md) — 투자의견 ☑ 관심 | XRPL KSC 인프라 | RLUSD-KSC 공존 시나리오
+- [im_슈퍼블록_20260308.md](outputs/reports/im_%EC%8A%88%ED%8D%BC%EB%B8%94%EB%A1%9D_20260308.md) — 기투자 사후검증 | $OVER FDV $3.8M | 경영진 보완 (Dan Park CTO)
+- [im_토스_20260306.md](outputs/reports/im_%ED%86%A0%EC%8A%A4_20260306.md) — 투자의견 ☑ 보류 | 경쟁사 분석 | 다날 차별화 역도출
 
 ### 섹터 스크리닝
-- [screen_stablecoin_20260306.md](outputs/reports/screen_stablecoin_20260306.md) — **최신 (개선판)**
-  - 규제 프레임워크 현황표 (GENIUS Act·MiCA·디지털자산기본법)
-  - 경쟁사 6개 비교표 (다날 포지셔닝 컬럼 포함)
-  - 다날 포지셔닝 독립 섹션 (3축×레짐 함의 표)
-- [screen_stablecoin_20260303.md](outputs/reports/screen_stablecoin_20260303.md) — 초기 버전
+- [screen_stablecoin_20260306.md](outputs/reports/screen_stablecoin_20260306.md) — 규제 현황표 | 경쟁사 6개 비교 | 다날 포지셔닝
+
+### 데이터 (CSV) ★ (2026-03-08 신규)
+- [kwrw_stablecoin_scenario_20260308.csv](outputs/csv/kwrw_stablecoin_scenario_20260308.csv) — KRW SaaS 수익 시나리오 27개 (3규제×3전환율×3take rate)
+- [screening_scorecard_20260308.csv](outputs/csv/screening_scorecard_20260308.csv) — 기업 스크리닝 스코어카드 (7개사, 100점 척도)
+- [macro_snapshot_20260308.csv](outputs/csv/macro_snapshot_20260308.csv) — 거시지표 스냅샷 9개 (BLS·BEA·ISM·Fed·FRED 출처)
 
 ---
 
