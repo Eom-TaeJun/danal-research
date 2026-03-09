@@ -1,9 +1,24 @@
 # danal-research
 
+## 이 포트폴리오가 증명하는 것
+
+> **인턴 지원자 입장에서, 다날 투자팀 현직자가 하는 일을 미리 구현했습니다.**
+
+채용공고 업무 3가지를 직접 자동화했습니다:
+- **IM 초안 작성**: Circle·Ripple·슈퍼블록·토스 — 10섹션 구조, 출처 명기, 다날 전략 연결까지
+- **거시경제 데이터 수집·분석**: FRED·CoinGecko·Perplexity 멀티소스 → 레짐 판단(Goldilocks 등) → 투자 시사점
+- **데이터 시각화**: 파이차트·레짐게이지·매출추이 PNG 4종 + Excel 시나리오 모델
+
+차별점은 도구가 아닙니다. **AI가 신뢰할 수 있게 작동하도록 품질 게이트를 설계했고, 모든 분석이 다날 3대 사업(KRW 스테이블코인·휴대폰결제·x402)과 연결되도록 원칙을 강제했습니다.**
+
+핵심 산출물: [마스터 리서치 리포트](outputs/reports/master_research_report_20260308.md) · [Circle S-1 영문 직독](outputs/reports/circle_s1_analysis_20260308.md)
+
+---
+
 핀테크 & 디지털자산 투자 리서치 자동화 에이전트
 
 FRED(거시경제) + CoinGecko(디지털자산) + Perplexity(뉴스·기업 리서치)를 수집해
-주간 브리핑, 투자 검토 보고서(IM), 섹터 스크리닝을 Markdown으로 자동 생성합니다.
+주간 브리핑, 투자 검토 보고서(IM), 섹터 스크리닝을 자동 생성합니다.
 거시 레짐(Goldilocks/Overheating/Stagflation/Recession)을 판단하고
 다날의 KRW 스테이블코인·핀테크 사업 맥락에서 투자 함의까지 도출합니다.
 

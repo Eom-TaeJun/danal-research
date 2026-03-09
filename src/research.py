@@ -7,6 +7,7 @@
 import json
 import os
 import argparse
+import unicodedata
 import httpx
 from datetime import datetime
 
@@ -19,6 +20,10 @@ _RESEARCH_FALLBACK = {
     "bear_case": [], "recent_news": [], "risks": [],
     "financials_history": [], "valuation_metrics": {}, "management_team": [],
 }
+
+
+def _is_korean(text: str) -> bool:
+    return any("HANGUL" in unicodedata.name(char, "") for char in text)
 
 
 def _save_result(result: dict, company: str) -> str:
@@ -49,8 +54,17 @@ def research(company: str = "", query: str = "") -> dict:
         _save_result(result, company)
         return result
 
+    prompt_prefix = ""
+    if _is_korean(target):
+        prompt_prefix = (
+            "This is a Korean company. Include Korean-language sources "
+            "(공정공시, 언론보도) and use Korean market context. "
+            f"Company name: {target}\n\n"
+        )
+
     prompt = (
-        f"Provide a structured research summary for investment analysis of: {target}\n\n"
+        prompt_prefix
+        + f"Provide a structured research summary for investment analysis of: {target}\n\n"
         "Format as JSON with exactly these keys:\n"
         "- summary: 2-3 sentence company overview\n"
         "- business_model: how they make money\n"

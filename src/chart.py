@@ -149,11 +149,14 @@ def regime_gauge(analysis: dict, date_str: str) -> str | None:
     _pos = {
         "Recession":   (0, 0), "Goldilocks":  (1, 0),
         "Stagflation": (0, 1), "Overheating": (1, 1),
+        "Late-Cycle":  (0, 0),
     }
     _colors = {
         "Recession": "#90CAF9", "Goldilocks": "#A5D6A7",
         "Stagflation": "#FFCC80", "Overheating": "#EF9A9A",
+        "Late-Cycle": "#B0BEC5",
     }
+    _base_regimes = ("Recession", "Goldilocks", "Stagflation", "Overheating")
 
     fig, ax = plt.subplots(figsize=(6, 5))
     ax.set_xlim(0, 2); ax.set_ylim(0, 2)
@@ -164,7 +167,8 @@ def regime_gauge(analysis: dict, date_str: str) -> str | None:
     ax.grid(True, color="white", linewidth=2)
     ax.set_facecolor("#F5F5F5")
 
-    for name, (c, r) in _pos.items():
+    for name in _base_regimes:
+        c, r = _pos[name]
         fc = _colors[name]
         rect = mpatches.FancyBboxPatch(
             (c + 0.05, r + 0.05), 0.9, 0.9,
@@ -174,15 +178,22 @@ def regime_gauge(analysis: dict, date_str: str) -> str | None:
         ax.add_patch(rect)
         ax.text(c + 0.5, r + 0.5, name, ha="center", va="center",
                 fontsize=11, fontweight="bold", color="#333333")
-        if name == regime:
-            ax.text(c + 0.5, r + 0.5, "★", ha="center", va="center",
-                    fontsize=22, color="#1565C0", zorder=5,
-                    fontfamily="DejaVu Sans")
+    if regime in _pos:
+        c, r = _pos[regime]
+        ax.text(c + 0.5, r + 0.5, "★", ha="center", va="center",
+                fontsize=22, color="#1565C0", zorder=5,
+                fontfamily="DejaVu Sans")
 
     ax.set_title(
         f"현재 레짐: {regime}  (확신: {confidence})",
         fontsize=12, fontweight="bold", pad=12, color="#1A237E"
     )
+    if regime == "Late-Cycle":
+        ax.text(
+            0.5, -0.12, "⚠ Late-Cycle: 성장 둔화 진입 이행 국면",
+            transform=ax.transAxes, ha="center", fontsize=9,
+            color="#546E7A", style="italic"
+        )
     fig.tight_layout()
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     path = f"{OUTPUT_DIR}/regime_gauge_{date_str}.png"

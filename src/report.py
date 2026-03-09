@@ -35,7 +35,7 @@ def _na(v, suffix="") -> str:
     return "[확인 필요]" if v is None else f"{v}{suffix}"
 
 
-def build_brief(data: dict, chart_paths: dict = None) -> str:
+def build_brief(data: dict, chart_paths: dict = None, analysis: dict = None) -> str:
     date = datetime.now().strftime("%Y-%m-%d")
     macro = data.get("macro", {})
     stable = data.get("stablecoins", {})
@@ -55,9 +55,24 @@ def build_brief(data: dict, chart_paths: dict = None) -> str:
     _btc_price = btc.get("price")
     btc_price_str = f"${int(_btc_price):,}" if isinstance(_btc_price, (int, float)) else "N/A"
 
+    # Executive 결론 — 레짐 + 우선 행동 (analysis 있을 때)
+    exec_line = ""
+    if analysis:
+        r = analysis.get("regime", {})
+        danal = analysis.get("danal_implications", {})
+        regime_name = r.get("regime", "")
+        confidence = r.get("confidence", "")
+        priority = danal.get("priority_action", "")
+        if regime_name:
+            exec_line = f"> **이번 주 핵심**: 레짐 **{regime_name}** ({confidence}) | {priority}"
+
     lines = [
         f"# 핀테크/디지털자산 주간 브리핑 — {date}",
         "",
+    ]
+    if exec_line:
+        lines += [exec_line, ""]
+    lines += [
         "## 1. 거시경제 스냅샷",
         f"| 지표 | 값 |",
         f"|------|-----|",
@@ -359,13 +374,14 @@ def report(report_type: str = "brief", company: str = "", sector: str = "stablec
 
     if report_type == "brief":
         data = load_latest("snapshot_*.json")
+        analysis = load_latest("analysis_*.json") or {}
         try:
             from src.chart import build_charts
             charts = build_charts(date_str)
         except Exception as e:
             print(f"[WARN] chart 생성 실패: {e}")
             charts = {}
-        content = build_brief(data, chart_paths=charts)
+        content = build_brief(data, chart_paths=charts, analysis=analysis)
         path = f"{OUTPUT_DIR}/brief_{date_str}.md"
 
     elif report_type == "im":

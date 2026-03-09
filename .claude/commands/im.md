@@ -41,19 +41,21 @@ python src/research.py --company "$ARGUMENTS"
 
 `im-draft` 스킬의 **10섹션 구조** (`spec.md §2` 기준):
 
-| # | 섹션 |
-|---|------|
-| 1 | Executive Summary + 투자 의견 + 스코어카드 |
-| 1-b | 거시 맥락 (macro-analyst Step 7 결과 반영) |
-| 2 | Company Overview |
-| 3 | 경영진 |
-| 4 | Market Opportunity (TAM/SAM/SOM) |
-| 5 | 재무 실적 + 차트 |
-| 6 | Investment Thesis (Bull 3 / Bear 3) |
-| 7 | 밸류에이션 (피어 비교) |
-| 8 | Key Risks |
-| 9 | 최근 동향 |
-| 10 | 다음 단계 (다날 전략 연결) |
+| # | 섹션 | 비고 |
+|---|------|------|
+| 1 | Executive Summary + 투자 의견 | 시니어 검토 |
+| 2 | Company Overview | 인턴 초안 |
+| 3 | 경영진 | 인턴 초안 |
+| 4 | Market Opportunity (TAM/SAM/SOM) | 인턴 초안 |
+| 5 | 재무 실적 + 차트 | 인턴 초안 |
+| 6 | Investment Thesis (Bull 3 / Bear 3) | 시니어 검토 |
+| 7 | 밸류에이션 (피어 비교) | 인턴 초안 |
+| 8 | Key Risks | 인턴 초안 |
+| 9 | 최근 동향 | 인턴 초안 |
+| 10 | 다음 단계 (다날 전략 연결) | 팀 논의 |
+
+> 거시 맥락(레짐·다날 함의)은 섹션 1 Executive Summary 내 서술 또는 brief 리포트 참조.
+> macro-analyst 전파 분석(α·β·γ)은 섹션 8 Key Risks의 거시 리스크 항목에 반영.
 
 **Human-in-the-Loop Gate [2]**: Bull/Bear 균형·재무 수치 출처 확인
 

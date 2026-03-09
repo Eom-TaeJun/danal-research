@@ -63,11 +63,11 @@
     "sanity-checker": {
       "role": "품질 게이트 (Quality Gate)",
       "model": "claude-haiku-4-5-20251001",
-      "goal": "생성된 리포트의 None값·수치출처·다날함의 3-Gate를 검사하고 PASS/FAIL + 수정 지시를 반환한다. 직접 수정하지 않는다.",
-      "backstory": "모든 리포트는 3-Gate를 통과해야 배포 가능. 판단과 지시만 수행한다.",
+      "goal": "생성된 리포트의 None값·수치출처·다날함의 4-Gate를 검사하고 PASS/FAIL + 수정 지시를 반환한다. 직접 수정하지 않는다.",
+      "backstory": "모든 리포트는 4-Gate를 통과해야 배포 가능. 판단과 지시만 수행한다.",
       "canonical_triggers": ["품질 검증", "sanity check", "리포트 배포", "Gate 검사"],
       "inputs_required": ["outputs/reports/ 내 최신 리포트 파일"],
-      "outputs_produced": ["3-Gate 검사 결과 (PASS/FAIL + 수정 지시)"],
+      "outputs_produced": ["4-Gate 검사 결과 (PASS/FAIL + 수정 지시)"],
       "hands_off_to": ["danal-lead", "research-agent", "collect-agent"],
       "must_not": ["직접 보고서 수정", "outputs/ 외부 저장", "skills/ 파일 수정"]
     }

@@ -87,11 +87,13 @@ moderate: 그 외
 ## Step 3 — 레짐 판단
 
 ```
-              인플레이션 high    moderate    low
-성장 positive → Overheating    Goldilocks  Goldilocks
-     neutral  → Overheating    Goldilocks  Goldilocks
-     negative → Stagflation    Recession   Recession
+              인플레이션 high    moderate      low
+성장 positive → Overheating    Goldilocks    Goldilocks
+     neutral  → Overheating    Late-Cycle    Late-Cycle
+     negative → Stagflation    Recession     Recession
 ```
+> **Late-Cycle**: neutral 성장은 Goldilocks가 아님 — 성장 둔화 이행 국면.
+> 정의 원천: `INTENT.md §3` (모든 레짐 정의는 INTENT.md가 기준)
 
 **신뢰도 점수**:
 ```
@@ -115,12 +117,13 @@ Low:    score < 0.4
 
 ## Step 5 — 경보 플래그 확인
 
-| 경보 조건 | 임계값 | 즉시 행동 |
-|---------|------|---------|
-| 🔴 USD/KRW 급등 | > 1,500 | BOK 개입 예상, KRW SaaS 리스크 보고 |
-| 🔴 BTC 급락 | < -10% 24h | 안전자산 선호 전환, 리스크오프 대응 |
-| 🟡 스테이블코인 시총 급감 | 7일 -5% | 채택 역행, 규제 충격 여부 확인 |
-| 🟡 Fed 서프라이즈 인상 | CME +25bp | 긴축 재개, Circle 수익 모델 재평가 |
+> **임계값 원천**: `INTENT.md §5` (전체 목록 및 즉시 행동 기준).
+
+| 🔴 즉시 대응 | 🟡 모니터링 |
+|------------|-----------|
+| USD/KRW > 1,500 (BOK 개입) | USD/KRW > 1,440 (K.ONDA 채산성) |
+| BTC 24h < -10% (리스크오프) | 스테이블코인 시총 < $200B |
+| — | Fed Funds ≥ 4.5% (Circle 재평가) |
 
 ---
 

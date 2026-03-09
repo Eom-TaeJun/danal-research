@@ -17,6 +17,7 @@ from src.analyze import analyze
 def run_brief():
     print("── 주간 브리핑 생성 중 ──")
     collect(mode="brief")
+    analyze()
     path = report(report_type="brief")
     print(f"\n✓ 완료: {path}")
 
@@ -48,6 +49,14 @@ def run_screen(sector: str):
     print(f"\n✓ 완료: {path}")
 
 
+def run_excel():
+    print("── Excel 변환 중 ──")
+    from src.excel import generate_excel
+
+    path = generate_excel()
+    print(f"\n✓ 완료: {path}")
+
+
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(
         description="danal — 핀테크 & 디지털자산 투자 리서치 자동화"
@@ -61,6 +70,8 @@ if __name__ == "__main__":
                        help="섹터 스크리닝 (stablecoin / fintech / defi)")
     group.add_argument("--analyze", action="store_true",
                        help="거시 레짐 판단 + 스테이블코인 시그널 분석")
+    group.add_argument("--excel", action="store_true",
+                       help="CSV 데이터를 Excel(.xlsx)로 변환 출력")
     args = parser.parse_args()
 
     if args.brief:
@@ -71,3 +82,5 @@ if __name__ == "__main__":
         run_screen(args.screen)
     elif args.analyze:
         run_analyze()
+    elif args.excel:
+        run_excel()

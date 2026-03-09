@@ -1,7 +1,7 @@
 # 목적: 거시경제 + 디지털자산 지표 → 레짐 판단 + 스테이블코인 시그널 + 다날 함의
 # 입력: outputs/context/snapshot_*.json
 # 출력: outputs/context/analysis_YYYYMMDD.json
-# 레짐: Goldilocks / Overheating / Stagflation / Recession
+# 레짐: Goldilocks / Overheating / Late-Cycle / Stagflation / Recession
 # 제외: 기업 개별 분석, 포트폴리오 최적화
 #
 # ── 2026-03-06 업데이트: 다중 신호 합산 + CoT 추론 로그 + 신뢰도 가중치
@@ -31,7 +31,7 @@ class Signal:
 
 @dataclass
 class RegimeResult:
-    regime: str           # Goldilocks | Overheating | Stagflation | Recession
+    regime: str           # Goldilocks | Overheating | Late-Cycle | Stagflation | Recession
     confidence: str       # High | Medium | Low
     confidence_score: float  # 0.0~1.0 (신호 가중 합산)
     growth_dir: str       # positive | neutral | negative
@@ -66,40 +66,130 @@ class DanalResult:
 
 # ── 레짐 함의 ──────────────────────────────────────────────────────────────
 
-_IMPLICATIONS = {
-    "Goldilocks": {
-        "stablecoin_saas":  "성장 환경 최적 — 기업 스테이블코인 결제 도입 수요 증가. KRW SaaS 신규 계약 공략 타이밍.",
-        "payment_cashcow":  "소비 확장 → 휴대폰결제 거래량 증가. 캐시카우 수익 안정적 유지.",
-        "global_expansion": "위험자산 선호 → 글로벌 핀테크 투자 활성화. 바이낸스·Circle 파트너십 확장 유리.",
-        "x402_ai":          "AI 서비스 투자 활성화 → x402 AI 에이전트 결제 수요 증가. 슈퍼블록 협력 성과 공개 타이밍.",
-        "watch_events":     ["K.ONDA 4월 출시 KPI 선제 설정", "스테이블코인 신규 발행 동향", "디지털자산기본법 세부 규정"],
-        "priority_action":  "K.ONDA × Binance × Circle 출시 준비 상황 공시 모니터링 — 4월 출시 성과가 KRW SaaS 타임라인 결정.",
-    },
-    "Overheating": {
-        "stablecoin_saas":  "고금리 → 준비금 이자 수익 최대화(Circle 모델). 다날 SaaS 수수료 모델은 금리 중립, 경쟁사 수익↑ 주의.",
-        "payment_cashcow":  "인플레이션 → 실질 구매력 감소. 고가 결제 거래 위축 가능, PCI 편의점 방어 역할.",
-        "global_expansion": "긴축 환경 → 핀테크 밸류에이션 압박. 유기적 성장이 인수합병보다 유리.",
-        "x402_ai":          "비용 효율성 압박 → AI 자동화 수요 증가. x402 저비용 결제 레일 경쟁력 부각.",
-        "watch_events":     ["FOMC 성명 + 점도표", "CPI 발표일", "GENIUS Act 입법 동향"],
-        "priority_action":  "Circle IM 투자의견 재검토 — 고금리 지속 시 준비금 수익 모델 상향 가능성.",
-    },
-    "Stagflation": {
-        "stablecoin_saas":  "불확실성 증가 → 스테이블코인 결제 도입 의사결정 지연. 기존 고객 유지 집중.",
-        "payment_cashcow":  "경기 둔화 + 물가 상승 이중 압박 → 결제 수수료 수익 감소 위험.",
-        "global_expansion": "EM 환율 변동성 확대 → KRW 약세 시 해외 결제 비용 증가. 환헤지 전략 필요.",
-        "x402_ai":          "투자 위축 → x402 파트너십 협상 지연 가능. 기존 파트너 관계 유지 우선.",
-        "watch_events":     ["USD/KRW 1,450 돌파 여부", "BOK 기준금리 결정", "국내 소비지출 지표"],
-        "priority_action":  "다날 캐시카우 수익 방어 집중 — 신규 계약보다 기존 가맹점 이탈 방지 우선.",
-    },
-    "Recession": {
-        "stablecoin_saas":  "안전자산 선호 → 스테이블코인 수요 증가. KRW 스테이블코인 헤지 니즈 확대.",
-        "payment_cashcow":  "소비 급감 → 거래량 감소. PCI 편의점 결제가 방어적 역할 (필수재 성격).",
-        "global_expansion": "리스크오프 → 신규 투자 중단. 기존 인프라 효율화 및 비용 절감 집중.",
-        "x402_ai":          "AI 자동화로 비용 절감 압력 증가 → x402 도입 명분 강화. 장기적 긍정 시그널.",
-        "watch_events":     ["실업률 발표", "소매판매 지표", "BOK 긴급 금리인하 가능성"],
-        "priority_action":  "캐시카우 방어 + 규제 환경 모니터링 — 침체기 스테이블코인 도입 서사 준비.",
-    },
-}
+def build_implications(regime: str, macro: dict, stablecoin_result: StablecoinResult) -> dict:
+    fed = _f(macro.get("FEDFUNDS", {}).get("value"))
+    krw = _f(macro.get("DEXKOUS", {}).get("value"))
+    fed = fed if fed is not None else 4.0
+    krw = krw if krw is not None else 1400.0
+    phase = stablecoin_result.adoption_phase
+    total_b = stablecoin_result.total_mcap_b
+
+    if regime == "Goldilocks" and phase == "growth":
+        stablecoin_saas = (
+            f"Growth 단계(${total_b:.1f}B) — KRW SaaS 신규 계약 공략 최적 타이밍"
+        )
+    elif regime == "Goldilocks" and phase == "saturation":
+        stablecoin_saas = (
+            f"채택 포화 진입 (${total_b:.1f}B) — 점유율 경쟁 심화, 수수료 차별화 필요"
+        )
+    elif regime == "Overheating" and fed >= 4.5:
+        stablecoin_saas = (
+            f"Fed {fed:.1f}% 고금리 — Circle 준비금 이자 모델 경쟁 우위. "
+            "다날 SaaS는 금리 중립이나 경쟁사 체력 강화 주의"
+        )
+    elif regime == "Overheating":
+        stablecoin_saas = f"온건 긴축({fed:.1f}%) — SaaS 계약 속도 유지 가능"
+    elif regime == "Stagflation":
+        stablecoin_saas = (
+            "불확실성 증가 — 스테이블코인 도입 결정 지연. 기존 고객 유지 집중"
+        )
+    elif regime == "Recession":
+        stablecoin_saas = (
+            "안전자산 선호 → KRW 스테이블코인 헤지 니즈 확대. 선점 서사 강화 타이밍"
+        )
+    elif regime == "Late-Cycle":
+        stablecoin_saas = (
+            "성장 둔화 진입 — 기존 계약 리텐션 우선, 신규 보수적 접근"
+        )
+    else:
+        stablecoin_saas = "KRW SaaS 전략 재점검 필요"
+
+    if krw > 1450:
+        payment_cashcow = (
+            f"USD/KRW {krw:.0f} 원화 약세 — 수입 비용↑, PCI 편의점 방어 역할 중요"
+        )
+    else:
+        payment_cashcow_map = {
+            "Goldilocks": "소비 안정 구간 — 휴대폰결제 거래량 방어 가능",
+            "Overheating": "물가 부담 확대 — PCI 편의점 결제가 방어선 역할",
+            "Stagflation": "경기 둔화 + 비용 부담 — 캐시카우 수익성 방어 우선",
+            "Recession": "소비 위축 국면 — 생활밀착 결제 중심 방어 필요",
+            "Late-Cycle": "소비 둔화 초입 — 고마진 가맹점 리텐션 관리 우선",
+        }
+        payment_cashcow = payment_cashcow_map.get(
+            regime, "결제 캐시카우 모니터링 필요"
+        )
+
+    if regime == "Goldilocks" and krw < 1400:
+        global_expansion = (
+            "K.ONDA 출시(4월) 최적 환경 — 외국인 결제 채산성 양호"
+        )
+    elif krw > 1450:
+        global_expansion = (
+            f"KRW 약세({krw:.0f}) — K.ONDA 외국인 결제 수익성 점검 필요"
+        )
+    else:
+        global_expansion_map = {
+            "Goldilocks": "K.ONDA 출시 준비 지속 — 파트너십 확장 여건 양호",
+            "Overheating": "긴축 환경 — 파트너십 확장보다 단위경제 점검 우선",
+            "Stagflation": "환율·수요 변동성 확대 — 해외 결제 확장 속도 조절",
+            "Recession": "리스크오프 국면 — 신규 국가 확장보다 기존 파트너 효율화",
+            "Late-Cycle": "성장 둔화 구간 — K.ONDA 초기 KPI를 보수적으로 관리",
+        }
+        global_expansion = global_expansion_map.get(
+            regime, "글로벌 확장 전략 재점검 필요"
+        )
+
+    if regime in {"Goldilocks", "Overheating"}:
+        x402_ai = "AI 서비스 투자 활성 — x402 에이전트 결제 수요 증가"
+    elif regime in {"Stagflation", "Late-Cycle"}:
+        x402_ai = "AI 비용효율 압박 → x402 도입 명분 강화"
+    elif regime == "Recession":
+        x402_ai = "AI 자동화로 비용 절감 압력 → x402 장기 긍정 시그널"
+    else:
+        x402_ai = "x402 수요 신호 추가 확인 필요"
+
+    watch_events = []
+    if fed >= 4.5:
+        watch_events.append(f"FOMC 점도표 — {fed:.1f}% 고금리 인하 시점 확인")
+    if krw > 1440:
+        watch_events.append(f"BOK 개입 여부 — USD/KRW {krw:.0f}")
+    if phase == "growth":
+        watch_events.append("KRW SaaS 신규 계약 공시")
+    watch_events.extend([
+        "K.ONDA 4월 출시 KPI",
+        "디지털자산기본법 세부 규정",
+    ])
+
+    if krw > 1480:
+        priority_action = (
+            f"긴급: USD/KRW {krw:.0f} 급등 대응 — KRW SaaS 리스크 보고"
+        )
+    elif regime == "Stagflation":
+        priority_action = "캐시카우 방어 — 기존 가맹점 이탈 방지 우선"
+    elif regime == "Goldilocks" and phase == "growth":
+        priority_action = (
+            "K.ONDA × Binance × Circle 출시 준비 상황 모니터링 (4월 출시)"
+        )
+    elif regime == "Overheating" and fed >= 4.5:
+        priority_action = (
+            "Circle IM 투자의견 재검토 — 고금리 지속 시 준비금 수익 상향"
+        )
+    elif regime == "Late-Cycle":
+        priority_action = (
+            "다날 캐시카우 수익 방어 집중 — 신규보다 리텐션 우선"
+        )
+    else:
+        priority_action = "K.ONDA 출시 KPI 선제 설정"
+
+    return {
+        "stablecoin_saas": stablecoin_saas,
+        "payment_cashcow": payment_cashcow,
+        "global_expansion": global_expansion,
+        "x402_ai": x402_ai,
+        "watch_events": watch_events,
+        "priority_action": priority_action,
+    }
 
 
 # ── 신호 수집기 ────────────────────────────────────────────────────────────
@@ -147,9 +237,10 @@ def collect_growth_signals(macro: dict) -> list:
             ))
 
     # 신호 2: 2Y-10Y 스프레드 (단기 역전 지속성 확인)
+    # neutral 구간 추가: -0.1 ~ +0.2 → Late-Cycle 이행 신호
     if dgs2 is not None and dgs10 is not None:
         spread_2_10 = round(dgs10 - dgs2, 2)
-        if spread_2_10 >= 0:
+        if spread_2_10 >= 0.2:
             signals.append(Signal(
                 name="yield_curve_2y_10y",
                 direction="positive",
@@ -157,13 +248,21 @@ def collect_growth_signals(macro: dict) -> list:
                 weight=0.25,
                 rationale=f"2Y-10Y spread +{spread_2_10}%p → 정상 곡선, 경기 확장 확인"
             ))
-        else:
+        elif spread_2_10 <= -0.1:
             signals.append(Signal(
                 name="yield_curve_2y_10y",
                 direction="negative",
                 value=f"{spread_2_10}%p (FRED DGS2·DGS10)",
                 weight=0.25,
                 rationale=f"2Y-10Y spread {spread_2_10}%p → 역전 지속, 침체 리스크 상존"
+            ))
+        else:
+            signals.append(Signal(
+                name="yield_curve_2y_10y",
+                direction="neutral",
+                value=f"{spread_2_10:+}%p (FRED DGS2·DGS10)",
+                weight=0.10,
+                rationale=f"2Y-10Y spread {spread_2_10:+}%p → 평탄 구간, 성장 방향 불명확 (Late-Cycle 신호)"
             ))
 
     return signals
@@ -352,9 +451,9 @@ def detect_regime(macro: dict, crypto: dict = None, stable: dict = None) -> Regi
         ("positive", "high"):     "Overheating",
         ("positive", "moderate"): "Goldilocks",
         ("positive", "low"):      "Goldilocks",
-        ("neutral",  "high"):     "Overheating",
-        ("neutral",  "moderate"): "Goldilocks",
-        ("neutral",  "low"):      "Goldilocks",
+        ("neutral",  "high"):     "Late-Cycle",
+        ("neutral",  "moderate"): "Late-Cycle",
+        ("neutral",  "low"):      "Late-Cycle",
         ("negative", "high"):     "Stagflation",
         ("negative", "moderate"): "Recession",
         ("negative", "low"):      "Recession",
@@ -461,8 +560,8 @@ def analyze(snapshot: dict = None) -> dict:
     regime = detect_regime(macro, crypto, stable)
     stablecoin = analyze_stablecoins(stable, crypto)
 
-    impl = _IMPLICATIONS[regime.regime]
-    danal = DanalResult(**impl)
+    danal_data = build_implications(regime.regime, macro, stablecoin)
+    danal = DanalResult(**danal_data)
 
     result = {
         "analyzed_at":      datetime.now().isoformat(),
@@ -471,7 +570,7 @@ def analyze(snapshot: dict = None) -> dict:
         "stablecoin_signal": asdict(stablecoin),
         "danal_implications": asdict(danal),
         "signal_count":     len(regime.signals),
-        "analysis_version": "2.0.0",  # 다중 신호 + CoT 업데이트
+        "analysis_version": "2.1.0",  # 동적 함의 + Late-Cycle 업데이트
     }
 
     os.makedirs(OUTPUT_DIR, exist_ok=True)
