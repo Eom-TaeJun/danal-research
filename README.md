@@ -2,25 +2,56 @@
 
 ## 이 포트폴리오가 증명하는 것
 
-> **인턴 지원자 입장에서, 다날 투자팀 현직자가 하는 일을 미리 구현했습니다.**
+> **다날 금융·투자 분석 인턴 JD가 요구한 일을 다날의 현재 사업 시그널에 맞춰 미리 구현했습니다.**
 
-채용공고 업무 3가지를 직접 자동화했습니다:
-- **IM 초안 작성**: Circle·Ripple·슈퍼블록·토스 — 10섹션 구조, 출처 명기, 다날 전략 연결까지
-- **거시경제 데이터 수집·분석**: FRED·CoinGecko·Perplexity 멀티소스 → 레짐 판단(Goldilocks 등) → 투자 시사점
-- **데이터 시각화**: 파이차트·레짐게이지·매출추이 PNG 4종 + Excel 시나리오 모델
+공식 공고의 3가지 업무를 1:1로 대응했습니다:
+- **투자 리포트 및 IM 초안 지원**: Circle·Ripple·슈퍼블록·토스 IM 4종 + 마스터 리서치 리포트
+- **금융 및 거시경제 데이터 분석**: FRED·CoinGecko·Perplexity 멀티소스 → 거시/규제/기업 분석 → 판단 자료화
+- **전략 보고 및 시각화**: 차트 4종 + CSV 3종 + Excel 1종으로 의사결정 자료 정리
 
-차별점은 도구가 아닙니다. **AI가 신뢰할 수 있게 작동하도록 품질 게이트를 설계했고, 모든 분석이 다날 3대 사업(KRW 스테이블코인·휴대폰결제·x402)과 연결되도록 원칙을 강제했습니다.**
+차별점은 도구가 아닙니다. **다날이 공식적으로 반복하는 `결제 캐시카우 -> 통합 결제 플랫폼 -> 글로벌/디지털자산 확장` 시그널을 리서치 workflow로 번역했다는 점**입니다. 그래서 모든 분석은 `시장 동향 요약 -> IM 초안 -> 차트/시나리오 -> 다날 사업 연결` 순서로 설계했고, `확신도`, `반증 신호`, `watch point`, `시니어 검토 전제`를 함께 남기도록 구성했습니다.
 
-핵심 산출물: [마스터 리서치 리포트](outputs/reports/master_research_report_20260308.md) · [Circle S-1 영문 직독](outputs/reports/circle_s1_analysis_20260308.md)
+핵심 산출물: [마스터 리서치 리포트](outputs/reports/master_research_report_20260308.md) · [Circle S-1 영문 직독](outputs/reports/circle_s1_analysis_20260308.md)  
+포지셔닝 원페이지: [PORTFOLIO_POSITIONING_ONE_PAGER.md](PORTFOLIO_POSITIONING_ONE_PAGER.md)  
+정렬 메모: [JOB_SIGNAL_ALIGNMENT.md](JOB_SIGNAL_ALIGNMENT.md)  
+공식 시그널 메모: [OFFICIAL_SIGNALS_20260320.md](OFFICIAL_SIGNALS_20260320.md)  
+운영 원칙 메모: [WORKFLOW_PRINCIPLES.md](WORKFLOW_PRINCIPLES.md)
 
 ---
 
-핀테크 & 디지털자산 투자 리서치 자동화 에이전트
+다날용 금융·투자 분석 지원 워크플로
 
 FRED(거시경제) + CoinGecko(디지털자산) + Perplexity(뉴스·기업 리서치)를 수집해
-주간 브리핑, 투자 검토 보고서(IM), 섹터 스크리닝을 자동 생성합니다.
-거시 레짐(Goldilocks/Overheating/Stagflation/Recession)을 판단하고
-다날의 KRW 스테이블코인·핀테크 사업 맥락에서 투자 함의까지 도출합니다.
+주간 브리핑, 투자 검토 보고서(IM), 섹터 스크리닝 초안을 구조화합니다.
+핵심 계산과 규칙은 정형화하고, 최종 서술은 사람이 읽는 내부 문서 형식으로 정리합니다.
+즉, 범용 투자 자동화 데모가 아니라 다날 금융·투자 분석 인턴 JD에 맞춘 `workflow-first` 포트폴리오입니다.
+
+---
+
+## 다날 공식 시그널과 1:1 매핑
+
+| 다날 공식 시그널 | 공식 근거 | 이 프로젝트에서 보여준 것 |
+|---|---|---|
+| `투자 리포트`, `IM`, `거시/금융 데이터`, `차트 시각화` | 금융·투자 분석 인턴 공고 | brief, IM 4종, master report, charts, CSV, Excel |
+| `통합 결제 플랫폼` | 회사 소개 페이지 | 결제 본업과 신사업 확장을 함께 읽는 master report 구조 |
+| `가맹점 중심`, `간단한 연동`, `유지관리` | 2025-03-20 D1 공식 보도자료 | 기술 설명보다 사업 적용성과 실행 가능성을 앞세운 리포트 구조 |
+| `글로벌/외국인 결제`, `디지털자산 확장` | 2025-02-28 공식 보도자료, 회사 서비스 페이지 | Circle·Ripple·스테이블코인·크로스보더 결제 리서치 |
+| `시장·정책 동향`, `수익 모델`, `실행 로드맵` | 2025-12-07 사업기획 공고 | 규제 비교, 시나리오 모델, scorecard, action-oriented 메모 |
+
+이 프로젝트를 지원서나 면접에서 설명할 때의 핵심 번역은 [JOB_SIGNAL_ALIGNMENT.md](JOB_SIGNAL_ALIGNMENT.md)에 따로 정리했습니다.
+
+---
+
+## 이 포트폴리오의 분석 운영 원칙
+
+- `workflow first`: 기능 데모보다 brief, IM, screen, chart처럼 실제 내부 문서 흐름을 우선합니다.
+- `deterministic core first`: 데이터 수집, 지표 계산, 레짐 판단, 시나리오 표는 규칙 기반으로 고정하고 자연어는 보고서화에 집중합니다.
+- `confidence + falsification`: 결론만 적지 않고 확신도, 반론, 반증 가능 신호, 다음 모니터링 포인트를 함께 남깁니다.
+- `human-in-the-loop`: 인턴의 역할은 초안 작성과 자료 정리이며 최종 투자 판단은 시니어가 한다는 전제를 유지합니다.
+- `action-oriented handoff`: 모든 출력은 다날의 결제 본업, 가맹점 가치, 글로벌/외국인 결제, 디지털자산 확장 중 어디에 닿는지로 닫습니다.
+- `harness retained`: 역할 분리 하니스와 품질 게이트는 유지하되, 외부 설명에서는 메인 스토리가 아니라 안정적인 반복 생산을 돕는 보조 레이어로 둡니다.
+
+이 운영 원칙은 구조적으로는 넓은 범용 자동화보다 좁고 검증 가능한 리서치 시스템에 더 가깝고, 그 요약은 [WORKFLOW_PRINCIPLES.md](WORKFLOW_PRINCIPLES.md)에 정리했습니다.
 
 ---
 
@@ -79,7 +110,7 @@ python main.py --analyze            # 거시 레짐 단독 분석
 성장 ↓  →      Stagflation               Recession
 ```
 
-레짐별로 다날 3대 사업(KRW 스테이블코인 SaaS / 휴대폰결제 / 글로벌 핀테크)에
+레짐별로 다날의 결제 플랫폼 확장과 글로벌/디지털자산 사업에
 대한 투자 함의와 주목 이벤트를 자동으로 도출합니다.
 
 ---
@@ -89,7 +120,7 @@ python main.py --analyze            # 거시 레짐 단독 분석
 ### 주간 브리핑
 - [brief_20260306.md](outputs/reports/brief_20260306.md) — **최신 (개선판)**
   - Executive 결론 1줄 + 레짐 명시 | 거시경제 스냅샷 | 디지털자산 시장 | 핵심 동향 3건
-  - 다날 3축 투자 시사점 (KRW SaaS·x402·PCI 연결)
+  - 다날 핵심 확장축 시사점 (통합결제·글로벌 결제·디지털자산 연결)
 - [brief_20260302.md](outputs/reports/brief_20260302.md) — 초기 버전
 
 ### 마스터 리서치 리포트 ★ (2026-03-08 신규)
@@ -115,6 +146,11 @@ python main.py --analyze            # 거시 레짐 단독 분석
 
 ### 섹터 스크리닝
 - [screen_stablecoin_20260306.md](outputs/reports/screen_stablecoin_20260306.md) — 규제 현황표 | 경쟁사 6개 비교 | 다날 포지셔닝
+
+### 지원용 보강 문서 ★ (2026-03-21 신규)
+- [decision_memo_Circle_20260321.md](outputs/reports/decision_memo_Circle_20260321.md) — 1페이지 투자 판단 메모 | 한 줄 결론 | 핵심 숫자 | 리스크 | watch point
+- [shortlist_priority_memo_20260321.md](outputs/reports/shortlist_priority_memo_20260321.md) — 후보군 우선순위 메모 | Circle·Ripple·토스·슈퍼블록 정렬 기준
+- [merchant_foreigner_payment_summary_20260321.md](outputs/reports/merchant_foreigner_payment_summary_20260321.md) — 가맹점·외국인 결제 공식 시그널 요약 | 포트폴리오 해석 기준
 
 ### 데이터 (CSV) ★ (2026-03-08 신규)
 - [kwrw_stablecoin_scenario_20260308.csv](outputs/csv/kwrw_stablecoin_scenario_20260308.csv) — KRW SaaS 수익 시나리오 27개 (3규제×3전환율×3take rate)
@@ -200,16 +236,15 @@ CoinGecko는 Public API (무료, 키 불필요).
 
 ---
 
-## 이 프로젝트가 증명하는 역량
+## 이 프로젝트가 JD에 대해 증명하는 것
 
-다날 투자팀 인턴 포트폴리오 — 수동 리서치 대비 차별화 포인트:
-
-| 일반 인턴 | 이 시스템 |
-|---------|--------|
-| IM 수동 작성 (Excel + Word) | **IM 자동화** — Perplexity 리서치 → 10섹션 초안 |
-| 수동 시장 모니터링 | **멀티소스 자동 수집** — FRED·CoinGecko·Perplexity |
-| 분석과 비즈니스 연결 누락 | **모든 분석 → 다날 3축 연결 의무화** |
-| 거시 지표 나열 | **레짐 판단 → 투자 권고** (Goldilocks 등) |
+| JD 업무 | 이 프로젝트의 대응 산출물 |
+|---------|-------------------------|
+| 투자 리포트 작성 및 리서치 지원 | `brief_20260306.md`, `master_research_report_20260308.md` |
+| 투자 검토 보고서(IM) 초안 작성 보조 | `im_Circle_20260306.md`, `im_Ripple_20260306.md`, `im_슈퍼블록_20260308.md`, `im_토스_20260306.md` |
+| 금융 및 거시경제 데이터 분석 | `macro_snapshot_20260308.csv`, `master_research_report_20260308.md`, `regime_report_20260306.md` |
+| 글로벌 핀테크 및 디지털자산 시장 조사 | Circle, Ripple, 스테이블코인, 규제 비교 리서치 |
+| 전략 보고 및 시각화 | 차트 4종, `screening_scorecard_20260308.csv`, `danal_research_20260309.xlsx` |
 
 ---
 

@@ -510,15 +510,16 @@
 
   <header>
     <h1>danal-research</h1>
-    <p>핀테크 &amp; 디지털자산 투자 리서치 자동화 에이전트<br>
-      FRED × CoinGecko × Perplexity → 브리핑 · IM · 스크리닝 · 레짐 분석</p>
+    <p>다날 금융·투자 분석 인턴 JD를 기준으로 만든 결제 플랫폼 확장 리서치 workflow<br>
+      시장 · 기업 · 거시 자료 → 브리핑 · IM · 스크리닝 · 차트 → 다날 사업 시사점</p>
     <div class="badges">
       <span class="badge">Python 3.11+</span>
       <span class="badge">FRED API</span>
       <span class="badge">CoinGecko</span>
       <span class="badge">Perplexity</span>
-      <span class="badge">Claude Code</span>
-      <span class="badge">Hub-Spoke Agents</span>
+      <span class="badge">Workflow First</span>
+      <span class="badge">Confidence</span>
+      <span class="badge">Watch Points</span>
       <span class="badge">matplotlib</span>
     </div>
   </header>
@@ -527,37 +528,37 @@
 
     <!-- ── 3대 역량 ─────────────────────────────────── -->
     <section>
-      <h2>3대 역량 증명</h2>
+      <h2>직무 적합성 3축</h2>
       <div class="comp-grid">
         <div class="comp-card econ">
           <div class="icon">📐</div>
-          <div class="ctitle">경제 분석력</div>
+          <div class="ctitle">JD 1:1 문서화</div>
           <div class="cdesc">
-            수치를 나열하지 않고 <strong>판단과 권고</strong>로 표현합니다.<br><br>
-            Goldilocks·Overheating·Stagflation·Recession 4국면 프레임, 밸류에이션 피어 비교, 시나리오별 확률 추정, 규제 영향 연결.
+            다날 공고의 핵심 업무를 그대로 `brief · IM · screen · chart` 흐름으로 옮겼습니다.<br><br>
+            시장 동향 요약, 기업 검토 초안, 레짐 판단, 시각화까지 내부 문서 형태로 바로 읽히게 정리했습니다.
           </div>
           <div><span class="cevidence">regime_report_20260306.md</span></div>
           <div><span class="cevidence">im_Circle_20260306.md</span></div>
         </div>
         <div class="comp-card data">
           <div class="icon">📊</div>
-          <div class="ctitle">설득을 위한 데이터 분석</div>
+          <div class="ctitle">증거 · 반증 기반 분석</div>
           <div class="cdesc">
             모든 수치에 출처가 있고, 모든 주장에 <strong>근거 데이터</strong>가 있습니다.<br><br>
-            Bull/Bear 3:3 균형 구조, 경쟁사 비교표, 차트 4종, 모니터링 지표 — 반증 가능한 분석.
+            규제 비교표, 경쟁사 scorecard, 차트 4종, 시나리오 표, 모니터링 지표로 반증 가능한 분석을 남깁니다.
           </div>
           <div><span class="cevidence">screen_stablecoin_20260306.md</span></div>
           <div><span class="cevidence">outputs/charts/ (4종)</span></div>
         </div>
         <div class="comp-card ai">
-          <div class="icon">🤖</div>
-          <div class="ctitle">최신 AI 기술 도전력</div>
+          <div class="icon">🧭</div>
+          <div class="ctitle">판단 운영 원칙</div>
           <div class="cdesc">
-            AI를 쓴 것이 아니라 AI가 <strong>신뢰할 수 있게 작동하는 시스템</strong>을 설계했습니다.<br><br>
-            Hub-Spoke 에이전트, sanity-checker 4-Gate, 스킬 자동 주입, 2026 Best Practice 적용.
+            핵심 계산은 정형화하고, 최종 문서는 사람이 검토하기 쉽게 정리합니다.<br><br>
+            역할 분리 harness는 유지하되, 확신도, 반론, watch point, 시니어 검토 전제를 남기는 `workflow-first` 구조로 재배치했습니다.
           </div>
-          <div><span class="cevidence">.claude/agents/ (5개)</span></div>
           <div><span class="cevidence">AGENTS.md + spec.md</span></div>
+          <div><span class="cevidence">WORKFLOW_PRINCIPLES.md</span></div>
         </div>
       </div>
     </section>
@@ -571,7 +572,7 @@
           <div class="label">주간 브리핑</div>
           <div class="desc">Executive 결론 + 레짐 + 거시·디지털자산 + 뉴스 + 다날 시사점</div>
           <span class="comp-tag tag-data">데이터 분석</span>
-          <span class="comp-tag tag-ai">AI 도전력</span>
+          <span class="comp-tag tag-ai">워크플로 설계</span>
         </div>
         <div class="cmd-card">
           <code>python main.py --im "Circle"</code>
@@ -597,7 +598,7 @@
         <div class="cmd-card">
           <code>python main.py --analyze --report</code>
           <div class="label">레짐 분석 리포트</div>
-          <div class="desc">4국면 판단 + 시나리오 (Goldilocks 70% / Overheating 20% / Recession 10%)</div>
+          <div class="desc">4국면 판단 + 확신도 + 반증 신호 + watch point</div>
           <span class="comp-tag tag-econ">경제 분석력</span>
         </div>
       </div>
@@ -928,15 +929,16 @@
       <div style="display:flex;gap:16px;margin-bottom:16px;flex-wrap:wrap;">
         <span style="font-size:12px;"><span style="color:#58A6FF;font-weight:700;">■</span> 경제 분석력</span>
         <span style="font-size:12px;"><span style="color:#3FB950;font-weight:700;">■</span> 데이터 분석 시각</span>
-        <span style="font-size:12px;"><span style="color:#D2A8FF;font-weight:700;">■</span> AI 도전력</span>
+        <span style="font-size:12px;"><span style="color:#D2A8FF;font-weight:700;">■</span> 워크플로 설계</span>
       </div>
       <div class="arch">
         <pre>
 <span class="hl">danal-research/</span>
-├── <span class="econ">AGENTS.md</span>              하니스 아키텍처 + Skill Activation Map          <span class="muted">← AI 도전력 설계 문서</span>
+├── <span class="econ">AGENTS.md</span>              하니스 아키텍처 + Skill Activation Map          <span class="muted">← 워크플로/품질 게이트 설계 문서</span>
 ├── <span class="econ">spec.md</span>                방법론 원천 (워크플로·레짐·출처 표준)             <span class="muted">← 경제 분석력 기준</span>
+├── <span class="econ">WORKFLOW_PRINCIPLES.md</span>  분석 운영 원칙 + confidence/watch point 메모
 ├── CLAUDE.md / INTENT.md  세션 규칙 + 불변 원칙
-├── <span class="data-vis">portfolio-plan.md</span>      3대 역량 전략 + 구현 계획 + Todo
+├── <span class="data-vis">portfolio-plan.md</span>      포트폴리오 전략 + 구현 계획 + Todo
 ├── main.py
 │
 ├── <span class="hl">src/</span>
@@ -947,7 +949,7 @@
 │   └── <span class="data-vis">chart.py</span>           시각화 4종 (pie·trend·regime_gauge·dashboard)  <span class="muted">← 데이터 시각화</span>
 │
 ├── <span class="hl">.claude/</span>
-│   ├── <span class="ai-tech">agents/</span>            Hub-Spoke 에이전트 (2026 Best Practice)        <span class="muted">← AI 도전력 핵심</span>
+│   ├── <span class="ai-tech">agents/</span>            역할 분리 하니스                                  <span class="muted">← 워크플로 보조 장치</span>
 │   │   ├── danal-lead.md        조율 Hub
 │   │   ├── research-agent.md    IM 리서치
 │   │   ├── collect-agent.md     데이터 수집
@@ -961,7 +963,7 @@
 │   │   └── stablecoin-market· weekly-brief
 │   └── <span class="ai-tech">settings.json</span>      Hooks (API 키·경로·완성도 검증)
 │
-├── <span class="ai-tech">agents/contracts.json</span>  에이전트 역할·계약 선언 (v1.1.0)
+├── <span class="ai-tech">agents/contracts.json</span>  역할·계약 선언 (v1.1.0)
 │
 └── <span class="hl">outputs/</span>
     ├── <span class="econ">reports/</span>
