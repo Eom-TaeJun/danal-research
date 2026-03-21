@@ -71,7 +71,7 @@ Circle의 수익은 크게 두 축으로 구성된다:
 > *"USDC is not legal tender and is not backed by the U.S. government... We are subject to extensive and evolving regulatory requirements."*
 > — Circle S-1, Risk Factors
 
-**해석:** GENIUS Act 통과(2025-07-18)로 규제 불확실성은 대폭 감소했으나, Circle은 연방·주 수준의 이중 감독 대상. 협력 파트너인 다날도 한국 규제 준수 체계를 갖춰야 한다.
+**해석:** GENIUS Act 통과(2025-07-18)로 규제 불확실성은 대폭 감소했으나, Circle은 연방·주 수준의 이중 감독 대상. 협력 파트너인 다날도 해당 규제 준수 체계를 갖춰야 한다.
 
 > *"Tether, the issuer of USDT, has substantially higher market capitalization than USDC. Tether's dominance could limit USDC's growth."*
 > — Circle S-1, Risk Factors (요약)
@@ -95,17 +95,17 @@ Circle의 수익은 크게 두 축으로 구성된다:
 **다날 관점 활용 시나리오:**
 
 ```
-[다날 가맹점 A (한국)] → KRW 결제
+[다날 가맹점 A] → Fiat 결제
         ↓
-[다날 KRW SaaS 레이어] → KRW → KSC(KRW 스테이블코인)
+[다날 SC 정산 SaaS 레이어] → Fiat → 스테이블코인
         ↓
-[CCTP] → KSC ↔ USDC 교환 (체인 간 이동)
+[CCTP] → 스테이블코인 ↔ USDC 교환 (체인 간 이동)
         ↓
 [해외 수취인] → USDC 수령 → 현지 환전
 ```
 
 - CCTP는 브리지 없이 체인 간 이동 → 보안 리스크 감소
-- 다날이 USDC 생태계에 KRW 온램프로 진입하는 가장 현실적인 경로
+- 다날이 USDC 생태계에 Fiat 온램프로 진입하는 가장 현실적인 경로
 
 ---
 
@@ -127,7 +127,7 @@ Circle의 수익은 크게 두 축으로 구성된다:
 > *"Circle receives conditional approval from OCC for national trust charter — enabling Circle to offer custody, payments, and reserve management under federal banking supervision."*
 > — Circle Press Release, 2025-12-12
 
-**해석:** OCC 연방 은행 감독 하에 들어온 Circle은 한국 금융당국과의 협력 논의에서 "연방 규제 준수 기관"으로 포지셔닝 가능 → 다날과의 공식 파트너십 계약 신뢰도 ↑
+**해석:** OCC 연방 은행 감독 하에 들어온 Circle은 글로벌 파트너 협력 논의에서 "연방 규제 준수 기관"으로 포지셔닝 가능 → 다날과의 공식 파트너십 계약 신뢰도 ↑
 
 ---
 
@@ -148,18 +148,18 @@ Circle의 수익은 크게 두 축으로 구성된다:
 |---|---|---|
 | 금리 의존 수익 구조 | Circle 수익성 압박 시 파트너십 조건 악화 가능 | 계약에 고정 API 수수료 조항 삽입 |
 | Coinbase 집중도 | Circle-Coinbase 관계 악화 시 USDC 유동성 영향 | 다중 스테이블코인 전략 병행 |
-| USDT 시장 지배력 | USDC 생태계 성장 제한 → 다날 KRW SaaS 한계 | USDT 호환 구조 병행 검토 |
-| 한국 규제 공백 | 국내 스테이블코인법 미확정 → 시장 개시 지연 | 규제 샌드박스 진입으로 선점 |
+| USDT 시장 지배력 | USDC 생태계 성장 제한 → 다날 SC 정산 SaaS 한계 | USDT 호환 구조 병행 검토 |
+| 미국 규제 세부규정 확정 대기 | GENIUS Act 시행 세부규정 확정 대기 → 기관 채택 속도 변수 | 규제 가이던스 모니터링으로 선점 |
 
 ### 6.3 최종 판단
 
 **협력 권고: ✅ 파트너십 검토 (★★★)**
 
-Circle은 다날 KRW SaaS의 **글로벌 출구(off-ramp)**로 가장 현실적인 옵션이다. CCTP API는 오픈 소스 수준으로 접근 가능하며, OCC Charter 획득으로 기관 신뢰도가 상승했다. 금리 하락으로 Circle 수익성이 압박받는 시기가 오히려 다날이 협력 조건을 유리하게 협상할 수 있는 타이밍이다.
+Circle은 다날 SC 정산 SaaS의 **글로벌 출구(off-ramp)**로 가장 현실적인 옵션이다. CCTP API는 오픈 소스 수준으로 접근 가능하며, OCC Charter 획득으로 기관 신뢰도가 상승했다. 금리 하락으로 Circle 수익성이 압박받는 시기가 오히려 다날이 협력 조건을 유리하게 협상할 수 있는 타이밍이다.
 
 **단기 액션:**
 1. CCTP API 연동 기술 PoC (개발자 문서 기반, 비용 없음)
-2. Circle Business Development 팀 접촉 (한국 PG 온램프 파트너십 제안)
+2. Circle Business Development 팀 접촉 (Fiat 온램프 파트너십 제안)
 3. IPO(NYSE: CRCL) 후 공식 파트너십 체결 검토
 
 ---
