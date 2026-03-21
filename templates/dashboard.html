@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Dashboard — danal-research{% endblock %}
+
+{% block header %}
+<header>
+  <h1>danal-research</h1>
+  <p>Fintech & Digital Asset Investment Research</p>
+  <div class="badges">
+    <span class="badge">US Stablecoin Market</span>
+    <span class="badge">Regime Detection</span>
+    <span class="badge">4-Axis Risk Scoring</span>
+    <span class="badge">Auto-Calibrated Weights</span>
+  </div>
+</header>
+{% endblock %}
+
+{% block extra_css %}
+.stage-label {
+  font-size: 12px; font-weight: 700; color: var(--white);
+  background: var(--blue); padding: 3px 10px; border-radius: 10px;
+  display: inline-block; margin-bottom: 12px;
+}
+.stage-label.s2 { background: var(--green); }
+.stage-label.s3 { background: var(--orange); }
+.hero-card { border-left: 4px solid var(--blue); }
+.hero-card.decision { border-left-color: var(--orange); }
+.chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 16px 0; }
+.chart-grid img { width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+.arch-block {
+  background: #1E293B; color: #E2E8F0; padding: 20px; border-radius: 10px;
+  font-family: 'Consolas', monospace; font-size: 13px; line-height: 1.8;
+  margin: 16px 0; overflow-x: auto;
+}
+{% endblock %}
+
+{% block content %}
+<!-- Stage 1 -->
+<section>
+  <h2>Stage 1 — Business Position</h2>
+  <div class="card-grid">
+  {% for r in stage1 %}
+    <div class="card hero-card">
+      <a href="{{ r.filename }}">
+        <h3>{{ r.title }}</h3>
+        <p>{{ r.desc }}</p>
+        <span class="tag">{{ r.type }}</span>
+      </a>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+
+<!-- Stage 2 -->
+<section>
+  <h2>Stage 2 — External Research</h2>
+  <div class="card-grid">
+  {% for r in stage2 %}
+    <div class="card">
+      <a href="{{ r.filename }}">
+        <h3>{{ r.title }}</h3>
+        <p>{{ r.desc }}</p>
+        <span class="tag">{{ r.type }}</span>
+      </a>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+
+<!-- Stage 3 -->
+<section>
+  <h2>Stage 3 — Investment Decision</h2>
+  <div class="card-grid">
+  {% for r in stage3 %}
+    <div class="card hero-card decision">
+      <a href="{{ r.filename }}">
+        <h3>{{ r.title }}</h3>
+        <p>{{ r.desc }}</p>
+        <span class="tag">{{ r.type }}</span>
+      </a>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+
+<!-- Charts -->
+{% if charts %}
+<section>
+  <h2>Charts & Visualizations</h2>
+  <div class="chart-grid">
+  {% for c in charts %}
+    <img src="{{ c.path }}" alt="{{ c.alt }}">
+  {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Supporting -->
+{% if supporting %}
+<section>
+  <h2>Supporting Research</h2>
+  <div class="card-grid">
+  {% for r in supporting %}
+    <div class="card">
+      <a href="{{ r.filename }}">
+        <h3>{{ r.title }}</h3>
+        <span class="tag">{{ r.type }}</span>
+      </a>
+    </div>
+  {% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<!-- Architecture -->
+<section>
+  <h2>Pipeline Architecture</h2>
+  <div class="arch-block"><pre>collect.py  ──>  analyze.py  ──>  risk.py  ──>  report.py  ──>  html.py
+  FRED            Regime           4-Axis        Markdown        HTML
+  CoinGecko       Detection        Scoring       Generation      Dashboard
+  Perplexity      8 Signals        Stress Test
+                  calibrate.py
+                  (auto weights)</pre></div>
+</section>
+{% endblock %}

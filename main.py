@@ -73,6 +73,13 @@ def run_calibrate():
     print(f"\n✓ 완료: outputs/context/weights_*.json")
 
 
+def run_html():
+    print("── HTML 리포트 생성 중 ──")
+    from src.html import build_all
+    paths = build_all()
+    print(f"\n✓ 완료: {len(paths)}건 → outputs/html/index.html")
+
+
 def run_excel():
     print("── Excel 변환 중 ──")
     from src.excel import generate_excel
@@ -98,6 +105,8 @@ if __name__ == "__main__":
                        help="심화 리포트 (stablecoin)")
     group.add_argument("--calibrate", action="store_true",
                        help="과거 분석 결과 기반 신호 가중치 자동 보정")
+    group.add_argument("--html", action="store_true",
+                       help="모든 리포트를 HTML로 변환 + 대시보드 생성")
     group.add_argument("--excel", action="store_true",
                        help="CSV 데이터를 Excel(.xlsx)로 변환 출력")
     args = parser.parse_args()
@@ -114,5 +123,7 @@ if __name__ == "__main__":
         run_deep(args.deep)
     elif args.calibrate:
         run_calibrate()
+    elif args.html:
+        run_html()
     elif args.excel:
         run_excel()

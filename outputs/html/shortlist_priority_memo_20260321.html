@@ -1,0 +1,203 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Shortlist / Priority Memo — danal-research</title>
+<style>
+:root {
+  --blue: #1565C0; --light-blue: #E3F2FD;
+  --green: #2E7D32; --light-green: #E8F5E9;
+  --orange: #E65100; --light-orange: #FFF3E0;
+  --grey: #546E7A; --bg: #F5F7FA;
+  --white: #FFFFFF; --border: #DEE2E6;
+  --text: #212529; --muted: #6C757D;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+}
+header {
+  background: linear-gradient(135deg, var(--blue) 0%, #0D47A1 100%);
+  color: white; padding: 28px 48px 24px;
+}
+header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+header a:hover { text-decoration: underline; }
+.badges { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  padding: 2px 10px; border-radius: 20px; font-size: 11px;
+}
+main { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* tables */
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+th { background: var(--blue); color: white; font-weight: 600; text-align: left; padding: 10px 12px; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: var(--light-blue); }
+tr:nth-child(even) { background: #FAFBFC; }
+tr:nth-child(even):hover { background: var(--light-blue); }
+
+/* headings */
+h1 { font-size: 22px; color: var(--blue); margin: 32px 0 16px; border-bottom: 2px solid var(--blue); padding-bottom: 8px; }
+h2 { font-size: 17px; font-weight: 700; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 12px; margin: 28px 0 12px; }
+h3 { font-size: 14px; font-weight: 600; color: var(--grey); margin: 20px 0 8px; }
+
+/* content */
+p { margin: 8px 0; font-size: 14px; }
+ul, ol { margin: 8px 0 8px 20px; font-size: 14px; }
+li { margin: 4px 0; }
+blockquote {
+  border-left: 4px solid var(--blue); background: var(--light-blue);
+  padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 14px;
+}
+strong { color: var(--text); }
+code { background: #F1F3F5; padding: 1px 5px; border-radius: 3px; font-size: 13px; font-family: 'Consolas', monospace; }
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; border: 1px solid var(--border); }
+
+/* cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+.card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.card h3 { margin: 0 0 8px; color: var(--blue); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.card p { font-size: 13px; color: var(--muted); margin: 0; }
+.card a { text-decoration: none; color: inherit; display: block; }
+.card .tag { font-size: 11px; background: var(--light-blue); color: var(--blue); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 8px; }
+
+/* footer */
+footer { text-align: center; padding: 24px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+footer a { color: var(--blue); text-decoration: none; }
+
+/* nav breadcrumb */
+.breadcrumb { margin-bottom: 20px; font-size: 13px; color: var(--muted); }
+.breadcrumb a { color: var(--blue); text-decoration: none; }
+
+@media print {
+  header { background: white; color: var(--text); padding: 12px 0; }
+  .badges, footer, .breadcrumb { display: none; }
+  main { padding: 0; }
+}
+@media (max-width: 700px) {
+  header { padding: 20px 16px; }
+  main { padding: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>danal-research</h1>
+  <p>Shortlist / Priority Memo</p>
+  <div class="badges">
+    <span class="badge">Priority Memo</span>
+    <span class="badge">2026-03-21</span>
+  </div>
+</header>
+
+<main>
+
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a> &rsaquo; Shortlist / Priority Memo
+</div>
+<article>
+<h1 id="shortlist-priority-memo">Shortlist / Priority Memo</h1>
+<blockquote>
+<p>작성일: 2026-03-21
+목적: 리서치 대상 후보군 우선순위 정리
+기준: 다날 사업 적합성, 문서화 가능성, 시그널 명확성, 후속 액션 가능성</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 우선순위 요약</h2>
+<table>
+<thead>
+<tr>
+<th>우선순위</th>
+<th>대상</th>
+<th>역할</th>
+<th>현재 판단</th>
+<th>다음 액션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td><strong>Circle</strong></td>
+<td>글로벌 USDC 정산 파트너</td>
+<td><code>파트너십 검토 유지</code></td>
+<td>KPI 확인형 follow-up memo</td>
+</tr>
+<tr>
+<td>2</td>
+<td><strong>Ripple</strong></td>
+<td>크로스보더 정산·인프라 옵션</td>
+<td><code>관심</code></td>
+<td>IPO/국내 확장 신호 모니터링</td>
+</tr>
+<tr>
+<td>3</td>
+<td><strong>토스</strong></td>
+<td>국내 경쟁사 벤치마크</td>
+<td><code>보류</code></td>
+<td>가맹점/PG 차별화 비교 유지</td>
+</tr>
+<tr>
+<td>4</td>
+<td><strong>슈퍼블록</strong></td>
+<td>기술 옵션·기투자 사후 점검</td>
+<td><code>후속 모니터링</code></td>
+<td>상용화 실증 확인</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2">2. 왜 이 순서인가</h2>
+<h3 id="1-circle">1) Circle</h3>
+<ul>
+<li>다날의 <code>글로벌/외국인 결제</code> 축과 가장 직접적으로 연결된다.</li>
+<li>규제 친화성과 기관 설명력이 높아 IM 초안 작성 적합성이 높다.</li>
+<li><code>투자</code>보다 <code>정산 파트너</code> 해석이 더 자연스럽다.</li>
+</ul>
+<h3 id="2-ripple">2) Ripple</h3>
+<ul>
+<li>크로스보더 정산 서사와 잘 맞는다.</li>
+<li>다만 국내 사업 연결과 실제 파트너십 구체성은 Circle보다 한 단계 약하다.</li>
+<li><code>관심 유지 + 상장/제휴 신호 대기</code>가 적절하다.</li>
+</ul>
+<h3 id="3">3) 토스</h3>
+<ul>
+<li>투자 기회라기보다 <code>경쟁사 분석용 benchmark</code> 성격이 강하다.</li>
+<li>다날의 가맹점 전략, PG 차별화, 스테이블코인 공백을 역으로 설명하는 데 유용하다.</li>
+</ul>
+<h3 id="4">4) 슈퍼블록</h3>
+<ul>
+<li>기술적 옵션과 기존 투자 자산 모니터링 관점에선 의미가 있다.</li>
+<li>하지만 다날의 현재 공식 시그널인 <code>가맹점</code>, <code>외국인 결제</code>, <code>통합 결제 플랫폼</code>과의 직접성은 상대적으로 낮다.</li>
+</ul>
+<h2 id="3_1">3. 제외 / 후순위 처리 논리</h2>
+<ul>
+<li><code>단순 크립토 발행사</code>: 다날 결제 본업과 연결되지 않으면 후순위</li>
+<li><code>기술 데모형 프로젝트</code>: 가맹점 가치와 정산 구조가 약하면 후순위</li>
+<li><code>내수 소비앱</code>: 가맹점/정산 구조 분석에는 유용하지만 파트너 후보로는 제한적</li>
+</ul>
+<h2 id="4_1">4. 문서상 해석 원칙</h2>
+<ul>
+<li>shortlist는 <code>누가 더 좋아 보이는가</code>가 아니라 <code>누가 다날 의사결정에 더 직접 연결되는가</code>로 정렬한다.</li>
+<li>따라서 1순위는 시장 인기보다 <code>사업 연결성 + 문서화 가능성 + 후속 액션 명확성</code>이 높은 대상이 된다.</li>
+</ul>
+</article>
+
+</main>
+<footer>
+  Source: FRED, CoinGecko, SEC EDGAR | Built with Python
+  
+</footer>
+</body>
+</html>

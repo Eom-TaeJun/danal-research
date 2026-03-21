@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+
+{% block title %}{{ title }} — danal-research{% endblock %}
+
+{% block header %}
+<header>
+  <h1>danal-research</h1>
+  <p>{{ title }}</p>
+  <div class="badges">
+    <span class="badge">{{ report_type }}</span>
+    <span class="badge">{{ date }}</span>
+  </div>
+</header>
+{% endblock %}
+
+{% block content %}
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a> &rsaquo; {{ title }}
+</div>
+<article>
+{{ body }}
+</article>
+{% endblock %}

@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Dashboard — danal-research</title>
+<style>
+:root {
+  --blue: #1565C0; --light-blue: #E3F2FD;
+  --green: #2E7D32; --light-green: #E8F5E9;
+  --orange: #E65100; --light-orange: #FFF3E0;
+  --grey: #546E7A; --bg: #F5F7FA;
+  --white: #FFFFFF; --border: #DEE2E6;
+  --text: #212529; --muted: #6C757D;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+}
+header {
+  background: linear-gradient(135deg, var(--blue) 0%, #0D47A1 100%);
+  color: white; padding: 28px 48px 24px;
+}
+header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+header a:hover { text-decoration: underline; }
+.badges { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  padding: 2px 10px; border-radius: 20px; font-size: 11px;
+}
+main { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* tables */
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+th { background: var(--blue); color: white; font-weight: 600; text-align: left; padding: 10px 12px; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: var(--light-blue); }
+tr:nth-child(even) { background: #FAFBFC; }
+tr:nth-child(even):hover { background: var(--light-blue); }
+
+/* headings */
+h1 { font-size: 22px; color: var(--blue); margin: 32px 0 16px; border-bottom: 2px solid var(--blue); padding-bottom: 8px; }
+h2 { font-size: 17px; font-weight: 700; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 12px; margin: 28px 0 12px; }
+h3 { font-size: 14px; font-weight: 600; color: var(--grey); margin: 20px 0 8px; }
+
+/* content */
+p { margin: 8px 0; font-size: 14px; }
+ul, ol { margin: 8px 0 8px 20px; font-size: 14px; }
+li { margin: 4px 0; }
+blockquote {
+  border-left: 4px solid var(--blue); background: var(--light-blue);
+  padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 14px;
+}
+strong { color: var(--text); }
+code { background: #F1F3F5; padding: 1px 5px; border-radius: 3px; font-size: 13px; font-family: 'Consolas', monospace; }
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; border: 1px solid var(--border); }
+
+/* cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+.card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.card h3 { margin: 0 0 8px; color: var(--blue); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.card p { font-size: 13px; color: var(--muted); margin: 0; }
+.card a { text-decoration: none; color: inherit; display: block; }
+.card .tag { font-size: 11px; background: var(--light-blue); color: var(--blue); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 8px; }
+
+/* footer */
+footer { text-align: center; padding: 24px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+footer a { color: var(--blue); text-decoration: none; }
+
+/* nav breadcrumb */
+.breadcrumb { margin-bottom: 20px; font-size: 13px; color: var(--muted); }
+.breadcrumb a { color: var(--blue); text-decoration: none; }
+
+@media print {
+  header { background: white; color: var(--text); padding: 12px 0; }
+  .badges, footer, .breadcrumb { display: none; }
+  main { padding: 0; }
+}
+@media (max-width: 700px) {
+  header { padding: 20px 16px; }
+  main { padding: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+.stage-label {
+  font-size: 12px; font-weight: 700; color: var(--white);
+  background: var(--blue); padding: 3px 10px; border-radius: 10px;
+  display: inline-block; margin-bottom: 12px;
+}
+.stage-label.s2 { background: var(--green); }
+.stage-label.s3 { background: var(--orange); }
+.hero-card { border-left: 4px solid var(--blue); }
+.hero-card.decision { border-left-color: var(--orange); }
+.chart-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(300px, 1fr)); gap: 16px; margin: 16px 0; }
+.chart-grid img { width: 100%; border-radius: 8px; border: 1px solid var(--border); }
+.arch-block {
+  background: #1E293B; color: #E2E8F0; padding: 20px; border-radius: 10px;
+  font-family: 'Consolas', monospace; font-size: 13px; line-height: 1.8;
+  margin: 16px 0; overflow-x: auto;
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>danal-research</h1>
+  <p>Fintech & Digital Asset Investment Research</p>
+  <div class="badges">
+    <span class="badge">US Stablecoin Market</span>
+    <span class="badge">Regime Detection</span>
+    <span class="badge">4-Axis Risk Scoring</span>
+    <span class="badge">Auto-Calibrated Weights</span>
+  </div>
+</header>
+
+<main>
+
+<!-- Stage 1 -->
+<section>
+  <h2>Stage 1 — Business Position</h2>
+  <div class="card-grid">
+  
+    <div class="card hero-card">
+      <a href="danal_business_position_20260321.html">
+        <h3>다날 사업 구조 분석 메모</h3>
+        <p>IR + financials analysis. PG defense vs blockchain investment structure.</p>
+        <span class="tag">Business Position</span>
+      </a>
+    </div>
+  
+  </div>
+</section>
+
+<!-- Stage 2 -->
+<section>
+  <h2>Stage 2 — External Research</h2>
+  <div class="card-grid">
+  
+    <div class="card">
+      <a href="master_research_report_20260308.html">
+        <h3>B2B 스테이블코인 결제 인프라 섹터 리서치 리포트</h3>
+        <p>Macro regime, sector screening, company analysis with 27 sources.</p>
+        <span class="tag">Master Research</span>
+      </a>
+    </div>
+  
+    <div class="card">
+      <a href="deep_stablecoin_20260321.html">
+        <h3>스테이블코인 시장 심화 분석 — 2026-03-21</h3>
+        <p>Market structure + regulation + 4-axis risk scoring + stress test.</p>
+        <span class="tag">Deep Analysis</span>
+      </a>
+    </div>
+  
+    <div class="card">
+      <a href="circle_s1_analysis_20260308.html">
+        <h3>Circle Internet Financial — S-1 & FY2025 영문 원문 분석</h3>
+        <p>Circle SEC S-1 filing deep dive. Revenue structure, risk factors.</p>
+        <span class="tag">S-1 Analysis</span>
+      </a>
+    </div>
+  
+    <div class="card">
+      <a href="brief_20260321.html">
+        <h3>핀테크/디지털자산 주간 브리핑 — 2026-03-21</h3>
+        <p>Macro snapshot + stablecoin market + investment implications.</p>
+        <span class="tag">Weekly Brief</span>
+      </a>
+    </div>
+  
+  </div>
+</section>
+
+<!-- Stage 3 -->
+<section>
+  <h2>Stage 3 — Investment Decision</h2>
+  <div class="card-grid">
+  
+    <div class="card hero-card decision">
+      <a href="shortlist_priority_memo_20260321.html">
+        <h3>Shortlist / Priority Memo</h3>
+        <p>Shortlisted companies ranked by strategic fit.</p>
+        <span class="tag">Priority Memo</span>
+      </a>
+    </div>
+  
+    <div class="card hero-card decision">
+      <a href="decision_memo_Circle_20260321.html">
+        <h3>One-Page Decision Memo — Circle</h3>
+        <p>1-page investment decision. Partnership over equity investment.</p>
+        <span class="tag">Decision Memo</span>
+      </a>
+    </div>
+  
+  </div>
+</section>
+
+<!-- Charts -->
+
+<section>
+  <h2>Charts & Visualizations</h2>
+  <div class="chart-grid">
+  
+    <img src="charts/macro_dashboard_20260321.png" alt="Macro Dashboard">
+  
+    <img src="charts/regime_gauge_20260321.png" alt="Regime Gauge">
+  
+    <img src="charts/stablecoin_pie_20260321.png" alt="Stablecoin Market Share">
+  
+    <img src="charts/macro_timeseries_20260321.png" alt="Macro 12-Month Trend">
+  
+    <img src="charts/danal_financial_20260321.png" alt="Danal Financial Trend">
+  
+  </div>
+</section>
+
+
+<!-- Supporting -->
+
+<section>
+  <h2>Supporting Research</h2>
+  <div class="card-grid">
+  
+    <div class="card">
+      <a href="screen_stablecoin_20260321.html">
+        <h3>스테이블코인 섹터 스크리닝 — 2026-03-21</h3>
+        <span class="tag">Screening</span>
+      </a>
+    </div>
+  
+    <div class="card">
+      <a href="im_토스_20260306.html">
+        <h3>Investment Memorandum — 토스 (비바리퍼블리카)</h3>
+        <span class="tag">Report</span>
+      </a>
+    </div>
+  
+    <div class="card">
+      <a href="im_슈퍼블록_20260308.html">
+        <h3>Investment Memorandum — 슈퍼블록 (Superblock)</h3>
+        <span class="tag">Report</span>
+      </a>
+    </div>
+  
+    <div class="card">
+      <a href="im_Ripple_20260306.html">
+        <h3>Investment Memorandum — Ripple (XRP Ledger)</h3>
+        <span class="tag">IM</span>
+      </a>
+    </div>
+  
+    <div class="card">
+      <a href="im_Circle_20260306.html">
+        <h3>Investment Memorandum — Circle</h3>
+        <span class="tag">IM</span>
+      </a>
+    </div>
+  
+  </div>
+</section>
+
+
+<!-- Architecture -->
+<section>
+  <h2>Pipeline Architecture</h2>
+  <div class="arch-block"><pre>collect.py  ──>  analyze.py  ──>  risk.py  ──>  report.py  ──>  html.py
+  FRED            Regime           4-Axis        Markdown        HTML
+  CoinGecko       Detection        Scoring       Generation      Dashboard
+  Perplexity      8 Signals        Stress Test
+                  calibrate.py
+                  (auto weights)</pre></div>
+</section>
+
+</main>
+<footer>
+  Source: FRED, CoinGecko, SEC EDGAR | Built with Python
+  
+</footer>
+</body>
+</html>

@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스테이블코인 시장 심화 분석 — 2026-03-21 — danal-research</title>
+<style>
+:root {
+  --blue: #1565C0; --light-blue: #E3F2FD;
+  --green: #2E7D32; --light-green: #E8F5E9;
+  --orange: #E65100; --light-orange: #FFF3E0;
+  --grey: #546E7A; --bg: #F5F7FA;
+  --white: #FFFFFF; --border: #DEE2E6;
+  --text: #212529; --muted: #6C757D;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+}
+header {
+  background: linear-gradient(135deg, var(--blue) 0%, #0D47A1 100%);
+  color: white; padding: 28px 48px 24px;
+}
+header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+header a:hover { text-decoration: underline; }
+.badges { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  padding: 2px 10px; border-radius: 20px; font-size: 11px;
+}
+main { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* tables */
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+th { background: var(--blue); color: white; font-weight: 600; text-align: left; padding: 10px 12px; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: var(--light-blue); }
+tr:nth-child(even) { background: #FAFBFC; }
+tr:nth-child(even):hover { background: var(--light-blue); }
+
+/* headings */
+h1 { font-size: 22px; color: var(--blue); margin: 32px 0 16px; border-bottom: 2px solid var(--blue); padding-bottom: 8px; }
+h2 { font-size: 17px; font-weight: 700; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 12px; margin: 28px 0 12px; }
+h3 { font-size: 14px; font-weight: 600; color: var(--grey); margin: 20px 0 8px; }
+
+/* content */
+p { margin: 8px 0; font-size: 14px; }
+ul, ol { margin: 8px 0 8px 20px; font-size: 14px; }
+li { margin: 4px 0; }
+blockquote {
+  border-left: 4px solid var(--blue); background: var(--light-blue);
+  padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 14px;
+}
+strong { color: var(--text); }
+code { background: #F1F3F5; padding: 1px 5px; border-radius: 3px; font-size: 13px; font-family: 'Consolas', monospace; }
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; border: 1px solid var(--border); }
+
+/* cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+.card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.card h3 { margin: 0 0 8px; color: var(--blue); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.card p { font-size: 13px; color: var(--muted); margin: 0; }
+.card a { text-decoration: none; color: inherit; display: block; }
+.card .tag { font-size: 11px; background: var(--light-blue); color: var(--blue); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 8px; }
+
+/* footer */
+footer { text-align: center; padding: 24px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+footer a { color: var(--blue); text-decoration: none; }
+
+/* nav breadcrumb */
+.breadcrumb { margin-bottom: 20px; font-size: 13px; color: var(--muted); }
+.breadcrumb a { color: var(--blue); text-decoration: none; }
+
+@media print {
+  header { background: white; color: var(--text); padding: 12px 0; }
+  .badges, footer, .breadcrumb { display: none; }
+  main { padding: 0; }
+}
+@media (max-width: 700px) {
+  header { padding: 20px 16px; }
+  main { padding: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>danal-research</h1>
+  <p>스테이블코인 시장 심화 분석 — 2026-03-21</p>
+  <div class="badges">
+    <span class="badge">Deep Analysis</span>
+    <span class="badge">2026-03-21</span>
+  </div>
+</header>
+
+<main>
+
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a> &rsaquo; 스테이블코인 시장 심화 분석 — 2026-03-21
+</div>
+<article>
+<h1 id="2026-03-21">스테이블코인 시장 심화 분석 — 2026-03-21</h1>
+<blockquote>
+<p>현재 레짐: <strong>Goldilocks</strong> (High) | 스테이블코인 시총: $267.9B</p>
+</blockquote>
+<hr />
+<h2 id="1">1. 거시지표 추이</h2>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>현재</th>
+<th>레짐 신호</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fed Funds Rate</td>
+<td>3.64%</td>
+<td>금리 하락 기조 — SC 결제 볼륨 ↑, 이자 수익 ↓</td>
+</tr>
+<tr>
+<td>10Y Treasury</td>
+<td>4.25%</td>
+<td>장기금리 안정 — 기업 투자 환경 양호</td>
+</tr>
+<tr>
+<td>USD/KRW</td>
+<td>1498.88</td>
+<td>달러 강세 프록시 — 크립토·이머징 자금 흐름 참고</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="거시지표 12개월 추이" src="charts/macro_timeseries_20260321.png" /></p>
+<hr />
+<h2 id="2">2. 스테이블코인 시장 구조</h2>
+<table>
+<thead>
+<tr>
+<th>코인</th>
+<th>시총</th>
+<th>도미넌스</th>
+<th>수익 모델</th>
+<th>규제 상태</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USDT</td>
+<td>$184.2B</td>
+<td>~70%</td>
+<td>이자 수익 (T-Bills)</td>
+<td>미규제 — GENIUS Act 적용 대상</td>
+</tr>
+<tr>
+<td>USDC</td>
+<td>$79.0B</td>
+<td>~29%</td>
+<td>이자 수익 + CPN 수수료</td>
+<td>SEC 등록, OCC 인가 추진</td>
+</tr>
+<tr>
+<td>DAI</td>
+<td>$4.2B</td>
+<td>~1.6%</td>
+<td>담보 이자 (DSR)</td>
+<td>DeFi — MiCA 해당 없음</td>
+</tr>
+<tr>
+<td>RLUSD</td>
+<td>출시 초기</td>
+<td>&lt;0.1%</td>
+<td>ODL 수수료 + 이자</td>
+<td>NYDFS 인가</td>
+</tr>
+</tbody>
+</table>
+<p><strong>구조적 특징:</strong>
+- <strong>이자 의존 모델의 한계</strong>: USDT/USDC 모두 수익의 90%+ 가 준비금 이자. Fed 금리 1%p 인하 시 Circle 연 $4.4억 매출 감소 (S-1 기준)
+- <strong>수수료 모델로의 전환</strong>: Circle CPN ($5.7B 연간 볼륨), Ripple ODL — 거래 기반 수익 구조 시도
+- <strong>수수료 기반 모델</strong>: 이자가 아닌 <strong>정산 수수료(take rate) 기반 SaaS</strong> — 금리 변동에 구조적으로 중립</p>
+<p><img alt="스테이블코인 시장점유율" src="charts/stablecoin_pie_20260321.png" /></p>
+<hr />
+<h2 id="3">3. 규제 환경 비교</h2>
+<table>
+<thead>
+<tr>
+<th>관할</th>
+<th>법안/규제</th>
+<th>현황</th>
+<th>다날 함의</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>미국</td>
+<td>GENIUS Act</td>
+<td>2025-07 통과</td>
+<td>USDC 정산 레일 안정성 ↑ — 규제 명확화로 기관 채택 가속</td>
+</tr>
+<tr>
+<td>미국</td>
+<td>SEC 가이던스</td>
+<td>증권성 판단 기준 진화 중</td>
+<td>이자 지급 SC(DAI 등)의 증권 분류 리스크 지속</td>
+</tr>
+<tr>
+<td>EU</td>
+<td>MiCA</td>
+<td>2024-06 시행, EBA 면제 종료 (2026-03-02)</td>
+<td>유럽 SC 발행 진입장벽 ↑ — USDC 유럽 시장 점유 기회</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4">4. 다날 재무 현황</h2>
+<table>
+<thead>
+<tr>
+<th>연도</th>
+<th>매출</th>
+<th>영업이익</th>
+<th>세전순이익</th>
+<th>해석</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2021</td>
+<td>2,648억</td>
+<td>257억</td>
+<td>52억</td>
+<td></td>
+</tr>
+<tr>
+<td>2022</td>
+<td>2,553억</td>
+<td>245억</td>
+<td>-58억</td>
+<td></td>
+</tr>
+<tr>
+<td>2023</td>
+<td>2,468억</td>
+<td>209억</td>
+<td>-210억</td>
+<td></td>
+</tr>
+<tr>
+<td>2024</td>
+<td>2,118억</td>
+<td>136억</td>
+<td>-355억</td>
+<td>매출 하락 가속, 효율화 시작</td>
+</tr>
+<tr>
+<td>2025</td>
+<td>1,945억</td>
+<td>150억</td>
+<td>-611억</td>
+<td>영업이익 반등, 블록체인 투자 적자 확대</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="다날 재무 추이" src="charts/danal_financial_20260321.png" /></p>
+<p><strong>핵심 긴장</strong>: 본업 PG는 영업이익률 개선(6.4%→7.7%)으로 방어 중이나, 블록체인 투자 영업외손실 누적으로 세전순이익 적자 3배 확대. 신사업 수익화 시점이 투자 판단의 핵심.</p>
+<hr />
+<h2 id="5">5. 리서치 대상 스크리닝</h2>
+<table>
+<thead>
+<tr>
+<th>기업</th>
+<th>전략적합(40)</th>
+<th>기술보완(30)</th>
+<th>규제역량(20)</th>
+<th>협력가능(10)</th>
+<th><strong>합계</strong></th>
+<th>판정</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Circle</td>
+<td>38</td>
+<td>28</td>
+<td>19</td>
+<td>8</td>
+<td><strong>93</strong></td>
+<td>파트너십 검토</td>
+</tr>
+<tr>
+<td>Ripple</td>
+<td>32</td>
+<td>27</td>
+<td>17</td>
+<td>7</td>
+<td><strong>83</strong></td>
+<td>관심→IPO 후 검토</td>
+</tr>
+<tr>
+<td>슈퍼블록</td>
+<td>30</td>
+<td>25</td>
+<td>14</td>
+<td>10</td>
+<td><strong>79</strong></td>
+<td>후속 모니터링</td>
+</tr>
+<tr>
+<td>Tether</td>
+<td>10</td>
+<td>15</td>
+<td>5</td>
+<td>3</td>
+<td><strong>33</strong></td>
+<td>탈락</td>
+</tr>
+<tr>
+<td>Coinbase</td>
+<td>12</td>
+<td>20</td>
+<td>12</td>
+<td>2</td>
+<td><strong>46</strong></td>
+<td>탈락</td>
+</tr>
+<tr>
+<td>람다256</td>
+<td>8</td>
+<td>18</td>
+<td>10</td>
+<td>2</td>
+<td><strong>38</strong></td>
+<td>탈락</td>
+</tr>
+<tr>
+<td>카이아</td>
+<td>10</td>
+<td>15</td>
+<td>8</td>
+<td>3</td>
+<td><strong>36</strong></td>
+<td>탈락</td>
+</tr>
+</tbody>
+</table>
+<p><strong>기준</strong>: 다날 전략적합성(40%) + 기술보완성(30%) + 규제역량(20%) + 협력가능성(10%)</p>
+<hr />
+<h2 id="6">6. 투자 시사점</h2>
+<ul>
+<li><strong>레짐 Goldilocks에서의 최적 행동</strong>: Growth 단계($267.9B) — USDC 정산 SaaS 파트너십 확장 최적 타이밍</li>
+<li><strong>결제 캐시카우</strong>: 소비 안정 구간 — 결제 거래량 방어 가능</li>
+<li><strong>크로스보더 확장</strong>: 크로스보더 결제 확장 여건 양호 — 파트너십 가속</li>
+</ul>
+<p><strong>watch point:</strong>
+- GENIUS Act 시행 세부규정 확정
+- Circle CCTP 정산 볼륨 추이
+- USDC 도미넌스 변화 (USDT 대비)</p>
+<hr />
+<p><em>작성: 2026-03-21 | Source: FRED, CoinGecko, SEC EDGAR, 다날 공식(IR 북·보도자료·재무정보)</em></p>
+</article>
+
+</main>
+<footer>
+  Source: FRED, CoinGecko, SEC EDGAR | Built with Python
+  
+</footer>
+</body>
+</html>

@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>스테이블코인 섹터 스크리닝 — 2026-03-21 — danal-research</title>
+<style>
+:root {
+  --blue: #1565C0; --light-blue: #E3F2FD;
+  --green: #2E7D32; --light-green: #E8F5E9;
+  --orange: #E65100; --light-orange: #FFF3E0;
+  --grey: #546E7A; --bg: #F5F7FA;
+  --white: #FFFFFF; --border: #DEE2E6;
+  --text: #212529; --muted: #6C757D;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+}
+header {
+  background: linear-gradient(135deg, var(--blue) 0%, #0D47A1 100%);
+  color: white; padding: 28px 48px 24px;
+}
+header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+header a:hover { text-decoration: underline; }
+.badges { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  padding: 2px 10px; border-radius: 20px; font-size: 11px;
+}
+main { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* tables */
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+th { background: var(--blue); color: white; font-weight: 600; text-align: left; padding: 10px 12px; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: var(--light-blue); }
+tr:nth-child(even) { background: #FAFBFC; }
+tr:nth-child(even):hover { background: var(--light-blue); }
+
+/* headings */
+h1 { font-size: 22px; color: var(--blue); margin: 32px 0 16px; border-bottom: 2px solid var(--blue); padding-bottom: 8px; }
+h2 { font-size: 17px; font-weight: 700; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 12px; margin: 28px 0 12px; }
+h3 { font-size: 14px; font-weight: 600; color: var(--grey); margin: 20px 0 8px; }
+
+/* content */
+p { margin: 8px 0; font-size: 14px; }
+ul, ol { margin: 8px 0 8px 20px; font-size: 14px; }
+li { margin: 4px 0; }
+blockquote {
+  border-left: 4px solid var(--blue); background: var(--light-blue);
+  padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 14px;
+}
+strong { color: var(--text); }
+code { background: #F1F3F5; padding: 1px 5px; border-radius: 3px; font-size: 13px; font-family: 'Consolas', monospace; }
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; border: 1px solid var(--border); }
+
+/* cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+.card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.card h3 { margin: 0 0 8px; color: var(--blue); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.card p { font-size: 13px; color: var(--muted); margin: 0; }
+.card a { text-decoration: none; color: inherit; display: block; }
+.card .tag { font-size: 11px; background: var(--light-blue); color: var(--blue); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 8px; }
+
+/* footer */
+footer { text-align: center; padding: 24px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+footer a { color: var(--blue); text-decoration: none; }
+
+/* nav breadcrumb */
+.breadcrumb { margin-bottom: 20px; font-size: 13px; color: var(--muted); }
+.breadcrumb a { color: var(--blue); text-decoration: none; }
+
+@media print {
+  header { background: white; color: var(--text); padding: 12px 0; }
+  .badges, footer, .breadcrumb { display: none; }
+  main { padding: 0; }
+}
+@media (max-width: 700px) {
+  header { padding: 20px 16px; }
+  main { padding: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>danal-research</h1>
+  <p>스테이블코인 섹터 스크리닝 — 2026-03-21</p>
+  <div class="badges">
+    <span class="badge">Screening</span>
+    <span class="badge">2026-03-21</span>
+  </div>
+</header>
+
+<main>
+
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a> &rsaquo; 스테이블코인 섹터 스크리닝 — 2026-03-21
+</div>
+<article>
+<h1 id="2026-03-21">스테이블코인 섹터 스크리닝 — 2026-03-21</h1>
+<p><img alt="Market Snapshot Dashboard" src="charts/macro_dashboard_20260321.png" /></p>
+<hr />
+<h2 id="1">1. 거시 레짐</h2>
+<table>
+<thead>
+<tr>
+<th>판단</th>
+<th>확신</th>
+<th>성장 방향</th>
+<th>인플레이션</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Goldilocks</strong></td>
+<td>High</td>
+<td>positive</td>
+<td>moderate</td>
+</tr>
+</tbody>
+</table>
+<p><strong>근거:</strong>
+  - 10Y-FF spread +0.61%p → 수익률 곡선 정상화, 경기 확장 기대
+  - 2Y-10Y spread +0.46%p → 정상 곡선, 경기 확장 확인</p>
+<p><img alt="Regime Gauge" src="charts/regime_gauge_20260321.png" /></p>
+<h2 id="2">2. 거시경제 스냅샷</h2>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>값</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fed Funds Rate</td>
+<td>3.64%</td>
+</tr>
+<tr>
+<td>미국 10Y 국채</td>
+<td>4.25%</td>
+</tr>
+<tr>
+<td>USD/KRW</td>
+<td>1498.88</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3">3. 스테이블코인 시장</h2>
+<p><strong>전체 시총: $267.9B</strong> — 시그널: <code>NEUTRAL</code></p>
+<blockquote>
+<p>시총 $267.9B — 안정권 유지</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>코인</th>
+<th>시총</th>
+<th>도미넌스</th>
+<th>7일 변화</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>USDT</td>
+<td>$184.1B</td>
+<td>68.7%</td>
+<td>-0.0%</td>
+</tr>
+<tr>
+<td>USDC</td>
+<td>$79.0B</td>
+<td>29.5%</td>
+<td>-0.0%</td>
+</tr>
+<tr>
+<td>DAI</td>
+<td>$4.3B</td>
+<td>1.6%</td>
+<td>-0.0%</td>
+</tr>
+<tr>
+<td>FDUSD</td>
+<td>$0.4B</td>
+<td>0.1%</td>
+<td>-0.0%</td>
+</tr>
+</tbody>
+</table>
+<p><img alt="Stablecoin Market Share" src="charts/stablecoin_pie_20260321.png" /></p>
+<h2 id="4">4. 다날 비즈니스 함의</h2>
+<p><strong>레짐 Goldilocks 기준:</strong></p>
+<ul>
+<li><strong>스테이블코인 정산 SaaS</strong>: Growth 단계($267.9B) — USDC 정산 SaaS 파트너십 확장 최적 타이밍</li>
+<li><strong>결제 캐시카우</strong>: 소비 안정 구간 — 결제 거래량 방어 가능</li>
+<li><strong>크로스보더 확장</strong>: 크로스보더 결제 확장 여건 양호 — 파트너십 가속</li>
+</ul>
+<p><strong>주목할 이벤트:</strong>
+- GENIUS Act 시행 세부규정 확정
+- Circle CCTP 정산 볼륨 추이
+- USDC 도미넌스 변화 (USDT 대비)</p>
+<h2 id="5">5. 투자 기회 &amp; 리스크 매트릭스</h2>
+<table>
+<thead>
+<tr>
+<th>구분</th>
+<th>내용</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>✅ 기회 1</td>
+<td>스테이블코인 규제 명확화(GENIUS Act) → SaaS 신규 수요</td>
+</tr>
+<tr>
+<td>✅ 기회 2</td>
+<td>Goldilocks 레짐 → Growth 단계($267.9B) — USDC 정산 파트너십 확장 가속</td>
+</tr>
+<tr>
+<td>✅ 기회 3</td>
+<td>결제 인프라 확장 — 경기 방어적 포지션</td>
+</tr>
+<tr>
+<td>⚠️ 리스크 1</td>
+<td>USDT 도미넌스 68.7% 집중 → Circle 이탈 시 구조 변화</td>
+</tr>
+<tr>
+<td>⚠️ 리스크 2</td>
+<td>SEC 증권성 판단 — 이자 지급 SC 규제 불확실성</td>
+</tr>
+<tr>
+<td>⚠️ 리스크 3</td>
+<td>Fed 금리 인하 시 준비금 이자 모델 수익성 압박</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><em>작성: 2026-03-21 | Source: FRED, CoinGecko, 다날 공식(IR 북·보도자료·재무정보)</em></p>
+</article>
+
+</main>
+<footer>
+  Source: FRED, CoinGecko, SEC EDGAR | Built with Python
+  
+</footer>
+</body>
+</html>

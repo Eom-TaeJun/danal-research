@@ -1,0 +1,439 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Investment Memorandum — Ripple (XRP Ledger) — danal-research</title>
+<style>
+:root {
+  --blue: #1565C0; --light-blue: #E3F2FD;
+  --green: #2E7D32; --light-green: #E8F5E9;
+  --orange: #E65100; --light-orange: #FFF3E0;
+  --grey: #546E7A; --bg: #F5F7FA;
+  --white: #FFFFFF; --border: #DEE2E6;
+  --text: #212529; --muted: #6C757D;
+}
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body {
+  font-family: 'Segoe UI', 'Noto Sans KR', -apple-system, sans-serif;
+  background: var(--bg); color: var(--text); line-height: 1.7;
+}
+header {
+  background: linear-gradient(135deg, var(--blue) 0%, #0D47A1 100%);
+  color: white; padding: 28px 48px 24px;
+}
+header h1 { font-size: 22px; font-weight: 700; letter-spacing: -0.5px; }
+header p { font-size: 14px; opacity: 0.85; margin-top: 4px; }
+header a { color: rgba(255,255,255,0.9); text-decoration: none; }
+header a:hover { text-decoration: underline; }
+.badges { display: flex; gap: 8px; margin-top: 12px; flex-wrap: wrap; }
+.badge {
+  background: rgba(255,255,255,0.18); border: 1px solid rgba(255,255,255,0.35);
+  padding: 2px 10px; border-radius: 20px; font-size: 11px;
+}
+main { max-width: 960px; margin: 0 auto; padding: 32px 24px 60px; }
+
+/* tables */
+table { border-collapse: collapse; width: 100%; margin: 16px 0; font-size: 14px; }
+th { background: var(--blue); color: white; font-weight: 600; text-align: left; padding: 10px 12px; }
+td { padding: 8px 12px; border-bottom: 1px solid var(--border); }
+tr:hover { background: var(--light-blue); }
+tr:nth-child(even) { background: #FAFBFC; }
+tr:nth-child(even):hover { background: var(--light-blue); }
+
+/* headings */
+h1 { font-size: 22px; color: var(--blue); margin: 32px 0 16px; border-bottom: 2px solid var(--blue); padding-bottom: 8px; }
+h2 { font-size: 17px; font-weight: 700; color: var(--blue); border-left: 4px solid var(--blue); padding-left: 12px; margin: 28px 0 12px; }
+h3 { font-size: 14px; font-weight: 600; color: var(--grey); margin: 20px 0 8px; }
+
+/* content */
+p { margin: 8px 0; font-size: 14px; }
+ul, ol { margin: 8px 0 8px 20px; font-size: 14px; }
+li { margin: 4px 0; }
+blockquote {
+  border-left: 4px solid var(--blue); background: var(--light-blue);
+  padding: 12px 16px; margin: 16px 0; border-radius: 0 8px 8px 0; font-size: 14px;
+}
+strong { color: var(--text); }
+code { background: #F1F3F5; padding: 1px 5px; border-radius: 3px; font-size: 13px; font-family: 'Consolas', monospace; }
+hr { border: none; border-top: 1px solid var(--border); margin: 24px 0; }
+img { max-width: 100%; height: auto; border-radius: 8px; margin: 12px 0; border: 1px solid var(--border); }
+
+/* cards */
+.card-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin: 16px 0; }
+.card {
+  background: var(--white); border: 1px solid var(--border); border-radius: 12px;
+  padding: 20px; transition: box-shadow 0.2s;
+}
+.card:hover { box-shadow: 0 4px 16px rgba(0,0,0,0.08); }
+.card h3 { margin: 0 0 8px; color: var(--blue); font-size: 15px; text-transform: none; letter-spacing: 0; }
+.card p { font-size: 13px; color: var(--muted); margin: 0; }
+.card a { text-decoration: none; color: inherit; display: block; }
+.card .tag { font-size: 11px; background: var(--light-blue); color: var(--blue); padding: 2px 8px; border-radius: 10px; display: inline-block; margin-top: 8px; }
+
+/* footer */
+footer { text-align: center; padding: 24px; font-size: 12px; color: var(--muted); border-top: 1px solid var(--border); }
+footer a { color: var(--blue); text-decoration: none; }
+
+/* nav breadcrumb */
+.breadcrumb { margin-bottom: 20px; font-size: 13px; color: var(--muted); }
+.breadcrumb a { color: var(--blue); text-decoration: none; }
+
+@media print {
+  header { background: white; color: var(--text); padding: 12px 0; }
+  .badges, footer, .breadcrumb { display: none; }
+  main { padding: 0; }
+}
+@media (max-width: 700px) {
+  header { padding: 20px 16px; }
+  main { padding: 16px; }
+  .card-grid { grid-template-columns: 1fr; }
+}
+
+</style>
+</head>
+<body>
+
+<header>
+  <h1>danal-research</h1>
+  <p>Investment Memorandum — Ripple (XRP Ledger)</p>
+  <div class="badges">
+    <span class="badge">IM</span>
+    <span class="badge">2026-03-06</span>
+  </div>
+</header>
+
+<main>
+
+<div class="breadcrumb">
+  <a href="index.html">Dashboard</a> &rsaquo; Investment Memorandum — Ripple (XRP Ledger)
+</div>
+<article>
+<h1 id="investment-memorandum-ripple-xrp-ledger">Investment Memorandum — Ripple (XRP Ledger)</h1>
+<blockquote>
+<p>작성일: 2026-03-06 | 초안 v1 (Draft)
+분석 목적: 다날 스테이블코인 발행 플랫폼 기술 파트너 분석 + 전략적 투자 가능성 검토</p>
+</blockquote>
+<hr />
+<h2 id="1-executive-summary">1. Executive Summary</h2>
+<p>Ripple은 XRP Ledger(XRPL) 기반의 크로스보더 결제 인프라 기업으로, ODL(On-Demand Liquidity)을 통해 은행·핀테크의 실시간 국제 송금을 처리한다. 2024년 말 자체 달러 스테이블코인 RLUSD를 출시하며 결제 인프라에서 스테이블코인 발행으로 사업 영역을 확장 중이다. 2020년 시작된 SEC 소송이 2024~2025년 사이 사실상 종결되며 규제 불확실성이 해소되었고, XRP ETF 승인 가능성이 부상하고 있다.</p>
+<p><strong>다날 연결</strong>: 다날의 스테이블코인 발행 플랫폼은 XRP Ledger 네트워크 위에서 구동된다. Ripple은 단순 투자 대상이 아닌 <strong>기술 인프라 파트너</strong>이며, RLUSD의 글로벌 유통 전략과 다날 스테이블코인 플랫폼의 글로벌 유통 경로가 교차하는 접점이다.</p>
+<p><strong>투자 의견:</strong> ☑ 관심  ☐ 검토  ☐ 보류</p>
+<blockquote>
+<p>관심 근거: XRP Ledger = 다날 스테이블코인 플랫폼 핵심 인프라. Ripple IPO 현실화 시 전략적 투자 가치 발생. 단, 비상장으로 재무 접근 제한 — IPO 타임라인 확정 후 검토 상향 가능.</p>
+</blockquote>
+<p><strong>투자 지표 스코어카드:</strong></p>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th style="text-align: center;">등급</th>
+<th style="text-align: center;">신호</th>
+<th>근거 요약</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Alignment (전략 정렬)</td>
+<td style="text-align: center;">高</td>
+<td style="text-align: center;">↑</td>
+<td>스테이블코인 발행 플랫폼 = XRP Ledger 직접 구동 — 다날 3축 중 SC 정산 SaaS 핵심 인프라</td>
+</tr>
+<tr>
+<td>Momentum (사업 모멘텀)</td>
+<td style="text-align: center;">中</td>
+<td style="text-align: center;">↑</td>
+<td>RLUSD 출시 + SEC 종결 + XRP ETF 기대 → 파트너 복귀 가속 중</td>
+</tr>
+<tr>
+<td>Trend (섹터 트렌드)</td>
+<td style="text-align: center;">高</td>
+<td style="text-align: center;">↑</td>
+<td>크로스보더 결제 성장 + GENIUS Act → 스테이블코인 인프라 채택 확대</td>
+</tr>
+<tr>
+<td>Volatility (변동성 리스크)</td>
+<td style="text-align: center;">高</td>
+<td style="text-align: center;">↓</td>
+<td>XRP 가격 변동성 高 + 비상장 재무 불투명 — 직접 투자 리스크 요인</td>
+</tr>
+<tr>
+<td>KR Market Sensitivity</td>
+<td style="text-align: center;">中</td>
+<td style="text-align: center;">↑</td>
+<td>한국 = 글로벌 최대 XRP 거래국 중 하나; 정부 확장재정 + 미국 유동성 위기 시 반사이익 기대</td>
+</tr>
+<tr>
+<td>Policy Direction</td>
+<td style="text-align: center;">低→中</td>
+<td style="text-align: center;">↑</td>
+<td>GENIUS Act 시행 세부규정 확정 대기 → SC 정산 SaaS 상용화 정책 수혜; SEC 증권성 판단 기준 진화 중</td>
+</tr>
+<tr>
+<td><strong>Overall</strong></td>
+<td style="text-align: center;"><strong>관심</strong></td>
+<td style="text-align: center;">→</td>
+<td>전략 정렬·트렌드 강세 vs 변동성·재무 불투명 상쇄 — IPO 후 재평가</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="1-b">1-b. 거시 시장 맥락 (한국 시장 관점)</h2>
+<blockquote>
+<p>현재 시나리오: <strong>정부 확장재정 + 미국 유동성 불안</strong> 병존 국면 (2026-03 기준)</p>
+</blockquote>
+<p><strong>미국 증시 불안 → 한국 반사이익 메커니즘:</strong>
+미국 대형 금융기관(JP Morgan 등)의 사모펀드(PE) 익스포저 누적으로 유동성 경색 우려가 제기되는 국면. 단기적으로 글로벌 위험자산 동조 하락이 나타나나, 이후 외국인 자금이 상대적으로 건전한 아시아 신흥국으로 이동하는 반사이익 패턴이 관찰된다. <strong>한국 코스피·코스닥은 미국 본격 조정 이후 3~6개월 래그(lag)를 두고 상승 전환하는 경향이 있다.</strong></p>
+<p><strong>정부 확장재정 국면:</strong>
+현재 한국 정부는 내수 부양을 위해 재정 지출을 확대하고 있으며, 한은 기준금리 인하 기조도 유지 중. 이는 코스닥 유동성 장세로 이어지며 <strong>핀테크·디지털자산 테마 종목(다날 포함)의 밸류에이션 확장에 유리한 환경</strong>이다.</p>
+<p><strong>지정학 리스크 (하방 시나리오):</strong>
+한반도 긴장 고조 또는 중동·동유럽 분쟁 확전이 급락 트리거로 작용할 수 있다. 코리아 디스카운트가 재확대되면 외인 이탈이 빨라지고 KRW 약세가 심화된다. 단, XRP는 전통 자산 대비 <strong>디커플링 경향</strong>이 있어 지정학 쇼크 이후 회복 속도가 상대적으로 빠른 편.</p>
+<p><strong>장기 secular 방향:</strong>
+단기 변동성과 무관하게 구조적으로 ① 디지털 결제 인프라 성장 ② 크로스보더 스테이블코인 결제 수요 ③ AI 에이전트 결제(x402) 시장 개화가 진행 중. XRP Ledger 기반 스테이블코인 플랫폼의 장기 성장 경로는 이 secular 트렌드와 정합한다.</p>
+<table>
+<thead>
+<tr>
+<th>시나리오</th>
+<th style="text-align: center;">확률(추정)</th>
+<th>XRP/다날 영향</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>미국 반사이익 + 확장재정 지속</td>
+<td style="text-align: center;">50%</td>
+<td>XRP 유동성 확대 + 코스닥 상승 → 다날 밸류에이션 ↑</td>
+</tr>
+<tr>
+<td>지정학 충격(전쟁 트리거)</td>
+<td style="text-align: center;">15%</td>
+<td>단기 급락 → 3~6개월 내 반등 (XRP 디커플링)</td>
+</tr>
+<tr>
+<td>미국 연착륙 + 글로벌 안정</td>
+<td style="text-align: center;">35%</td>
+<td>위험선호 유지 → XRP ETF 모멘텀 + 스테이블코인 채택 가속</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="2-company-overview">2. Company Overview</h2>
+<p><strong>설립</strong>: 2012년 | 본사: 미국 샌프란시스코 | 형태: 비상장(IPO 검토 중)</p>
+<p><strong>사업 모델</strong>: ODL(XRP 브릿지 통화 기반 즉시 정산) 수수료 + XRP 에스크로 방출 수익 + RLUSD 준비금 이자 수익의 3중 구조. RippleNet 가입 금융기관에 API 기반 메시징·정산 서비스 제공.</p>
+<p><strong>핵심 제품/서비스:</strong>
+- <strong>XRP Ledger (XRPL)</strong> — 탈중앙화 레이어1 블록체인, 3~5초 결제 완결, 수수료 $0.0002
+- <strong>RippleNet</strong> — 은행·핀테크 300개사 이상 연결된 결제 메시징 네트워크
+- <strong>ODL (On-Demand Liquidity)</strong> — XRP를 브릿지 통화로 활용한 실시간 크로스보더 정산
+- <strong>RLUSD</strong> — Ripple 달러 스테이블코인 (2024-12 출시, NYDFS 승인)
+- <strong>XRPL AMM</strong> — 온체인 자동화 마켓메이커 (2024 활성화)</p>
+<hr />
+<h2 id="3">3. 경영진</h2>
+<table>
+<thead>
+<tr>
+<th>이름</th>
+<th>직책</th>
+<th>주요 이력</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Brad Garlinghouse</td>
+<td>CEO</td>
+<td>Yahoo 전 COO; 2012년 Ripple 합류; SEC 소송 공개 대응 주도</td>
+</tr>
+<tr>
+<td>David Schwartz</td>
+<td>CTO &amp; XRPL 공동 발명자</td>
+<td>NSA 암호화 계약자 출신; XRP Ledger 원설계자</td>
+</tr>
+<tr>
+<td>Monica Long</td>
+<td>President</td>
+<td>Ripple 마케팅·전략 총괄; 아시아·중동 파트너십 확대 주도</td>
+</tr>
+<tr>
+<td>Stuart Alderoty</td>
+<td>Chief Legal Officer</td>
+<td>SEC 소송 법적 전략 수립; 암호자산 규제 전문</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="4-market-opportunity">4. Market Opportunity</h2>
+<p><strong>시장 규모:</strong>
+| 구분 | 규모 | 비고 |
+|------|------|------|
+| TAM (글로벌 크로스보더 결제) | $150T+ / 연 | 2030년 $250T 전망 (McKinsey, 2024) |
+| SAM (은행·핀테크 ODL 대체 가능 거래) | ~$5T / 연 | 업계 추정치 (McKinsey) |
+| SOM (RippleNet 현재 처리량) | 미공시 | 비상장 — 공시 의무 없음 |</p>
+<p><strong>성장 드라이버:</strong>
+- GENIUS Act 통과 → 미국 내 달러 스테이블코인 규제 명확화 → RLUSD 채택 가속
+- XRP ETF 승인 기대감 → 기관 자금 유입, XRP 유동성 증가 → ODL 비용 구조 개선
+- 아시아·중동 중앙은행 CBDC 파일럿에서 XRPL 활용 사례 증가</p>
+<p><strong>경쟁사 비교:</strong>
+| 기업 | 제품 | 강점 | 약점 |
+|------|------|------|------|
+| <strong>SWIFT</strong> | GPI 국제 송금 | 11,000개 기관 연결, 신뢰 | 1~5일 정산, 수수료 高 |
+| <strong>Stellar (XLM)</strong> | Stellar Network | 소액 송금 특화 | 생태계 규모 Ripple 대비 소규모 |
+| <strong>Circle (USDC)</strong> | USDC 크로스보더 | CCTP 멀티체인 | 결제 레일 아닌 스테이블코인 발행 |
+| <strong>JPMorgan (Kinexys)</strong> | Onyx / JPM Coin | 기관 신뢰 | 폐쇄형, 외부 접근 제한 |</p>
+<hr />
+<h2 id="5">5. 재무 실적</h2>
+<blockquote>
+<p>Ripple은 비상장 기업으로 공식 재무제표 미공개. 아래는 공개 언론·IR 자료 기반 추정.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>연도</th>
+<th>매출(추정)</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2022</td>
+<td>~$500M</td>
+<td>XRP 에스크로 방출 + ODL 수수료 (Forbes 추정, 2023)</td>
+</tr>
+<tr>
+<td>2023</td>
+<td>~$600M</td>
+<td>ODL 거래량 증가, SEC 부분 승소 이후 파트너 복귀</td>
+</tr>
+<tr>
+<td>2024</td>
+<td>미공시</td>
+<td>RLUSD 출시 + XRP 가격 상승 → 수익 증가 추정</td>
+</tr>
+</tbody>
+</table>
+<p><em>(출처: Forbes, Bloomberg 추정치 기반 — 비상장 기업으로 공식 수치 아님. IPO 공시 시 재검증 필요)</em></p>
+<blockquote>
+<p><strong>비상장 리스크</strong>: 재무 투명성 부재로 밸류에이션 검증 어려움. IPO 타임라인(2025~2026 검토 중) 확정 시 재무 실적 공개 예상.</p>
+</blockquote>
+<hr />
+<h2 id="6-investment-thesis">6. Investment Thesis</h2>
+<p><strong>Bull Case:</strong>
+1. <strong>XRP Ledger = 다날 스테이블코인 플랫폼 기반 인프라</strong> — 플랫폼 상용화·채택 확대는 XRPL 트랜잭션 증가로 직결. 다날이 XRPL 생태계 성장의 수혜자인 동시에 기여자.
+2. <strong>RLUSD + ODL 수직 통합</strong> — 스테이블코인(RLUSD) + 결제 레일(ODL) 동시 보유. Circle·Tether와 달리 결제 인프라 내재화 → 수수료 구조 방어력 高.
+3. <strong>SEC 소송 종결 + XRP ETF 가능성</strong> — 규제 불확실성 해소 + 기관 자금 유입 시 XRP 유동성·ODL 비용 구조 개선 → Ripple 기업가치 재평가.</p>
+<p><strong>Bear Case:</strong>
+1. <strong>비상장 → 재무 불투명</strong> — IPO 없이는 실제 수익성·부채 구조 확인 불가. 밸류에이션 근거 취약.
+2. <strong>XRP 가격 의존 리스크</strong> — ODL 효율성은 XRP 유동성·변동성에 직결. XRP 급락 시 ODL 비용 上昇 → 파트너 이탈 가능성.
+3. <strong>RLUSD vs 다날 스테이블코인 플랫폼 잠재적 경쟁</strong> — RLUSD가 다날이 타깃하는 시장에 직접 진출 시 다날 플랫폼과 직접 경쟁 전환 가능성.</p>
+<hr />
+<h2 id="7">7. 밸류에이션</h2>
+<blockquote>
+<p>비상장 기업. 아래는 최종 공개 라운드 및 비교 추정 기반.</p>
+</blockquote>
+<table>
+<thead>
+<tr>
+<th>지표</th>
+<th>값</th>
+<th>비고</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>마지막 공개 밸류에이션</td>
+<td>~$15B</td>
+<td>Series C (2019) — 현재 가치와 무관할 가능성 高</td>
+</tr>
+<tr>
+<td>XRP 시가총액(네트워크)</td>
+<td>변동</td>
+<td>XRP 유통량 × 현재가 기준 (CoinGecko 실시간 조회)</td>
+</tr>
+<tr>
+<td>비교 피어 (Coinbase, NASDAQ: COIN)</td>
+<td>EV/Revenue ~8x</td>
+<td>규제 리스크 반영된 크립토 인프라 배수</td>
+</tr>
+<tr>
+<td>IPO 기대 밸류에이션</td>
+<td>미정</td>
+<td>2025~2026 IPO 검토 중 — 공시 전 추정 불가</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>밸류에이션 판단</strong>: 직접 투자는 IPO 이후에야 가능. 현재 단계에서는 "전략적 파트너 모니터링" 포지션이 적절. IPO 공모가 공개 시 즉시 Circle(EV/Rev 28x)과 비교 검토 필요.</p>
+</blockquote>
+<hr />
+<h2 id="8-key-risks">8. Key Risks</h2>
+<table>
+<thead>
+<tr>
+<th>리스크</th>
+<th>유형</th>
+<th>강도</th>
+<th>완화 요인</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>XRP 가격 변동성</td>
+<td>시장</td>
+<td>★★★ (高)</td>
+<td>RLUSD 도입으로 스테이블 수익원 다변화 중</td>
+</tr>
+<tr>
+<td>RLUSD의 다날 플랫폼 경쟁 전환</td>
+<td>전략</td>
+<td>★★ (中)</td>
+<td>현재 동일 체인(XRPL) 기반 — RLUSD 직접 결제 확장 시 충돌 가능</td>
+</tr>
+<tr>
+<td>IPO 지연 / 재무 불투명</td>
+<td>재무</td>
+<td>★★ (中)</td>
+<td>SEC 소송 종결로 IPO 장애물 해소 — 타임라인 모니터링</td>
+</tr>
+<tr>
+<td>CBDC 경쟁 (특히 한국 CBDC)</td>
+<td>구조적</td>
+<td>★★ (中)</td>
+<td>XRPL 기반 CBDC 파일럿(팔라우·부탄 등) 선례 — 공존 가능</td>
+</tr>
+<tr>
+<td>SWIFT GPI 업그레이드</td>
+<td>경쟁</td>
+<td>★ (低)</td>
+<td>ODL 속도·비용 우위는 단기 역전 어려움</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="9">9. 최근 동향</h2>
+<ul>
+<li><strong>RLUSD 출시 (2024-12)</strong>: NYDFS 승인 완료. XRP Ledger + Ethereum 동시 발행. 출시 1개월 내 $50M+ 시총 돌파. <em>(출처: Ripple 공식 발표, 2024-12)</em></li>
+<li><strong>SEC 소송 사실상 종결 (2024~2025)</strong>: 2023년 "XRP 소매 판매는 증권 아님" 판결 이후 합의 진행. 기관 파트너 복귀 가속. <em>(출처: Reuters, 2025 추정)</em></li>
+<li><strong>XRPL AMM 활성화 (2024)</strong>: 온체인 자동화 유동성 공급 기능 추가 → DeFi 생태계 확장, RLUSD 유동성 공급에 활용. <em>(출처: XRPL.org, 2024)</em></li>
+<li><strong>한국 파트너십</strong>: Ripple-SBI Remittance를 통한 한-일 송금 서비스 운영 중 — 한국 시장 기존 접점 존재. <em>(출처: SBI Ripple Asia 공식 발표)</em></li>
+</ul>
+<hr />
+<h2 id="10">10. 다음 단계</h2>
+<p><strong>추가 확인 필요:</strong>
+- [ ] 2024~2025 ODL 거래량·수익 공개 자료 확보 (IPO 준비 중 일부 공시 가능성)
+- [ ] RLUSD 현재 시총·유통량 (CoinGecko 실시간 확인)
+- [ ] Ripple IPO 타임라인 공식 발표 모니터링
+- [ ] XRP ETF 승인 여부 및 기관 자금 유입 규모 추적</p>
+<p><strong>다날 전략 연결:</strong>
+- [x] <strong>스테이블코인 플랫폼 인프라 의존도 확인</strong>: 다날 스테이블코인 플랫폼이 XRP Ledger 기반으로 구동 — Ripple의 기술 안정성·생태계 성장이 플랫폼 상용화에 직결. XRPL 네트워크 장애·정책 변경 리스크 모니터링 필요.
+- [ ] <strong>RLUSD-다날 플랫폼 공존 시나리오 설계</strong>: RLUSD(달러) + 다날 스테이블코인을 XRPL 위에서 동시 운용하는 구조 검토 — 글로벌 크로스보더 결제 브릿지 가능성.
+- [ ] <strong>ODL × K.ONDA 연동 가능성</strong>: Ripple ODL을 방한 외국인 USDC 정산 이후 원화 전환 레이어로 활용 시 K.ONDA 정산 비용 절감 시나리오.
+- [ ] <strong>Ripple IPO 시 전략적 투자 검토</strong>: 공모가·재무 공시 확인 후 ☑ 검토 상향 여부 판단. Circle(EV/Rev 28x)과 배수 비교 필수.</p>
+<hr />
+<p><em>작성: 2026-03-06 v1 | Source: Ripple 공식 자료, Forbes, Reuters, CoinGecko, SBI Ripple Asia | 레짐: Goldilocks</em></p>
+</article>
+
+</main>
+<footer>
+  Source: FRED, CoinGecko, SEC EDGAR | Built with Python
+  
+</footer>
+</body>
+</html>
