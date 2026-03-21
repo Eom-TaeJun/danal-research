@@ -7,6 +7,7 @@
 # ── 2026-03-06 업데이트: 다중 신호 합산 + 신호별 추론 기록 + 신뢰도 가중치
 
 import json
+import math
 import os
 from dataclasses import dataclass, field, asdict
 from datetime import datetime
@@ -67,24 +68,23 @@ class DanalResult:
 
 def build_implications(regime: str, macro: dict, stablecoin_result: StablecoinResult) -> dict:
     fed = _f(macro.get("FEDFUNDS", {}).get("value"))
-    krw = _f(macro.get("DEXKOUS", {}).get("value"))
     fed = fed if fed is not None else 4.0
-    krw = krw if krw is not None else 1400.0
     phase = stablecoin_result.adoption_phase
     total_b = stablecoin_result.total_mcap_b
 
+    # 스테이블코인 정산 SaaS (US 시장 중심)
     if regime == "Goldilocks" and phase == "growth":
         stablecoin_saas = (
-            f"Growth 단계(${total_b:.1f}B) — KRW SaaS 신규 계약 공략 최적 타이밍"
+            f"Growth 단계(${total_b:.1f}B) — USDC 정산 SaaS 신규 파트너십 최적 타이밍"
         )
     elif regime == "Goldilocks" and phase == "saturation":
         stablecoin_saas = (
-            f"채택 포화 진입 (${total_b:.1f}B) — 점유율 경쟁 심화, 수수료 차별화 필요"
+            f"채택 포화 진입(${total_b:.1f}B) — 점유율 경쟁 심화, take rate 차별화 필요"
         )
     elif regime == "Overheating" and fed >= 4.5:
         stablecoin_saas = (
             f"Fed {fed:.1f}% 고금리 — Circle 준비금 이자 모델 경쟁 우위. "
-            "다날 SaaS는 금리 중립이나 경쟁사 체력 강화 주의"
+            "수수료 기반 SaaS는 금리 중립이나 경쟁사 체력 강화 주의"
         )
     elif regime == "Overheating":
         stablecoin_saas = f"온건 긴축({fed:.1f}%) — SaaS 계약 속도 유지 가능"
@@ -94,51 +94,40 @@ def build_implications(regime: str, macro: dict, stablecoin_result: StablecoinRe
         )
     elif regime == "Recession":
         stablecoin_saas = (
-            "안전자산 선호 → KRW 스테이블코인 헤지 니즈 확대. 선점 서사 강화 타이밍"
+            "안전자산 선호 → 스테이블코인 헤지 수요 확대. USDC 정산 볼륨 증가 기대"
         )
     elif regime == "Late-Cycle":
         stablecoin_saas = (
-            "성장 둔화 진입 — 기존 계약 리텐션 우선, 신규 보수적 접근"
+            "성장 둔화 진입 — 기존 정산 파트너 리텐션 우선, 신규 보수적 접근"
         )
     else:
-        stablecoin_saas = "KRW SaaS 전략 재점검 필요"
+        stablecoin_saas = "정산 SaaS 전략 재점검 필요"
 
-    if krw > 1450:
-        payment_cashcow = (
-            f"USD/KRW {krw:.0f} 원화 약세 — 수입 비용↑, PCI 편의점 방어 역할 중요"
-        )
-    else:
-        payment_cashcow_map = {
-            "Goldilocks": "소비 안정 구간 — 휴대폰결제 거래량 방어 가능",
-            "Overheating": "물가 부담 확대 — PCI 편의점 결제가 방어선 역할",
-            "Stagflation": "경기 둔화 + 비용 부담 — 캐시카우 수익성 방어 우선",
-            "Recession": "소비 위축 국면 — 생활밀착 결제 중심 방어 필요",
-            "Late-Cycle": "소비 둔화 초입 — 고마진 가맹점 리텐션 관리 우선",
-        }
-        payment_cashcow = payment_cashcow_map.get(
-            regime, "결제 캐시카우 모니터링 필요"
-        )
+    # 결제 캐시카우 (PG 본업)
+    payment_cashcow_map = {
+        "Goldilocks": "소비 안정 구간 — 결제 거래량 방어 가능",
+        "Overheating": "물가 부담 확대 — 생활밀착 결제가 방어선 역할",
+        "Stagflation": "경기 둔화 + 비용 부담 — 캐시카우 수익성 방어 우선",
+        "Recession": "소비 위축 국면 — 생활밀착 결제 중심 방어 필요",
+        "Late-Cycle": "소비 둔화 초입 — 고마진 파트너 리텐션 관리 우선",
+    }
+    payment_cashcow = payment_cashcow_map.get(
+        regime, "결제 캐시카우 모니터링 필요"
+    )
 
-    if regime == "Goldilocks" and krw < 1400:
-        global_expansion = (
-            "K.ONDA 출시(4월) 최적 환경 — 외국인 결제 채산성 양호"
-        )
-    elif krw > 1450:
-        global_expansion = (
-            f"KRW 약세({krw:.0f}) — K.ONDA 외국인 결제 수익성 점검 필요"
-        )
-    else:
-        global_expansion_map = {
-            "Goldilocks": "K.ONDA 출시 준비 지속 — 파트너십 확장 여건 양호",
-            "Overheating": "긴축 환경 — 파트너십 확장보다 단위경제 점검 우선",
-            "Stagflation": "환율·수요 변동성 확대 — 해외 결제 확장 속도 조절",
-            "Recession": "리스크오프 국면 — 신규 국가 확장보다 기존 파트너 효율화",
-            "Late-Cycle": "성장 둔화 구간 — K.ONDA 초기 KPI를 보수적으로 관리",
-        }
-        global_expansion = global_expansion_map.get(
-            regime, "글로벌 확장 전략 재점검 필요"
-        )
+    # 글로벌 확장 (크로스보더 결제)
+    global_expansion_map = {
+        "Goldilocks": "크로스보더 결제 확장 여건 양호 — 파트너십 가속",
+        "Overheating": "긴축 환경 — 파트너십 확장보다 단위경제 점검 우선",
+        "Stagflation": "수요 변동성 확대 — 해외 결제 확장 속도 조절",
+        "Recession": "리스크오프 국면 — 신규 확장보다 기존 파트너 효율화",
+        "Late-Cycle": "성장 둔화 구간 — 초기 KPI를 보수적으로 관리",
+    }
+    global_expansion = global_expansion_map.get(
+        regime, "글로벌 확장 전략 재점검 필요"
+    )
 
+    # x402 AI 결제
     if regime in {"Goldilocks", "Overheating"}:
         x402_ai = "AI 서비스 투자 활성 — x402 에이전트 결제 수요 증가"
     elif regime in {"Stagflation", "Late-Cycle"}:
@@ -151,24 +140,18 @@ def build_implications(regime: str, macro: dict, stablecoin_result: StablecoinRe
     watch_events = []
     if fed >= 4.5:
         watch_events.append(f"FOMC 점도표 — {fed:.1f}% 고금리 인하 시점 확인")
-    if krw > 1440:
-        watch_events.append(f"BOK 개입 여부 — USD/KRW {krw:.0f}")
     if phase == "growth":
-        watch_events.append("KRW SaaS 신규 계약 공시")
+        watch_events.append("GENIUS Act 시행 세부규정 확정")
     watch_events.extend([
-        "K.ONDA 4월 출시 KPI",
-        "디지털자산기본법 세부 규정",
+        "Circle CCTP 정산 볼륨 추이",
+        "USDC 도미넌스 변화 (USDT 대비)",
     ])
 
-    if krw > 1480:
-        priority_action = (
-            f"긴급: USD/KRW {krw:.0f} 급등 대응 — KRW SaaS 리스크 보고"
-        )
-    elif regime == "Stagflation":
-        priority_action = "캐시카우 방어 — 기존 가맹점 이탈 방지 우선"
+    if regime == "Stagflation":
+        priority_action = "캐시카우 방어 — 기존 파트너 이탈 방지 우선"
     elif regime == "Goldilocks" and phase == "growth":
         priority_action = (
-            "K.ONDA × Binance × Circle 출시 준비 상황 모니터링 (4월 출시)"
+            "USDC 정산 파트너십 확장 가속 — 채택 Growth 구간 활용"
         )
     elif regime == "Overheating" and fed >= 4.5:
         priority_action = (
@@ -176,10 +159,10 @@ def build_implications(regime: str, macro: dict, stablecoin_result: StablecoinRe
         )
     elif regime == "Late-Cycle":
         priority_action = (
-            "다날 캐시카우 수익 방어 집중 — 신규보다 리텐션 우선"
+            "캐시카우 수익 방어 집중 — 신규보다 리텐션 우선"
         )
     else:
-        priority_action = "K.ONDA 출시 KPI 선제 설정"
+        priority_action = "스테이블코인 정산 SaaS 파트너십 KPI 선제 설정"
 
     return {
         "stablecoin_saas": stablecoin_saas,
@@ -331,6 +314,26 @@ def collect_inflation_signals(macro: dict) -> list:
     return signals
 
 
+def _compute_vol_ratio(btc_history: list[dict]) -> float | None:
+    """BTC 20d/60d realized vol ratio (GFSI crypto_vol 패턴).
+
+    > 1.0이면 단기 변동성 > 장기 → 스트레스 확대.
+    < 1.0이면 단기 변동성 < 장기 → 안정.
+    """
+    if len(btc_history) < 61:
+        return None
+    prices = [d["price"] for d in btc_history[-61:]]
+    returns = [math.log(prices[i] / prices[i - 1]) for i in range(1, len(prices))]
+    if len(returns) < 60:
+        return None
+    import statistics
+    vol_20 = statistics.stdev(returns[-20:]) * math.sqrt(365)
+    vol_60 = statistics.stdev(returns[-60:]) * math.sqrt(365)
+    if vol_60 == 0:
+        return None
+    return round(vol_20 / vol_60, 2)
+
+
 def collect_risk_signals(macro: dict, crypto: dict, stable: dict) -> list:
     """위험선호 및 경보 신호 수집"""
     signals = []
@@ -338,23 +341,24 @@ def collect_risk_signals(macro: dict, crypto: dict, stable: dict) -> list:
     btc_24h = crypto.get("BTC", {}).get("change_24h") or 0
     total_mcap = sum(v.get("market_cap", 0) or 0 for v in stable.values()) / 1e9
 
-    # 신호 5: USD/KRW 환율 경보
+    # 신호 5: DXY 프록시 — USD 강세는 이머징 자금 유출 → 크립토 약세 상관
+    # (DEXKOUS를 달러 강세 프록시로 활용)
     if krw is not None:
         if krw > 1500:
             signals.append(Signal(
-                name="usd_krw_alert",
+                name="usd_strength_alert",
                 direction="negative",
-                value=f"{krw:.0f} (FRED DEXKOUS)",
-                weight=0.30,
-                rationale=f"⚠️ USD/KRW {krw:.0f} — BOK 개입 임계(1,500) 돌파, KRW SaaS 리스크"
+                value=f"USD/KRW {krw:.0f} (FRED DEXKOUS)",
+                weight=0.15,
+                rationale=f"달러 강세(USD/KRW {krw:.0f}) — 이머징 자금 유출, 크립토 약세 압력"
             ))
-        elif krw > 1440:
+        elif krw < 1350:
             signals.append(Signal(
-                name="usd_krw_watch",
-                direction="neutral",
-                value=f"{krw:.0f} (FRED DEXKOUS)",
+                name="usd_weakness",
+                direction="positive",
+                value=f"USD/KRW {krw:.0f} (FRED DEXKOUS)",
                 weight=0.10,
-                rationale=f"USD/KRW {krw:.0f} — 원화 약세 지속, KRW SaaS 수출 경쟁력 유리"
+                rationale=f"달러 약세(USD/KRW {krw:.0f}) — 위험자산 선호, 크립토 우호적"
             ))
 
     # 신호 6: BTC 모멘텀 (위험자산 선호 대리변수)
@@ -399,17 +403,60 @@ def collect_risk_signals(macro: dict, crypto: dict, stable: dict) -> list:
 
 # ── 레짐 판단 (가중 신호 합산) ───────────────────────────────────
 
-def detect_regime(macro: dict, crypto: dict = None, stable: dict = None) -> RegimeResult:
+def detect_regime(macro: dict, crypto: dict = None, stable: dict = None,
+                  btc_history: list[dict] = None) -> RegimeResult:
     """
     다중 신호를 수집하고 가중 합산으로 레짐 판단.
+    가중치는 calibrate.py의 보정 결과를 우선 사용 (없으면 기본값).
     모든 신호는 signals 리스트에 보존.
     """
     crypto = crypto or {}
     stable = stable or {}
 
+    # 보정 가중치 로드 (있으면 신호 생성 시 반영)
+    try:
+        from src.calibrate import load_calibrated_weights
+        cal_weights = load_calibrated_weights()
+    except ImportError:
+        cal_weights = {}
+
     growth_signals = collect_growth_signals(macro)
     inflation_signals = collect_inflation_signals(macro)
     risk_signals = collect_risk_signals(macro, crypto, stable)
+
+    # 보정 가중치 적용 (신호 이름으로 매칭)
+    if cal_weights:
+        for s in growth_signals + inflation_signals + risk_signals:
+            if s.name in cal_weights:
+                s.weight = cal_weights[s.name]
+
+    # 신호 8: BTC 변동성 구조 (GFSI crypto_vol 패턴)
+    vol_ratio = _compute_vol_ratio(btc_history or [])
+    if vol_ratio is not None:
+        if vol_ratio >= 1.3:
+            risk_signals.append(Signal(
+                name="btc_vol_ratio",
+                direction="negative",
+                value=f"{vol_ratio} (20d/60d, CoinGecko)",
+                weight=0.20,
+                rationale=f"BTC vol ratio {vol_ratio} — 단기 변동성 급등, 크립토 스트레스 확대"
+            ))
+        elif vol_ratio <= 0.7:
+            risk_signals.append(Signal(
+                name="btc_vol_ratio",
+                direction="positive",
+                value=f"{vol_ratio} (20d/60d, CoinGecko)",
+                weight=0.15,
+                rationale=f"BTC vol ratio {vol_ratio} — 변동성 수렴, 크립토 시장 안정"
+            ))
+        else:
+            risk_signals.append(Signal(
+                name="btc_vol_ratio",
+                direction="neutral",
+                value=f"{vol_ratio} (20d/60d, CoinGecko)",
+                weight=0.05,
+                rationale=f"BTC vol ratio {vol_ratio} — 변동성 중립 구간"
+            ))
 
     all_signals = growth_signals + inflation_signals + risk_signals
 
@@ -459,7 +506,11 @@ def detect_regime(macro: dict, crypto: dict = None, stable: dict = None) -> Regi
     }
     regime = regime_map.get((growth_dir, inflation_dir), "Goldilocks")
 
-    # 신뢰도 점수: 신호 수 + 방향 일관성
+    # 신뢰도 = 데이터 커버리지(60%) + 신호 방향 일관성(40%)
+    # 근거: Diebold-Yilmaz(2009) connectedness 프레임워크 참고
+    # - 커버리지: 수집된 신호 수 / 목표 신호 수 (7) → 데이터 충분성
+    # - 일관성: 성장·인플레 방향의 가중 투표 편향도 합산 → 신호 간 합의 정도
+    # 임계값: High≥0.7, Medium≥0.4 (통상 2σ, 1σ 수준 근사)
     signal_count = len(all_signals)
     consistency = abs(growth_norm) + abs(infl_norm)
     confidence_score = min(1.0, (signal_count / 7) * 0.6 + consistency * 0.4)
@@ -555,8 +606,9 @@ def analyze(snapshot: dict = None) -> dict:
     macro = snapshot.get("macro", {})
     stable = snapshot.get("stablecoins", {})
     crypto = snapshot.get("crypto", {})
+    btc_history = snapshot.get("btc_history", [])
 
-    regime = detect_regime(macro, crypto, stable)
+    regime = detect_regime(macro, crypto, stable, btc_history=btc_history)
     stablecoin = analyze_stablecoins(stable, crypto)
 
     danal_data = build_implications(regime.regime, macro, stablecoin)

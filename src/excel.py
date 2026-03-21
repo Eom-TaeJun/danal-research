@@ -11,7 +11,6 @@ from openpyxl.utils import get_column_letter
 CSV_DIR = Path("outputs/csv")
 EXCEL_DIR = Path("outputs/excel")
 SHEET_SOURCES = {
-    "KRW시나리오": "kwrw_stablecoin_scenario_*.csv",
     "스크리닝스코어카드": "screening_scorecard_*.csv",
     "거시지표스냅샷": "macro_snapshot_*.csv",
 }

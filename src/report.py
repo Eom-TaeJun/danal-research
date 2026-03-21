@@ -340,9 +340,9 @@ def build_screen(snapshot: dict, analysis: dict, chart_paths: dict = None) -> st
         "",
         f"**레짐 {regime.get('regime', '—')} 기준:**",
         "",
-        f"- **KRW 스테이블코인 SaaS**: {danal.get('stablecoin_saas', '—')}",
-        f"- **휴대폰결제 캐시카우**: {danal.get('payment_cashcow', '—')}",
-        f"- **글로벌 핀테크 확장**: {danal.get('global_expansion', '—')}",
+        f"- **스테이블코인 정산 SaaS**: {danal.get('stablecoin_saas', '—')}",
+        f"- **결제 캐시카우**: {danal.get('payment_cashcow', '—')}",
+        f"- **크로스보더 확장**: {danal.get('global_expansion', '—')}",
         "",
         "**주목할 이벤트:**",
     ]
@@ -359,8 +359,8 @@ def build_screen(snapshot: dict, analysis: dict, chart_paths: dict = None) -> st
         f"| ✅ 기회 2 | {regime.get('regime', '')} 레짐 → {danal.get('stablecoin_saas', '')[:40]}... |",
         f"| ✅ 기회 3 | PCI 편의점 결제 확장 — 경기 방어적 포지션 |",
         f"| ⚠️ 리스크 1 | USDT 도미넌스 {usdt_dom}% 집중 → Circle 이탈 시 구조 변화 |",
-        f"| ⚠️ 리스크 2 | USD/KRW {krw} — 환율 변동성 |",
-        f"| ⚠️ 리스크 3 | 한국 디지털자산기본법 스테이블코인 정의 미확정 |",
+        f"| ⚠️ 리스크 2 | SEC 증권성 판단 — 이자 지급 SC 규제 불확실성 |",
+        f"| ⚠️ 리스크 3 | Fed 금리 인하 시 준비금 이자 모델 수익성 압박 |",
         "",
         "---",
         f"*작성: {datetime.now().strftime('%Y-%m-%d')} | Source: FRED, CoinGecko, 다날 공식(IR 북·보도자료·재무정보)*",
@@ -394,37 +394,6 @@ def _inline_csv(csv_path: str, max_rows: int = 15) -> str:
         lines.append("| " + " | ".join(cells) + " |")
     return "\n".join(lines)
 
-
-def _scenario_summary_table(csv_path: str) -> str:
-    """시나리오 CSV → 핵심 요약 표 (규제 시나리오 × 전환율, take rate 0.2% 고정)"""
-    import csv as csv_mod
-    if not os.path.exists(csv_path):
-        return "> 시나리오 CSV 없음"
-    with open(csv_path, encoding="utf-8-sig") as f:
-        rows = list(csv_mod.DictReader(f))
-
-    lines = [
-        "| 규제 시나리오 | 전환율 | 활성 가맹점 | 연간 GMV | 연간 매출 |",
-        "|-------------|--------|-----------|---------|---------|",
-    ]
-    timing_map = {
-        "Optimistic": "낙관 (2026H2)",
-        "Base": "기본 (2027H1)",
-        "Conservative": "보수 (2027H2+)",
-    }
-    for row in rows:
-        if "_0.2pct" not in row["scenario"]:
-            continue
-        for prefix, label in timing_map.items():
-            if row["scenario"].startswith(prefix):
-                conv = f"{float(row['merchant_conversion_rate'])*100:.0f}%"
-                merchants = f"{int(row['active_merchants']):,}"
-                gmv = float(row["annual_gmv_krw"]) / 1e8
-                rev = float(row["annual_revenue_krw"]) / 1e8
-                lines.append(
-                    f"| {label} | {conv} | {merchants} | {gmv:,.0f}억 | {rev:,.0f}억 |"
-                )
-    return "\n".join(lines)
 
 
 def _scorecard_table(csv_path: str) -> str:
@@ -477,7 +446,6 @@ def build_deep_stablecoin(snapshot: dict, analysis: dict,
 
     # CSV 파일 경로 (최신)
     import glob
-    scenario_csvs = sorted(glob.glob("outputs/csv/kwrw_stablecoin_scenario_*.csv"), reverse=True)
     scorecard_csvs = sorted(glob.glob("outputs/csv/screening_scorecard_*.csv"), reverse=True)
 
     lines = [
@@ -494,7 +462,7 @@ def build_deep_stablecoin(snapshot: dict, analysis: dict,
         f"|------|------|---------|",
         f"| Fed Funds Rate | {fed}% | 금리 하락 기조 — SC 결제 볼륨 ↑, 이자 수익 ↓ |",
         f"| 10Y Treasury | {dgs10}% | 장기금리 안정 — 기업 투자 환경 양호 |",
-        f"| USD/KRW | {krw} | 원화 약세 — KRW SaaS 수출 유리, 외국인 결제 수요 ↑ |",
+        f"| USD/KRW | {krw} | 달러 강세 프록시 — 크립토·이머징 자금 흐름 참고 |",
         "",
     ]
     lines.append(_chart_ref("macro_timeseries", "거시지표 12개월 추이"))
@@ -513,7 +481,7 @@ def build_deep_stablecoin(snapshot: dict, analysis: dict,
         "**구조적 특징:**",
         "- **이자 의존 모델의 한계**: USDT/USDC 모두 수익의 90%+ 가 준비금 이자. Fed 금리 1%p 인하 시 Circle 연 $4.4억 매출 감소 (S-1 기준)",
         "- **수수료 모델로의 전환**: Circle CPN ($5.7B 연간 볼륨), Ripple ODL — 거래 기반 수익 구조 시도",
-        "- **다날의 포지션**: 이자가 아닌 **정산 수수료(take rate) 기반 SaaS** — 금리 변동에 구조적으로 중립",
+        "- **수수료 기반 모델**: 이자가 아닌 **정산 수수료(take rate) 기반 SaaS** — 금리 변동에 구조적으로 중립",
         "",
     ]
     lines.append(_chart_ref("stablecoin_pie", "스테이블코인 시장점유율"))
@@ -524,9 +492,9 @@ def build_deep_stablecoin(snapshot: dict, analysis: dict,
         "",
         "| 관할 | 법안/규제 | 현황 | 다날 함의 |",
         "|------|---------|------|---------|",
-        "| 미국 | GENIUS Act | 2025-07 통과 | USDC 정산 레일 안정성 ↑ — 크립토 마스터카드 기반 강화 |",
-        "| EU | MiCA | 2024-06 시행, EBA 면제 종료 (2026-03-02) | 유럽 SC 발행 진입장벽 ↑ — 다날 스위스 VASP 라이선스 활용 가능 |",
-        "| 한국 | 디지털자산기본법 2단계 | 시행령 미확정 | **핵심 변수** — 은행 전용 vs 민간 허용 여부가 다날 SaaS 사업 존폐 결정 |",
+        "| 미국 | GENIUS Act | 2025-07 통과 | USDC 정산 레일 안정성 ↑ — 규제 명확화로 기관 채택 가속 |",
+        "| 미국 | SEC 가이던스 | 증권성 판단 기준 진화 중 | 이자 지급 SC(DAI 등)의 증권 분류 리스크 지속 |",
+        "| EU | MiCA | 2024-06 시행, EBA 면제 종료 (2026-03-02) | 유럽 SC 발행 진입장벽 ↑ — USDC 유럽 시장 점유 기회 |",
         "",
         "---",
         "",
@@ -557,21 +525,44 @@ def build_deep_stablecoin(snapshot: dict, analysis: dict,
         "",
         "---",
         "",
-        "## 5. KRW SaaS 시나리오 분석",
-        "",
-        "다날 PG 가맹점 50,000개 기준, 가맹점당 월 GMV 5,000만원 가정 (take rate 0.2% 고정):",
+        "## 5. 스테이블코인 리스크 평가",
         "",
     ]
-    if scenario_csvs:
-        lines.append(_scenario_summary_table(scenario_csvs[0]))
-    lines.append("")
-    lines.append(_chart_ref("scenario_comparison", "KRW SaaS 시나리오별 매출 비교"))
+    # 리스크 평가 삽입
+    try:
+        from src.risk import evaluate_stablecoins, STRESS_SCENARIOS
+        risk_data = evaluate_stablecoins(snapshot)
+        lines += [
+            "| 코인 | 신용 | 유동성 | 규제 | 기술 | **종합** | 등급 |",
+            "|------|------|--------|------|------|---------|------|",
+        ]
+        for a in risk_data["assessments"]:
+            lines.append(
+                f"| {a['ticker']} | {a['credit']:.0f} | {a['liquidity']:.0f} "
+                f"| {a['regulatory']:.0f} | {a['technical']:.0f} "
+                f"| **{a['total']:.0f}** | {a['grade']} |"
+            )
+        lines += [
+            "",
+            "**가중치**: 신용(30%) + 유동성(25%) + 규제(25%) + 기술(20%) — 0(안전)~100(위험)",
+            "",
+            "**스트레스 테스트 (Severe 시나리오 — 은행 위기급):**",
+            "",
+            "| 코인 | 디페그 확률 | 예상 손실 | 등급 |",
+            "|------|-----------|----------|------|",
+        ]
+        for ticker, tests in risk_data["stress_tests"].items():
+            severe = next((t for t in tests if "은행" in t["scenario"]), tests[-2] if len(tests) > 1 else tests[0])
+            lines.append(
+                f"| {ticker} | {severe['depeg_prob']:.1f}% "
+                f"| {severe['expected_loss_pct']:.1f}% | {severe['rating']} |"
+            )
+        lines.append("")
+    except Exception as e:
+        lines.append(f"> 리스크 평가 생성 실패: {e}")
+        lines.append("")
+
     lines += [
-        "",
-        "**시나리오 해석**: 가맹점 전환율 7% + take rate 0.2%가 현실적 기본 시나리오. "
-        "연간 매출 ~42억원 → 다날 전체 매출(1,945억) 대비 2.2%. "
-        "규제 확정 후 가맹점 전환 가속이 핵심 드라이버.",
-        "",
         "---",
         "",
         "## 6. 리서치 대상 스크리닝",

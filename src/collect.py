@@ -141,6 +141,26 @@ def fetch_fred_history(series_ids: list[str], months: int = 12) -> dict:
     return result
 
 
+def fetch_btc_history(days: int = 90) -> list[dict]:
+    """CoinGecko BTC 일별 가격 히스토리 (vol ratio 계산용)"""
+    try:
+        r = requests.get(
+            "https://api.coingecko.com/api/v3/coins/bitcoin/market_chart",
+            params={"vs_currency": "usd", "days": days, "interval": "daily"},
+            timeout=15,
+        )
+        r.raise_for_status()
+        prices = r.json().get("prices", [])
+        return [
+            {"date": datetime.fromtimestamp(p[0] / 1000).strftime("%Y-%m-%d"),
+             "price": p[1]}
+            for p in prices
+        ]
+    except Exception as e:
+        print(f"  [CoinGecko history] BTC 실패: {e}")
+        return []
+
+
 def collect_danal_financials() -> dict:
     """다날 공식 재무정보 (공시 기반 하드코딩 — API 없음)"""
     return {
@@ -181,6 +201,8 @@ def collect(mode: str = "brief", sector: str = "stablecoin") -> dict:
         snapshot["fred_history"] = fetch_fred_history(
             ["FEDFUNDS", "DGS10", "DEXKOUS"], months=12
         )
+        print("  → BTC 가격 히스토리 수집 중 (90일)...")
+        snapshot["btc_history"] = fetch_btc_history(days=90)
         print("  → 다날 재무정보 로드 중...")
         snapshot["danal_financials"] = collect_danal_financials()
 

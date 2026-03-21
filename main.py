@@ -6,6 +6,7 @@ danal — 핀테크 & 디지털자산 투자 리서치 자동화
   python main.py --im "Circle"            # 투자 검토 보고서 초안
   python main.py --screen stablecoin      # 시장 스크리닝
   python main.py --deep stablecoin        # 스테이블코인 심화 분석
+  python main.py --calibrate             # 신호 가중치 자동 보정
 """
 
 import argparse
@@ -58,6 +59,20 @@ def run_deep(topic: str):
     print(f"\n✓ 완료: {path}")
 
 
+def run_calibrate():
+    print("── 신호 가중치 보정 중 ──")
+    from src.calibrate import calibrate
+    result = calibrate()
+    meta = result.get("meta", {})
+    print(f"  방법: {meta.get('method')} (samples={meta.get('samples', 0)})")
+    if result.get("correlations"):
+        print("  신호별 상관:")
+        for name, rho in sorted(result["correlations"].items(),
+                                 key=lambda x: abs(x[1]), reverse=True):
+            print(f"    {name}: {rho:+.3f}")
+    print(f"\n✓ 완료: outputs/context/weights_*.json")
+
+
 def run_excel():
     print("── Excel 변환 중 ──")
     from src.excel import generate_excel
@@ -81,6 +96,8 @@ if __name__ == "__main__":
                        help="거시 레짐 판단 + 스테이블코인 시그널 분석")
     group.add_argument("--deep", metavar="TOPIC",
                        help="심화 리포트 (stablecoin)")
+    group.add_argument("--calibrate", action="store_true",
+                       help="과거 분석 결과 기반 신호 가중치 자동 보정")
     group.add_argument("--excel", action="store_true",
                        help="CSV 데이터를 Excel(.xlsx)로 변환 출력")
     args = parser.parse_args()
@@ -95,5 +112,7 @@ if __name__ == "__main__":
         run_analyze()
     elif args.deep:
         run_deep(args.deep)
+    elif args.calibrate:
+        run_calibrate()
     elif args.excel:
         run_excel()

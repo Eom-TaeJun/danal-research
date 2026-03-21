@@ -512,14 +512,6 @@ def build_deep_charts(snapshot: dict, date_str: str = None) -> dict:
         if ts:
             paths["macro_timeseries"] = ts
 
-    # 시나리오 비교
-    import glob
-    csvs = sorted(glob.glob("outputs/csv/kwrw_stablecoin_scenario_*.csv"), reverse=True)
-    if csvs:
-        sc = scenario_comparison(csvs[0], date_str)
-        if sc:
-            paths["scenario_comparison"] = sc
-
     # 다날 재무
     fin = snapshot.get("danal_financials", {})
     if fin:
