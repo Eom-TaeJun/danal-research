@@ -307,6 +307,234 @@ def macro_dashboard(snapshot: dict, analysis: dict, date_str: str) -> str | None
     return path
 
 
+def macro_timeseries(history: dict, date_str: str) -> str | None:
+    """거시지표 12개월 시계열 (Fed Funds, 10Y, USD/KRW) → PNG"""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        from matplotlib.dates import DateFormatter
+        from datetime import datetime as dt
+        plt.rcParams["font.family"] = "NanumGothic"
+        plt.rcParams["axes.unicode_minus"] = False
+    except ImportError:
+        return None
+
+    series_map = {
+        "FEDFUNDS": ("Fed Funds Rate (%)", "#EF5350"),
+        "DGS10": ("10Y Treasury (%)", "#42A5F5"),
+        "DEXKOUS": ("USD/KRW", "#FF9800"),
+    }
+    available = {k: v for k, v in history.items() if k in series_map and v}
+    if not available:
+        return None
+
+    has_krw = "DEXKOUS" in available
+    n_axes = 2 if has_krw else 1
+    fig, axes = plt.subplots(n_axes, 1, figsize=(10, 3.5 * n_axes), sharex=True)
+    if n_axes == 1:
+        axes = [axes]
+
+    # Panel 1: Interest rates
+    ax1 = axes[0]
+    for sid in ["FEDFUNDS", "DGS10"]:
+        if sid not in available:
+            continue
+        label, color = series_map[sid]
+        dates = [dt.strptime(p["date"], "%Y-%m-%d") for p in available[sid]]
+        vals = [float(p["value"]) for p in available[sid]]
+        ax1.plot(dates, vals, label=label, color=color, linewidth=2)
+    ax1.set_ylabel("금리 (%)")
+    ax1.legend(loc="upper right", fontsize=9)
+    ax1.set_title("거시지표 추이 (최근 12개월)", fontsize=12, fontweight="bold")
+    ax1.grid(True, alpha=0.3)
+    ax1.spines[["top", "right"]].set_visible(False)
+
+    # Panel 2: USD/KRW
+    if has_krw:
+        ax2 = axes[1]
+        label, color = series_map["DEXKOUS"]
+        dates = [dt.strptime(p["date"], "%Y-%m-%d") for p in available["DEXKOUS"]]
+        vals = [float(p["value"]) for p in available["DEXKOUS"]]
+        ax2.plot(dates, vals, label=label, color=color, linewidth=2)
+        ax2.fill_between(dates, vals, alpha=0.15, color=color)
+        ax2.set_ylabel("USD/KRW")
+        ax2.legend(loc="upper right", fontsize=9)
+        ax2.grid(True, alpha=0.3)
+        ax2.spines[["top", "right"]].set_visible(False)
+        ax2.xaxis.set_major_formatter(DateFormatter("%Y-%m"))
+
+    fig.autofmt_xdate(rotation=30)
+    fig.tight_layout()
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    path = f"{OUTPUT_DIR}/macro_timeseries_{date_str}.png"
+    fig.savefig(path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  ✓ 차트 저장: {path}")
+    return path
+
+
+def scenario_comparison(csv_path: str, date_str: str) -> str | None:
+    """KRW SaaS 시나리오 비교 차트 → PNG (규제 시나리오 × 가맹점 전환율)"""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        import csv as csv_mod
+        plt.rcParams["font.family"] = "NanumGothic"
+        plt.rcParams["axes.unicode_minus"] = False
+    except ImportError:
+        return None
+
+    if not os.path.exists(csv_path):
+        return None
+
+    with open(csv_path, encoding="utf-8-sig") as f:
+        rows = list(csv_mod.DictReader(f))
+
+    # take_rate 0.2% 고정, 시나리오별 규제 타이밍 × 전환율 3단계
+    scenarios = {"Optimistic": [], "Base": [], "Conservative": []}
+    for row in rows:
+        name = row["scenario"]
+        if "_0.2pct" not in name:
+            continue
+        for prefix in scenarios:
+            if name.startswith(prefix):
+                conv = float(row["merchant_conversion_rate"]) * 100
+                rev = float(row["annual_revenue_krw"]) / 1e8  # 억원
+                scenarios[prefix].append((conv, rev))
+
+    colors = {"Optimistic": "#4CAF50", "Base": "#2196F3", "Conservative": "#FF9800"}
+    labels = {"Optimistic": "낙관 (2026H2)", "Base": "기본 (2027H1)", "Conservative": "보수 (2027H2+)"}
+
+    fig, ax = plt.subplots(figsize=(8, 5))
+    width = 0.25
+    x_labels = ["3%", "7%", "15%"]
+    x = range(len(x_labels))
+
+    for i, (key, data) in enumerate(scenarios.items()):
+        if not data:
+            continue
+        vals = [d[1] for d in sorted(data)]
+        offset = (i - 1) * width
+        bars = ax.bar([xi + offset for xi in x], vals, width,
+                      label=labels[key], color=colors[key], edgecolor="white")
+        for bar, v in zip(bars, vals):
+            ax.text(bar.get_x() + bar.get_width() / 2, v + 1,
+                    f"{v:.0f}", ha="center", fontsize=8, fontweight="bold")
+
+    ax.set_xticks(list(x))
+    ax.set_xticklabels([f"전환율 {l}" for l in x_labels])
+    ax.set_ylabel("연간 매출 (억원)")
+    ax.set_title("KRW SaaS 시나리오별 매출 예측 (take rate 0.2%)",
+                 fontsize=12, fontweight="bold")
+    ax.legend(fontsize=9)
+    ax.grid(axis="y", alpha=0.3)
+    ax.spines[["top", "right"]].set_visible(False)
+    fig.tight_layout()
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    path = f"{OUTPUT_DIR}/scenario_comparison_{date_str}.png"
+    fig.savefig(path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  ✓ 차트 저장: {path}")
+    return path
+
+
+def danal_financial(financials: dict, date_str: str) -> str | None:
+    """다날 연도별 재무 추이 (매출·영업이익·세전순이익) → PNG"""
+    try:
+        import matplotlib
+        matplotlib.use("Agg")
+        import matplotlib.pyplot as plt
+        plt.rcParams["font.family"] = "NanumGothic"
+        plt.rcParams["axes.unicode_minus"] = False
+    except ImportError:
+        return None
+
+    annual = financials.get("annual", [])
+    if not annual:
+        return None
+
+    years = [str(d["year"]) for d in annual]
+    revenue = [d["revenue"] for d in annual]
+    op_income = [d["operating_income"] for d in annual]
+    pretax = [d["pretax_income"] for d in annual]
+
+    fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 5))
+
+    # Left: Revenue bars
+    bars = ax1.bar(years, revenue, color="#2196F3", edgecolor="white", width=0.6)
+    for bar, v in zip(bars, revenue):
+        ax1.text(bar.get_x() + bar.get_width() / 2, v + 30,
+                 f"{v:,}", ha="center", fontsize=9, fontweight="bold")
+    ax1.set_title("매출 추이 (억원, 연결)", fontsize=12, fontweight="bold")
+    ax1.set_ylabel("억원")
+    ax1.grid(axis="y", alpha=0.3)
+    ax1.spines[["top", "right"]].set_visible(False)
+
+    # Right: Operating income + pretax income lines
+    ax2.bar(years, op_income, color="#4CAF50", width=0.4, label="영업이익", alpha=0.8)
+    ax2.plot(years, pretax, color="#EF5350", linewidth=2.5, marker="o",
+             label="세전순이익", zorder=5)
+    ax2.axhline(0, color="#999", linewidth=0.8)
+    for i, (o, p) in enumerate(zip(op_income, pretax)):
+        ax2.text(i, o + 15, f"{o}", ha="center", fontsize=8, color="#388E3C")
+        ax2.text(i, p - 45, f"{p}", ha="center", fontsize=8, color="#C62828")
+    ax2.set_title("수익성 추이 (억원)", fontsize=12, fontweight="bold")
+    ax2.set_ylabel("억원")
+    ax2.legend(fontsize=9)
+    ax2.grid(axis="y", alpha=0.3)
+    ax2.spines[["top", "right"]].set_visible(False)
+
+    fig.suptitle("다날 재무 현황 (2021–2025, 다날 공식 재무정보)",
+                 fontsize=13, fontweight="bold", y=1.02)
+    fig.tight_layout()
+
+    os.makedirs(OUTPUT_DIR, exist_ok=True)
+    path = f"{OUTPUT_DIR}/danal_financial_{date_str}.png"
+    fig.savefig(path, dpi=150, bbox_inches="tight")
+    plt.close(fig)
+    print(f"  ✓ 차트 저장: {path}")
+    return path
+
+
+def build_deep_charts(snapshot: dict, date_str: str = None) -> dict:
+    """deep 리포트용 차트 일괄 생성"""
+    if date_str is None:
+        date_str = datetime.now().strftime("%Y%m%d")
+    paths = {}
+
+    # 거시 시계열
+    history = snapshot.get("fred_history", {})
+    if history:
+        ts = macro_timeseries(history, date_str)
+        if ts:
+            paths["macro_timeseries"] = ts
+
+    # 시나리오 비교
+    import glob
+    csvs = sorted(glob.glob("outputs/csv/kwrw_stablecoin_scenario_*.csv"), reverse=True)
+    if csvs:
+        sc = scenario_comparison(csvs[0], date_str)
+        if sc:
+            paths["scenario_comparison"] = sc
+
+    # 다날 재무
+    fin = snapshot.get("danal_financials", {})
+    if fin:
+        df = danal_financial(fin, date_str)
+        if df:
+            paths["danal_financial"] = df
+
+    # 기존 차트도 포함
+    pie = stablecoin_pie(snapshot, date_str)
+    if pie:
+        paths["stablecoin_pie"] = pie
+
+    return paths
+
+
 def _safe_float(val):
     try:
         return float(val)

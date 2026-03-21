@@ -116,6 +116,47 @@ def fetch_fintech_news() -> dict:
         return {}
 
 
+def fetch_fred_history(series_ids: list[str], months: int = 12) -> dict:
+    """FRED 시계열 데이터 수집 (최근 N개월) — 차트용"""
+    api_key = os.getenv("FRED_API_KEY", "")
+    start = (datetime.now() - timedelta(days=months * 31)).strftime("%Y-%m-%d")
+    result = {}
+    for sid in series_ids:
+        try:
+            r = requests.get(
+                "https://api.stlouisfed.org/fred/series/observations",
+                params={"series_id": sid, "api_key": api_key,
+                        "file_type": "json", "observation_start": start,
+                        "sort_order": "asc"},
+                timeout=15,
+            )
+            r.raise_for_status()
+            obs = r.json().get("observations", [])
+            result[sid] = [
+                {"date": o["date"], "value": o["value"]}
+                for o in obs if o["value"] != "."
+            ]
+        except Exception as e:
+            print(f"  [FRED history] {sid} 실패: {e}")
+    return result
+
+
+def collect_danal_financials() -> dict:
+    """다날 공식 재무정보 (공시 기반 하드코딩 — API 없음)"""
+    return {
+        "source": "다날 공식 재무정보 (danal.co.kr/invest/financial)",
+        "unit": "억원 (연결)",
+        "annual": [
+            {"year": 2021, "revenue": 2648, "operating_income": 257, "pretax_income": 52},
+            {"year": 2022, "revenue": 2553, "operating_income": 245, "pretax_income": -58},
+            {"year": 2023, "revenue": 2468, "operating_income": 209, "pretax_income": -210},
+            {"year": 2024, "revenue": 2118, "operating_income": 136, "pretax_income": -355},
+            {"year": 2025, "revenue": 1945, "operating_income": 150, "pretax_income": -611},
+        ],
+        "note": "영업이익은 PG 본업 효율화로 반등, 세전순이익 적자는 블록체인 투자 영업외손실 누적",
+    }
+
+
 def collect(mode: str = "brief", sector: str = "stablecoin") -> dict:
     print(f"[collect] mode={mode} sector={sector}")
     snapshot = {"collected_at": datetime.now().isoformat(), "mode": mode}
@@ -134,6 +175,15 @@ def collect(mode: str = "brief", sector: str = "stablecoin") -> dict:
         print("  → 핀테크 뉴스 수집 중...")
         snapshot["news"] = fetch_fintech_news()
 
+    # 시계열 + 다날 재무 (deep 모드)
+    if mode == "deep":
+        print("  → FRED 시계열 수집 중 (12개월)...")
+        snapshot["fred_history"] = fetch_fred_history(
+            ["FEDFUNDS", "DGS10", "DEXKOUS"], months=12
+        )
+        print("  → 다날 재무정보 로드 중...")
+        snapshot["danal_financials"] = collect_danal_financials()
+
     # 저장
     os.makedirs(OUTPUT_DIR, exist_ok=True)
     date_str = datetime.now().strftime("%Y%m%d")
@@ -147,7 +197,7 @@ def collect(mode: str = "brief", sector: str = "stablecoin") -> dict:
 if __name__ == "__main__":
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", default="brief",
-                        choices=["brief", "stablecoin", "screen"])
+                        choices=["brief", "stablecoin", "screen", "deep"])
     parser.add_argument("--sector", default="stablecoin")
     args = parser.parse_args()
     collect(mode=args.mode, sector=args.sector)

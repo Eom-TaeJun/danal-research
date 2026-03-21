@@ -5,6 +5,7 @@ danal — 핀테크 & 디지털자산 투자 리서치 자동화
   python main.py --brief                  # 주간 핀테크 브리핑
   python main.py --im "Circle"            # 투자 검토 보고서 초안
   python main.py --screen stablecoin      # 시장 스크리닝
+  python main.py --deep stablecoin        # 스테이블코인 심화 분석
 """
 
 import argparse
@@ -49,6 +50,14 @@ def run_screen(sector: str):
     print(f"\n✓ 완료: {path}")
 
 
+def run_deep(topic: str):
+    print(f"── 심화 리포트 생성 중: {topic} ──")
+    collect(mode="deep")
+    analyze()
+    path = report(report_type="deep")
+    print(f"\n✓ 완료: {path}")
+
+
 def run_excel():
     print("── Excel 변환 중 ──")
     from src.excel import generate_excel
@@ -70,6 +79,8 @@ if __name__ == "__main__":
                        help="섹터 스크리닝 (stablecoin / fintech / defi)")
     group.add_argument("--analyze", action="store_true",
                        help="거시 레짐 판단 + 스테이블코인 시그널 분석")
+    group.add_argument("--deep", metavar="TOPIC",
+                       help="심화 리포트 (stablecoin)")
     group.add_argument("--excel", action="store_true",
                        help="CSV 데이터를 Excel(.xlsx)로 변환 출력")
     args = parser.parse_args()
@@ -82,5 +93,7 @@ if __name__ == "__main__":
         run_screen(args.screen)
     elif args.analyze:
         run_analyze()
+    elif args.deep:
+        run_deep(args.deep)
     elif args.excel:
         run_excel()

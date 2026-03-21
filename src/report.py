@@ -122,7 +122,7 @@ def build_brief(data: dict, chart_paths: dict = None, analysis: dict = None) -> 
 
     lines += [
         "---",
-        f"*Generated: {datetime.now().isoformat()} | Source: FRED, CoinGecko, Perplexity*",
+        f"*작성: {datetime.now().strftime('%Y-%m-%d')} | Source: FRED, CoinGecko, 다날 공식(IR 북·보도자료·재무정보)*",
     ]
     return "\n".join(lines)
 
@@ -257,7 +257,7 @@ def build_im(research_data: dict, company: str, chart_paths: dict = None) -> str
 - [ ] 미팅 요청 여부
 
 ---
-*Generated: {datetime.now().isoformat()} | Source: Perplexity*
+*작성: {datetime.now().strftime('%Y-%m-%d')} | Source: Perplexity, 다날 공식(IR 북·보도자료·재무정보)*
 """
 
 
@@ -363,7 +363,242 @@ def build_screen(snapshot: dict, analysis: dict, chart_paths: dict = None) -> st
         f"| ⚠️ 리스크 3 | 한국 디지털자산기본법 스테이블코인 정의 미확정 |",
         "",
         "---",
-        f"*Generated: {datetime.now().isoformat()} | Source: FRED, CoinGecko, Perplexity*",
+        f"*작성: {datetime.now().strftime('%Y-%m-%d')} | Source: FRED, CoinGecko, 다날 공식(IR 북·보도자료·재무정보)*",
+    ]
+    return "\n".join(lines)
+
+
+def _inline_csv(csv_path: str, max_rows: int = 15) -> str:
+    """CSV 파일을 마크다운 테이블로 변환"""
+    import csv as csv_mod
+    if not os.path.exists(csv_path):
+        return "> CSV 파일 없음"
+    with open(csv_path, encoding="utf-8-sig") as f:
+        reader = csv_mod.reader(f)
+        headers = next(reader, [])
+        rows = []
+        for i, row in enumerate(reader):
+            if i >= max_rows:
+                break
+            rows.append(row)
+    if not headers:
+        return "> 빈 CSV"
+    lines = [
+        "| " + " | ".join(headers) + " |",
+        "|" + "|".join("---" for _ in headers) + "|",
+    ]
+    for row in rows:
+        cells = [str(c)[:30] for c in row]
+        while len(cells) < len(headers):
+            cells.append("")
+        lines.append("| " + " | ".join(cells) + " |")
+    return "\n".join(lines)
+
+
+def _scenario_summary_table(csv_path: str) -> str:
+    """시나리오 CSV → 핵심 요약 표 (규제 시나리오 × 전환율, take rate 0.2% 고정)"""
+    import csv as csv_mod
+    if not os.path.exists(csv_path):
+        return "> 시나리오 CSV 없음"
+    with open(csv_path, encoding="utf-8-sig") as f:
+        rows = list(csv_mod.DictReader(f))
+
+    lines = [
+        "| 규제 시나리오 | 전환율 | 활성 가맹점 | 연간 GMV | 연간 매출 |",
+        "|-------------|--------|-----------|---------|---------|",
+    ]
+    timing_map = {
+        "Optimistic": "낙관 (2026H2)",
+        "Base": "기본 (2027H1)",
+        "Conservative": "보수 (2027H2+)",
+    }
+    for row in rows:
+        if "_0.2pct" not in row["scenario"]:
+            continue
+        for prefix, label in timing_map.items():
+            if row["scenario"].startswith(prefix):
+                conv = f"{float(row['merchant_conversion_rate'])*100:.0f}%"
+                merchants = f"{int(row['active_merchants']):,}"
+                gmv = float(row["annual_gmv_krw"]) / 1e8
+                rev = float(row["annual_revenue_krw"]) / 1e8
+                lines.append(
+                    f"| {label} | {conv} | {merchants} | {gmv:,.0f}억 | {rev:,.0f}억 |"
+                )
+    return "\n".join(lines)
+
+
+def _scorecard_table(csv_path: str) -> str:
+    """스크리닝 스코어카드 CSV → 마크다운 표"""
+    import csv as csv_mod
+    if not os.path.exists(csv_path):
+        return "> 스코어카드 CSV 없음"
+    with open(csv_path, encoding="utf-8-sig") as f:
+        rows = list(csv_mod.DictReader(f))
+
+    lines = [
+        "| 기업 | 전략적합(40) | 기술보완(30) | 규제역량(20) | 협력가능(10) | **합계** | 판정 |",
+        "|------|-----------|-----------|-----------|-----------|--------|------|",
+    ]
+    for row in rows:
+        lines.append(
+            f"| {row['company']} "
+            f"| {row['strategic_fit_score(40점)']} "
+            f"| {row['tech_complement_score(30점)']} "
+            f"| {row['regulatory_score(20점)']} "
+            f"| {row['cooperation_score(10점)']} "
+            f"| **{row['total_score(100점)']}** "
+            f"| {row['recommendation']} |"
+        )
+    return "\n".join(lines)
+
+
+def build_deep_stablecoin(snapshot: dict, analysis: dict,
+                           chart_paths: dict = None) -> str:
+    """스테이블코인 시장 심화 리포트"""
+    date = datetime.now().strftime("%Y-%m-%d")
+    macro = snapshot.get("macro", {})
+    stable = snapshot.get("stablecoins", {})
+    regime = analysis.get("regime", {})
+    sig = analysis.get("stablecoin_signal", {})
+    danal = analysis.get("danal_implications", {})
+    danal_fin = snapshot.get("danal_financials", {})
+
+    fed = macro.get("FEDFUNDS", {}).get("value", "N/A")
+    dgs10 = macro.get("DGS10", {}).get("value", "N/A")
+    krw = macro.get("DEXKOUS", {}).get("value", "N/A")
+    total_b = sig.get("total_mcap_b", 0)
+
+    # Chart refs
+    def _chart_ref(key, alt=""):
+        if chart_paths and key in chart_paths:
+            rel = "../charts/" + Path(chart_paths[key]).name
+            return f"\n![{alt}]({rel})\n"
+        return ""
+
+    # CSV 파일 경로 (최신)
+    import glob
+    scenario_csvs = sorted(glob.glob("outputs/csv/kwrw_stablecoin_scenario_*.csv"), reverse=True)
+    scorecard_csvs = sorted(glob.glob("outputs/csv/screening_scorecard_*.csv"), reverse=True)
+
+    lines = [
+        f"# 스테이블코인 시장 심화 분석 — {date}",
+        "",
+        f"> 현재 레짐: **{regime.get('regime', '—')}** ({regime.get('confidence', '—')}) | "
+        f"스테이블코인 시총: ${total_b}B",
+        "",
+        "---",
+        "",
+        "## 1. 거시지표 추이",
+        "",
+        f"| 지표 | 현재 | 레짐 신호 |",
+        f"|------|------|---------|",
+        f"| Fed Funds Rate | {fed}% | 금리 하락 기조 — SC 결제 볼륨 ↑, 이자 수익 ↓ |",
+        f"| 10Y Treasury | {dgs10}% | 장기금리 안정 — 기업 투자 환경 양호 |",
+        f"| USD/KRW | {krw} | 원화 약세 — KRW SaaS 수출 유리, 외국인 결제 수요 ↑ |",
+        "",
+    ]
+    lines.append(_chart_ref("macro_timeseries", "거시지표 12개월 추이"))
+    lines += [
+        "---",
+        "",
+        "## 2. 스테이블코인 시장 구조",
+        "",
+        "| 코인 | 시총 | 도미넌스 | 수익 모델 | 규제 상태 |",
+        "|------|------|---------|---------|---------|",
+        f"| USDT | {fmt_num(stable.get('USDT', {}).get('market_cap'))} | ~70% | 이자 수익 (T-Bills) | 미규제 — GENIUS Act 적용 대상 |",
+        f"| USDC | {fmt_num(stable.get('USDC', {}).get('market_cap'))} | ~29% | 이자 수익 + CPN 수수료 | SEC 등록, OCC 인가 추진 |",
+        "| DAI | $4.2B | ~1.6% | 담보 이자 (DSR) | DeFi — MiCA 해당 없음 |",
+        "| RLUSD | 출시 초기 | <0.1% | ODL 수수료 + 이자 | NYDFS 인가 |",
+        "",
+        "**구조적 특징:**",
+        "- **이자 의존 모델의 한계**: USDT/USDC 모두 수익의 90%+ 가 준비금 이자. Fed 금리 1%p 인하 시 Circle 연 $4.4억 매출 감소 (S-1 기준)",
+        "- **수수료 모델로의 전환**: Circle CPN ($5.7B 연간 볼륨), Ripple ODL — 거래 기반 수익 구조 시도",
+        "- **다날의 포지션**: 이자가 아닌 **정산 수수료(take rate) 기반 SaaS** — 금리 변동에 구조적으로 중립",
+        "",
+    ]
+    lines.append(_chart_ref("stablecoin_pie", "스테이블코인 시장점유율"))
+    lines += [
+        "---",
+        "",
+        "## 3. 규제 환경 비교",
+        "",
+        "| 관할 | 법안/규제 | 현황 | 다날 함의 |",
+        "|------|---------|------|---------|",
+        "| 미국 | GENIUS Act | 2025-07 통과 | USDC 정산 레일 안정성 ↑ — 크립토 마스터카드 기반 강화 |",
+        "| EU | MiCA | 2024-06 시행, EBA 면제 종료 (2026-03-02) | 유럽 SC 발행 진입장벽 ↑ — 다날 스위스 VASP 라이선스 활용 가능 |",
+        "| 한국 | 디지털자산기본법 2단계 | 시행령 미확정 | **핵심 변수** — 은행 전용 vs 민간 허용 여부가 다날 SaaS 사업 존폐 결정 |",
+        "",
+        "---",
+        "",
+        "## 4. 다날 재무 현황",
+        "",
+    ]
+    if danal_fin.get("annual"):
+        lines += [
+            "| 연도 | 매출 | 영업이익 | 세전순이익 | 해석 |",
+            "|------|------|---------|----------|------|",
+        ]
+        for d in danal_fin["annual"]:
+            note = ""
+            if d["year"] == 2025:
+                note = "영업이익 반등, 블록체인 투자 적자 확대"
+            elif d["year"] == 2024:
+                note = "매출 하락 가속, 효율화 시작"
+            lines.append(
+                f"| {d['year']} | {d['revenue']:,}억 | {d['operating_income']}억 "
+                f"| {d['pretax_income']}억 | {note} |"
+            )
+        lines.append("")
+    lines.append(_chart_ref("danal_financial", "다날 재무 추이"))
+    lines += [
+        "**핵심 긴장**: 본업 PG는 영업이익률 개선(6.4%→7.7%)으로 방어 중이나, "
+        "블록체인 투자 영업외손실 누적으로 세전순이익 적자 3배 확대. "
+        "신사업 수익화 시점이 투자 판단의 핵심.",
+        "",
+        "---",
+        "",
+        "## 5. KRW SaaS 시나리오 분석",
+        "",
+        "다날 PG 가맹점 50,000개 기준, 가맹점당 월 GMV 5,000만원 가정 (take rate 0.2% 고정):",
+        "",
+    ]
+    if scenario_csvs:
+        lines.append(_scenario_summary_table(scenario_csvs[0]))
+    lines.append("")
+    lines.append(_chart_ref("scenario_comparison", "KRW SaaS 시나리오별 매출 비교"))
+    lines += [
+        "",
+        "**시나리오 해석**: 가맹점 전환율 7% + take rate 0.2%가 현실적 기본 시나리오. "
+        "연간 매출 ~42억원 → 다날 전체 매출(1,945억) 대비 2.2%. "
+        "규제 확정 후 가맹점 전환 가속이 핵심 드라이버.",
+        "",
+        "---",
+        "",
+        "## 6. 리서치 대상 스크리닝",
+        "",
+    ]
+    if scorecard_csvs:
+        lines.append(_scorecard_table(scorecard_csvs[0]))
+    lines += [
+        "",
+        "**기준**: 다날 전략적합성(40%) + 기술보완성(30%) + 규제역량(20%) + 협력가능성(10%)",
+        "",
+        "---",
+        "",
+        "## 7. 투자 시사점",
+        "",
+        f"- **레짐 {regime.get('regime', '—')}에서의 최적 행동**: {danal.get('stablecoin_saas', '—')}",
+        f"- **본업 방어**: {danal.get('payment_cashcow', '—')}",
+        f"- **글로벌 확장**: {danal.get('global_expansion', '—')}",
+        "",
+        "**watch point:**",
+    ]
+    for ev in danal.get("watch_events", []):
+        lines.append(f"- {ev}")
+    lines += [
+        "",
+        "---",
+        f"*작성: {date} | Source: FRED, CoinGecko, SEC EDGAR, 다날 공식(IR 북·보도자료·재무정보)*",
     ]
     return "\n".join(lines)
 
@@ -410,6 +645,18 @@ def report(report_type: str = "brief", company: str = "", sector: str = "stablec
         content = build_screen(snapshot, analysis, chart_paths=screen_charts)
         safe_sector = sector.replace(" ", "_").replace("/", "-") or "stablecoin"
         path = f"{OUTPUT_DIR}/screen_{safe_sector}_{date_str}.md"
+
+    elif report_type == "deep":
+        snapshot = load_latest("snapshot_*.json")
+        analysis = load_latest("analysis_*.json")
+        try:
+            from src.chart import build_deep_charts
+            deep_charts = build_deep_charts(snapshot, date_str)
+        except Exception as e:
+            print(f"[WARN] chart 생성 실패: {e}")
+            deep_charts = {}
+        content = build_deep_stablecoin(snapshot, analysis, chart_paths=deep_charts)
+        path = f"{OUTPUT_DIR}/deep_stablecoin_{date_str}.md"
 
     else:
         content = f"# Screen Report\n> {date_str}\n\n(sector 미지정)"

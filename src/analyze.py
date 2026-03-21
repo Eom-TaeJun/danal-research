@@ -4,8 +4,7 @@
 # 레짐: Goldilocks / Overheating / Late-Cycle / Stagflation / Recession
 # 제외: 기업 개별 분석, 포트폴리오 최적화
 #
-# ── 2026-03-06 업데이트: 다중 신호 합산 + CoT 추론 로그 + 신뢰도 가중치
-# 참조: tech-digest (observability), pm-skills (structured reasoning)
+# ── 2026-03-06 업데이트: 다중 신호 합산 + 신호별 추론 기록 + 신뢰도 가중치
 
 import json
 import os
@@ -398,12 +397,12 @@ def collect_risk_signals(macro: dict, crypto: dict, stable: dict) -> list:
     return signals
 
 
-# ── 레짐 판단 (가중 신호 합산 CoT 방식) ───────────────────────────────────
+# ── 레짐 판단 (가중 신호 합산) ───────────────────────────────────
 
 def detect_regime(macro: dict, crypto: dict = None, stable: dict = None) -> RegimeResult:
     """
     다중 신호를 수집하고 가중 합산으로 레짐 판단.
-    모든 신호는 signals 리스트에 보존 (CoT 추론 로그).
+    모든 신호는 signals 리스트에 보존.
     """
     crypto = crypto or {}
     stable = stable or {}

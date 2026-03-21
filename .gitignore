@@ -3,3 +3,24 @@ __pycache__/
 *.pyc
 .DS_Store
 outputs/context/
+
+# 내부 운영 파일 (GitHub 비공개)
+.claude/
+CLAUDE.md
+agents/
+skills/
+_dev/
+preview.html
+소개.txt
+
+# 내부 기획 문서
+AGENTS.md
+INTENT.md
+JOB_SIGNAL_ALIGNMENT.md
+OFFICIAL_SIGNALS_20260320.md
+PORTFOLIO_POSITIONING_ONE_PAGER.md
+WORKFLOW_PRINCIPLES.md
+portfolio-plan.md
+spec.md
+outputs/codex_review_20260308.md
+references/

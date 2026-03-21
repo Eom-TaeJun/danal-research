@@ -22,7 +22,6 @@
 | **슈퍼블록** | 국내 L1 기술 파트너 (기투자) | 후속 모니터링 + 2차 투자 검토 | ★★☆ |
 
 > 데이터 CSV: 완료 (`outputs/csv/` — 시나리오 모델·스코어카드·거시지표 3종)
-> PPT 프레젠테이션: 준비 중 (`outputs/ppt/` — `[TODO]`)
 
 ---
 
@@ -222,7 +221,7 @@ $36B/년 (B2B 스테이블코인 결제 실증 규모, Artemis 2025-05)
 
 > ⚠️ "$36B"는 단순 시총 기반이 아닌, 실제 결제 흐름을 측정한 **Observed Flow** 수치다. 이 방법론이 시총($263B) 대비 현실적 TAM을 제공한다.
 
-> "TAM의 본질은 '스테이블코인 시총'이 아니라 '기업 정산 흐름의 대체 가능 금액'이다." — Codex 리서치, 2026-03-08
+> "TAM의 본질은 '스테이블코인 시총'이 아니라 '기업 정산 흐름의 대체 가능 금액'이다."
 
 | 시장/지표 | 규모 | 출처 |
 |---|---|---|
@@ -484,13 +483,6 @@ $36B/년 (B2B 스테이블코인 결제 실증 규모, Artemis 2025-05)
 - `outputs/csv/macro_snapshot_20260308.csv` ✅ — 거시지표 스냅샷 9개 (BLS·BEA·ISM·Fed·FRED 출처)
 - `outputs/reports/circle_s1_analysis_20260308.md` ✅ — Circle SEC S-1 영문 원문 직독 분석
 
-**진행 중/예정:**
-- `outputs/ppt/danal_research_deck_20260308.pptx` — PPT 프레젠테이션 *[TODO]*
-- `outputs/csv/stablecoin_market_20260308.csv` — 스테이블코인 시장 데이터 *[TODO]*
-- `outputs/reports/macro_deepdive_20260308.md` — 거시 심화 분석 *[TODO]*
-- `outputs/reports/regulation_update_20260308.md` — GENIUS Act·MiCA·한국법 규제 현황 상세 *[TODO]*
-
 ---
 
-*작성: 2026-03-08 | 분석 도구: Claude Sonnet 4.6 (설계·편집) + Codex gpt-5.4 (데이터 리서치)*
-*이 리포트는 다날 핀테크·디지털자산 투자팀의 의사결정 지원을 목적으로 작성된 내부 연구 문서입니다.*
+*작성: 2026-03-08 | Source: FRED, CoinGecko, SEC EDGAR, 다날 공식(IR 북·보도자료·재무정보)*
